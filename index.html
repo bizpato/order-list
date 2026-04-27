@@ -8,20 +8,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f4f6f9;
+      --bg: #d7f0ff;
       --surface: #ffffff;
-      --border: #e4e8ef;
-      --text: #1a1f2e;
-      --text-sub: #6b7280;
-      --accent: #2563eb;
-      --accent-light: #eff6ff;
-      --accent-dark: #1d4ed8;
+      --border: #b8ddf5;
+      --text: #1a2a3a;
+      --text-sub: #5a7a9a;
+      --accent: #215387;
+      --accent-light: #e8f4ff;
+      --accent-dark: #163a60;
       --green: #16a34a;
       --green-light: #f0fdf4;
       --amber: #d97706;
       --amber-light: #fffbeb;
-      --red: #dc2626;
-      --red-light: #fef2f2;
+      --red: #ea4d3c;
+      --red-light: #fff0ee;
+      --yellow: #fff050;
+      --yellow-dark: #c8b800;
       --purple: #7c3aed;
       --purple-light: #f5f3ff;
       --mono: 'DM Mono', monospace;
@@ -36,31 +38,29 @@
       min-height: 100vh;
     }
 
-    /* ─── LAYOUT ─── */
     .app { display: flex; flex-direction: column; min-height: 100vh; max-width: 680px; margin: 0 auto; }
 
     /* ─── HEADER ─── */
     .header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
+      background: var(--accent);
+      border-bottom: 1px solid var(--accent-dark);
       padding: 14px 20px 0;
       position: sticky; top: 0; z-index: 100;
     }
     .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .logo { font-weight: 900; font-size: 18px; letter-spacing: -0.5px; }
-    .logo span { color: var(--accent); }
-    .step-label { font-size: 11px; color: var(--text-sub); font-weight: 500; font-family: var(--mono); }
+    .logo { font-weight: 900; font-size: 17px; letter-spacing: -0.5px; color: #fff; }
+    .logo span { color: var(--yellow); }
+    .step-label { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 500; font-family: var(--mono); }
 
-    /* progress tabs */
     .progress-tabs { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
     .progress-tabs::-webkit-scrollbar { display: none; }
     .tab-item {
       flex-shrink: 0; padding: 8px 14px; font-size: 11px; font-weight: 700;
-      border-bottom: 2px solid transparent; color: var(--text-sub); cursor: pointer;
+      border-bottom: 2px solid transparent; color: rgba(255,255,255,0.6); cursor: pointer;
       white-space: nowrap; transition: all .2s;
     }
-    .tab-item.active { color: var(--accent); border-bottom-color: var(--accent); }
-    .tab-item.done { color: var(--green); }
+    .tab-item.active { color: var(--yellow); border-bottom-color: var(--yellow); }
+    .tab-item.done { color: rgba(255,255,255,0.9); }
     .tab-item.done::before { content: '✓ '; }
 
     /* ─── MAIN ─── */
@@ -68,7 +68,7 @@
 
     /* ─── SECTION HEADER ─── */
     .section-head { margin-bottom: 16px; }
-    .section-title { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
+    .section-title { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; color: var(--accent); }
     .section-sub { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
 
     /* ─── NOTICE BOX ─── */
@@ -77,6 +77,11 @@
       border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; font-size: 12px; line-height: 1.7;
     }
     .notice strong { color: var(--amber); }
+    .notice-blue {
+      background: var(--accent-light); border: 1px solid #b8ddf5;
+      border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; font-size: 12px; line-height: 1.7;
+    }
+    .notice-blue strong { color: var(--accent); }
 
     /* ─── PROPERTY FORM ─── */
     .form-group { margin-bottom: 16px; }
@@ -113,9 +118,12 @@
     .badge-essential { background: var(--red-light); color: var(--red); }
     .badge-recommended { background: var(--amber-light); color: var(--amber); }
     .badge-family { background: var(--green-light); color: var(--green); }
-    .badge-host { background: #f0f9ff; color: #0369a1; }
+    .badge-host { background: #fff8e1; color: #b45309; }
     .badge-auto { background: var(--purple-light); color: var(--purple); }
     .badge-id { background: var(--bg); color: var(--text-sub); font-family: var(--mono); }
+    .badge-millennium { background: #1a2a3a; color: #fff; }
+    .badge-premium { background: #215387; color: #fff; }
+    .badge-standard { background: var(--accent-light); color: var(--accent); }
 
     .item-name { font-size: 13px; font-weight: 700; line-height: 1.4; margin-bottom: 4px; }
     .item-meta { font-size: 11px; color: var(--text-sub); }
@@ -141,25 +149,26 @@
     .qty-num { font-family: var(--mono); font-size: 14px; font-weight: 700; min-width: 28px; text-align: center; padding: 4px 0; }
     .qty-unit { font-size: 9px; color: var(--text-sub); }
 
-    /* ─── HOST TOGGLE ─── */
-    .host-toggle { display: flex; background: var(--bg); border-radius: 8px; padding: 3px; gap: 2px; margin-top: 8px; }
-    .host-btn {
+    /* ─── REFILL TOGGLE (本体/詰め替えのみ) ─── */
+    .refill-toggle {
+      display: flex; background: var(--bg); border-radius: 8px; padding: 3px; gap: 2px; margin-top: 8px;
+    }
+    .refill-btn {
       flex: 1; padding: 5px 8px; font-size: 10px; font-weight: 700; border-radius: 6px;
       border: none; cursor: pointer; transition: all .2s; background: transparent; color: var(--text-sub);
     }
-    .host-btn.active-cx9 { background: var(--accent); color: #fff; }
-    .host-btn.active-host { background: var(--amber); color: #fff; }
+    .refill-btn.active-set { background: var(--accent); color: #fff; }
+    .refill-btn.active-refill { background: var(--amber); color: #fff; }
 
-    /* ─── GRADE SELECTOR (アメニティグループ) ─── */
+    /* ─── GRADE SELECTOR ─── */
     .grade-card {
       background: var(--surface); border: 1.5px solid var(--border);
       border-radius: 14px; padding: 16px; margin-bottom: 10px;
     }
     .grade-card.selected { border-color: var(--accent); background: var(--accent-light); }
     .grade-label { font-size: 12px; font-weight: 700; color: var(--text-sub); margin-bottom: 10px; }
-    .grade-name { font-size: 15px; font-weight: 900; margin-bottom: 10px; }
+    .grade-name { font-size: 15px; font-weight: 900; margin-bottom: 10px; color: var(--accent); }
     .grade-options { display: flex; background: var(--bg); border-radius: 10px; padding: 3px; gap: 3px; margin-bottom: 12px; }
-    .grade-options.vertical { flex-direction: column; gap: 4px; }
     .grade-opt-btn {
       flex: 1; padding: 8px 4px; font-size: 11px; font-weight: 700; border-radius: 8px;
       border: none; cursor: pointer; transition: all .2s; background: transparent; color: var(--text-sub);
@@ -169,8 +178,15 @@
     .grade-detail { display: flex; gap: 12px; align-items: flex-start; }
     .grade-img { width: 56px; height: 56px; border-radius: 8px; object-fit: contain; background: #fff; border: 1px solid var(--border); flex-shrink: 0; padding: 3px; }
     .grade-info { flex: 1; }
-    .grade-price { font-size: 16px; font-weight: 900; font-family: var(--mono); }
+    .grade-price { font-size: 16px; font-weight: 900; font-family: var(--mono); color: var(--accent); }
     .grade-price-sub { font-size: 10px; color: var(--text-sub); margin-top: 2px; }
+
+    /* ─── HOST PREP ALERT ─── */
+    .host-prep-alert {
+      background: #fff8e1; border: 1px solid #fcd34d; border-radius: 8px;
+      padding: 8px 12px; margin-top: 8px; font-size: 10px; color: #92400e; font-weight: 600;
+      line-height: 1.5;
+    }
 
     /* ─── SUBSECTION ─── */
     .subsection { margin-bottom: 24px; }
@@ -192,10 +208,10 @@
     .summary-price { font-family: var(--mono); font-size: 13px; font-weight: 700; }
     .summary-total {
       display: flex; justify-content: space-between; align-items: baseline;
-      padding: 16px; background: var(--text); border-radius: 14px; color: #fff; margin-top: 16px;
+      padding: 16px; background: var(--accent); border-radius: 14px; color: #fff; margin-top: 16px;
     }
     .total-label { font-size: 11px; font-weight: 500; opacity: .7; letter-spacing: 1px; }
-    .total-amount { font-family: var(--mono); font-size: 28px; font-weight: 700; color: #60a5fa; }
+    .total-amount { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--yellow); }
 
     /* ─── SUBMIT AREA ─── */
     .submit-info { font-size: 12px; color: var(--text-sub); text-align: center; margin-bottom: 12px; }
@@ -205,7 +221,7 @@
     .footer-nav {
       position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
       width: 100%; max-width: 680px;
-      background: rgba(255,255,255,.95); backdrop-filter: blur(12px);
+      background: rgba(255,255,255,.97); backdrop-filter: blur(12px);
       border-top: 1px solid var(--border); padding: 12px 16px;
       display: flex; align-items: center; gap: 10px; z-index: 200;
     }
@@ -234,11 +250,9 @@
     .submit-btn:disabled { background: var(--border); cursor: default; }
 
     /* ─── SUCCESS ─── */
-    .success-box {
-      text-align: center; padding: 40px 20px;
-    }
+    .success-box { text-align: center; padding: 40px 20px; }
     .success-icon { font-size: 56px; margin-bottom: 16px; }
-    .success-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+    .success-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; color: var(--accent); }
     .success-sub { font-size: 14px; color: var(--text-sub); line-height: 1.7; }
 
     .spinner {
@@ -247,7 +261,6 @@
       border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     @keyframes slideUp {
       from { opacity: 0; transform: translateX(-50%) translateY(20px); }
       to   { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -263,7 +276,7 @@
 <div class="app" id="app">
   <header class="header">
     <div class="header-top">
-      <div class="logo">民泊管理バンク 発注フォーム</div>
+      <div class="logo">民泊管理バンク <span>発注フォーム</span></div>
       <div class="step-label" id="step-label">STEP 1 / 9</div>
     </div>
     <div class="progress-tabs" id="progress-tabs"></div>
@@ -283,1476 +296,1301 @@
 
 <script>
 // ================================================================
-// DATA
+// STEPS
 // ================================================================
-const STEPS = ['物件情報','初回必須セット','バスアメニティ','トイレ用品','キッチン','食器・カトラリー','洗濯・掃除','食品・飲料','芳香・室内備品','BBQ','その他・オプション','確認・送信'];
+const STEPS = [
+  '物件情報',
+  '初回必須セット',
+  'バスアメニティ',
+  'トイレ用品',
+  'キッチン・食器',
+  '洗濯・掃除',
+  '食品・飲料',
+  '芳香・空間演出',
+  'その他・オプション',
+  '確認・送信'
+];
 
-// グレードグループ（シャンプー/コンディショナー/ボディソープをまとめる）
+// ================================================================
+// グレードグループ（バスアメニティ・ハンドソープ）
+// デフォルト: スタンダード（最下位グレード）
+// ================================================================
 const GRADE_GROUPS = [
   {
     id: 'bath_amenity',
-    name: 'シャンプー・コンディショナー・ボディソープ',
+    name: 'シャンプー・コンディショナー・ボディーソープ',
+    defaultGrade: 'standard',
     options: [
       {
         grade: 'standard', label: 'スタンダード', brand: 'ビオノート',
         img: 'https://www.sintoworld.jp/prod/images/prod_img/BIOBOD-400.jpg#tp',
-        items: [
-          { id:'B0060', name:'シャンプーディスペンサー', price:500, min:1, unit:'個', hostPrep:true },
-          { id:'S0068', name:'シャンプー詰替 1L', price:980, min:1, unit:'本' },
-          { id:'B0061', name:'コンディショナーディスペンサー', price:500, min:1, unit:'個', hostPrep:true },
-          { id:'S0069', name:'コンディショナー詰替 1L', price:980, min:1, unit:'本' },
-          { id:'B0062', name:'ボディソープディスペンサー', price:500, min:1, unit:'個', hostPrep:true },
-          { id:'S0070', name:'ボディソープ詰替 1L', price:980, min:1, unit:'本' },
+        description: 'ビオノートシリーズ（ディスペンサー3本＋詰め替え各1L）',
+        hostPrepNote: null,
+        // 本体セット
+        setItems: [
+          { id:'B0055', name:'シャンプーディスペンサー（ビオノート）', price:500, qty:1, unit:'個' },
+          { id:'S0062', name:'シャンプー詰め替え 1L（ビオノート）', price:1280, qty:1, unit:'本' },
+          { id:'B0056', name:'コンディショナーディスペンサー（ビオノート）', price:500, qty:1, unit:'個' },
+          { id:'S0063', name:'コンディショナー詰め替え 1L（ビオノート）', price:1280, qty:1, unit:'本' },
+          { id:'B0057', name:'ボディーソープディスペンサー（ビオノート）', price:500, qty:1, unit:'個' },
+          { id:'S0064', name:'ボディーソープ詰め替え 1L（ビオノート）', price:1280, qty:1, unit:'本' },
         ],
-        totalPrice: 500+980+500+980+500+980,
-        description: 'ビオノートシリーズ・ディスペンサー3本＋詰替セット',
-        priceBreakdown: [{label:'ディスペンサー×3', price:1500},{label:'詰替×3', price:2940}]
+        // 詰め替えのみ
+        refillItems: [
+          { id:'S0062', name:'シャンプー詰め替え 1L（ビオノート）', price:1280, qty:1, unit:'本' },
+          { id:'S0063', name:'コンディショナー詰め替え 1L（ビオノート）', price:1280, qty:1, unit:'本' },
+          { id:'S0064', name:'ボディーソープ詰め替え 1L（ビオノート）', price:1280, qty:1, unit:'本' },
+        ],
+        refillHostNote: 'ディスペンサー3本（シャンプー・コンディショナー・ボディーソープ）はホスト様のご準備となります',
+        hasRefillOption: true,
       },
       {
-        grade: 'premium', label: 'プレミアム', brand: 'ホテルグレード',
-        img: 'https://www.sintoworld.jp/prod/images/prod_img/BIOBOD-400.jpg#tp',
-        items: [
-          { id:'B0060P', name:'プレミアムシャンプーディスペンサー', price:800, min:1, unit:'個', hostPrep:true },
-          { id:'S0068P', name:'プレミアムシャンプー詰替 1L', price:1500, min:1, unit:'本' },
-          { id:'B0061P', name:'プレミアムコンディショナーディスペンサー', price:800, min:1, unit:'個', hostPrep:true },
-          { id:'S0069P', name:'プレミアムコンディショナー詰替 1L', price:1500, min:1, unit:'本' },
-          { id:'B0062P', name:'プレミアムボディソープディスペンサー', price:800, min:1, unit:'個', hostPrep:true },
-          { id:'S0070P', name:'プレミアムボディソープ詰替 1L', price:1500, min:1, unit:'本' },
+        grade: 'premium', label: 'プレミアム', brand: 'パンテーン',
+        img: 'https://m.media-amazon.com/images/I/71PMjkim9rL._AC_SL1500_.jpg',
+        description: 'パンテーン 2L（ディスペンサーはホスト様準備）',
+        hostPrepNote: 'ディスペンサーはホスト様のご準備となります',
+        setItems: [
+          { id:'S0223', name:'シャンプー 2L エクストラダメージリペア（パンテーン）', price:2580, qty:1, unit:'本' },
+          { id:'S0224', name:'コンディショナー 2L エクストラダメージリペア（パンテーン）', price:2580, qty:1, unit:'本' },
         ],
-        totalPrice: 800+1500+800+1500+800+1500,
-        description: 'プレミアムホテルグレード・ディスペンサー3本＋詰替セット',
-        priceBreakdown: [{label:'ディスペンサー×3', price:2400},{label:'詰替×3', price:4500}]
-      }
+        refillItems: null,
+        hasRefillOption: false,
+      },
+      {
+        grade: 'millennium', label: 'ミレニアム', brand: 'ホテルアメニティ',
+        img: 'https://www.sintoworld.jp/prod/images/prod_img/BIOBOD-400.jpg#tp',
+        description: 'ミレニアムシリーズ（ボトル3本＋詰め替え各1L）',
+        hostPrepNote: null,
+        setItems: [
+          { id:'B0191', name:'ミレニアム シャンプーボトル 500ml', price:650, qty:1, unit:'本' },
+          { id:'S0187', name:'ミレニアム シャンプー詰め替え 1L', price:1750, qty:1, unit:'本' },
+          { id:'B0192', name:'ミレニアム コンディショナーボトル 500ml', price:650, qty:1, unit:'本' },
+          { id:'S0188', name:'ミレニアム コンディショナー詰め替え 1L', price:1750, qty:1, unit:'本' },
+          { id:'B0193', name:'ミレニアム ボディーソープボトル 500ml', price:650, qty:1, unit:'本' },
+          { id:'S0189', name:'ミレニアム ボディーソープ詰め替え 1L', price:1750, qty:1, unit:'本' },
+        ],
+        refillItems: [
+          { id:'S0187', name:'ミレニアム シャンプー詰め替え 1L', price:1750, qty:1, unit:'本' },
+          { id:'S0188', name:'ミレニアム コンディショナー詰め替え 1L', price:1750, qty:1, unit:'本' },
+          { id:'S0189', name:'ミレニアム ボディーソープ詰め替え 1L', price:1750, qty:1, unit:'本' },
+        ],
+        refillHostNote: 'ボトル3本（シャンプー・コンディショナー・ボディーソープ）はホスト様のご準備となります',
+        hasRefillOption: true,
+      },
     ]
   },
   {
     id: 'handsoap',
     name: 'ハンドソープ',
+    defaultGrade: 'standard',
     options: [
       {
         grade: 'standard', label: 'スタンダード', brand: 'メディキュ',
         img: 'https://m.media-amazon.com/images/I/51BaloqKt7L._AC_SL1200_.jpg',
-        items: [
-          { id:'B0196', name:'ハンドソープボトル 250ml', price:0, min:1, unit:'個', hostPrep:true },
-          { id:'S0086', name:'ハンドソープ詰替 1000ml', price:480, min:1, unit:'本' },
+        description: 'メディキュ（ボトル250ml＋詰め替え1L）',
+        hostPrepNote: null,
+        setItems: [
+          { id:'B0183', name:'ハンドソープボトル 250ml（メディキュ）', price:500, qty:1, unit:'個' },
+          { id:'S0080', name:'ハンドソープ詰め替え 1L（メディキュ）', price:480, qty:1, unit:'本' },
         ],
-        totalPrice: 480,
-        description: 'メディキュ・ボトル＋詰替セット',
-        priceBreakdown: [{label:'ボトル', price:0},{label:'詰替', price:480}]
+        refillItems: [
+          { id:'S0080', name:'ハンドソープ詰め替え 1L（メディキュ）', price:480, qty:1, unit:'本' },
+        ],
+        refillHostNote: 'ハンドソープボトルはホスト様のご準備となります',
+        hasRefillOption: true,
       },
       {
         grade: 'premium', label: 'プレミアム', brand: 'ビオノート',
         img: 'https://www.sintoworld.jp/prod/images/prod_img/BIOFOS-450.jpg#tp',
-        items: [
-          { id:'B0063', name:'ハンドソープディスペンサー（ビオノート）', price:500, min:1, unit:'個', hostPrep:true },
-          { id:'S0086P', name:'プレミアムハンドソープ詰替 1000ml', price:980, min:1, unit:'本' },
+        description: 'ビオノートディスペンサー（ディスペンサー＋詰め替え1L）',
+        hostPrepNote: null,
+        setItems: [
+          { id:'B0058', name:'ハンドソープディスペンサー（ビオノート）', price:500, qty:1, unit:'個' },
+          { id:'S0080', name:'ハンドソープ詰め替え 1L（メディキュ）', price:480, qty:1, unit:'本' },
         ],
-        totalPrice: 1480,
-        description: 'ビオノートディスペンサー＋詰替セット',
-        priceBreakdown: [{label:'ディスペンサー', price:500},{label:'詰替', price:980}]
-      }
+        refillItems: [
+          { id:'S0080', name:'ハンドソープ詰め替え 1L（メディキュ）', price:480, qty:1, unit:'本' },
+        ],
+        refillHostNote: 'ハンドソープディスペンサーはホスト様のご準備となります',
+        hasRefillOption: true,
+      },
+      {
+        grade: 'millennium', label: 'ミレニアム', brand: 'ホテルアメニティ',
+        img: 'https://www.sintoworld.jp/prod/images/prod_img/BIOFOS-450.jpg#tp',
+        description: 'ミレニアムシリーズ（ボトル500ml＋詰め替え1L）',
+        hostPrepNote: null,
+        setItems: [
+          { id:'B0194', name:'ミレニアム ハンドソープボトル 500ml', price:650, qty:1, unit:'本' },
+          { id:'S0190', name:'ミレニアム ハンドソープ詰め替え 1L', price:1750, qty:1, unit:'本' },
+        ],
+        refillItems: [
+          { id:'S0190', name:'ミレニアム ハンドソープ詰め替え 1L', price:1750, qty:1, unit:'本' },
+        ],
+        refillHostNote: 'ハンドソープボトルはホスト様のご準備となります',
+        hasRefillOption: true,
+      },
     ]
-  }
+  },
+  {
+    id: 'toothbrush',
+    name: '歯ブラシ',
+    defaultGrade: 'standard',
+    options: [
+      {
+        grade: 'standard', label: 'スタンダード', brand: 'ホテルアメニティ',
+        img: 'https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg#tp',
+        description: 'マットシリーズ（100本単位）',
+        hostPrepNote: null,
+        setItems: [{ id:'S0065', name:'歯ブラシ①マットシリーズ', price:23, qty:100, unit:'本' }],
+        refillItems: null, hasRefillOption: false,
+      },
+      {
+        grade: 'premium', label: 'プレミアム', brand: 'ホテルアメニティ',
+        img: 'https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg#tp',
+        description: 'リーフシリーズ（100本単位）',
+        hostPrepNote: null,
+        setItems: [{ id:'S0066', name:'歯ブラシ②リーフシリーズ', price:43, qty:100, unit:'本' }],
+        refillItems: null, hasRefillOption: false,
+      },
+    ]
+  },
+  {
+    id: 'dish_soap',
+    name: '食器洗剤',
+    defaultGrade: 'standard',
+    options: [
+      {
+        grade: 'standard', label: 'スタンダード', brand: 'キュキュット',
+        img: 'https://m.media-amazon.com/images/I/41HoQN9MqRL._AC_.jpg',
+        description: 'キュキュット ポンプ本体480ml＋業務用詰め替え4.5L',
+        hostPrepNote: null,
+        setItems: [
+          { id:'S0144', name:'食器用洗剤本体 キュキュット ポンプ 480ml', price:500, qty:1, unit:'本' },
+          { id:'S0084', name:'キュキュット業務用 4.5L', price:3180, qty:1, unit:'本' },
+        ],
+        refillItems: [
+          { id:'S0084', name:'キュキュット業務用 4.5L', price:3180, qty:1, unit:'本' },
+        ],
+        refillHostNote: '食器洗剤ボトルはホスト様のご準備となります',
+        hasRefillOption: true,
+      },
+      {
+        grade: 'premium', label: 'プレミアム', brand: 'HAMILO',
+        img: 'https://m.media-amazon.com/images/I/61yHUrq13lL._AC_SL1280_.jpg',
+        description: 'ステンレスソープディスペンサー＋業務用詰め替え4.5L',
+        hostPrepNote: null,
+        setItems: [
+          { id:'S0143', name:'ステンレス ソープディスペンサー（HAMILO）', price:2400, qty:1, unit:'個' },
+          { id:'S0084', name:'キュキュット業務用 4.5L', price:3180, qty:1, unit:'本' },
+        ],
+        refillItems: [
+          { id:'S0084', name:'キュキュット業務用 4.5L', price:3180, qty:1, unit:'本' },
+        ],
+        refillHostNote: 'ステンレスディスペンサーはホスト様のご準備となります',
+        hasRefillOption: true,
+      },
+    ]
+  },
+  {
+    id: 'laundry_detergent',
+    name: '洗濯洗剤',
+    defaultGrade: 'standard',
+    options: [
+      {
+        grade: 'standard', label: 'スタンダード', brand: '花王',
+        img: 'https://m.media-amazon.com/images/I/81oDXh5sL5L._AC_SL1500_.jpg',
+        description: 'アタックZERO 業務用詰め替え 2,000ml',
+        hostPrepNote: null,
+        setItems: [
+          { id:'B0087', name:'洗濯洗剤容器 1000ml（サラサデザイン）', price:1120, qty:1, unit:'個' },
+          { id:'S0085', name:'アタックZERO 業務用詰め替え 2,000ml', price:2380, qty:1, unit:'本' },
+        ],
+        refillItems: [
+          { id:'S0085', name:'アタックZERO 業務用詰め替え 2,000ml', price:2380, qty:1, unit:'本' },
+        ],
+        refillHostNote: '洗濯洗剤ボトルはホスト様のご準備となります',
+        hasRefillOption: true,
+      },
+      {
+        grade: 'premium', label: 'ジェルボール', brand: 'ボールド',
+        img: 'https://m.media-amazon.com/images/I/81oDXh5sL5L._AC_SL1500_.jpg',
+        description: 'ボールド ジェルボール4in1 詰め替え 100個',
+        hostPrepNote: null,
+        setItems: [
+          { id:'S0232', name:'ボールド ジェルボール4in1 詰め替え 100個', price:3480, qty:1, unit:'個' },
+        ],
+        refillItems: null, hasRefillOption: false,
+      },
+    ]
+  },
+  {
+    id: 'fabric_softener',
+    name: '柔軟剤',
+    defaultGrade: 'standard',
+    options: [
+      {
+        grade: 'standard', label: 'スタンダード', brand: 'レノア',
+        img: 'https://m.media-amazon.com/images/I/81cSWEbOhzL._AC_SL1500_.jpg',
+        description: 'レノアハピネス詰め替え 1380ml',
+        hostPrepNote: null,
+        setItems: [
+          { id:'B0088', name:'柔軟剤容器 1000ml（サラサデザイン）', price:1120, qty:1, unit:'個' },
+          { id:'S0082', name:'レノアハピネスホワイトブーケ詰め替え 1380ml', price:1380, qty:1, unit:'本' },
+        ],
+        refillItems: [
+          { id:'S0082', name:'レノアハピネスホワイトブーケ詰め替え 1380ml', price:1380, qty:1, unit:'本' },
+        ],
+        refillHostNote: '柔軟剤ボトルはホスト様のご準備となります',
+        hasRefillOption: true,
+      },
+    ]
+  },
+  {
+    id: 'deodorant_spray',
+    name: '消臭スプレー（布製品用）',
+    defaultGrade: 'standard',
+    options: [
+      {
+        grade: 'standard', label: 'スタンダード', brand: 'ファブリーズ',
+        img: 'https://m.media-amazon.com/images/I/71BYhPXQPGL._AC_SL1500_.jpg',
+        description: 'ファブリーズ本体370ml＋詰め替え1600ml',
+        hostPrepNote: null,
+        setItems: [
+          { id:'B0159', name:'ファブリーズ本体 W除菌+消臭 370mL', price:600, qty:1, unit:'本' },
+          { id:'S0164', name:'ファブリーズ詰め替え 1600mL', price:2580, qty:1, unit:'本' },
+        ],
+        refillItems: [
+          { id:'S0164', name:'ファブリーズ詰め替え 1600mL', price:2580, qty:1, unit:'本' },
+        ],
+        refillHostNote: 'ファブリーズ本体ボトルはホスト様のご準備となります',
+        hasRefillOption: true,
+      },
+      {
+        grade: 'premium', label: 'プレミアム', brand: '清水香',
+        img: 'https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg',
+        description: '清水香ボトル＋詰め替え1L',
+        hostPrepNote: null,
+        setItems: [
+          { id:'B0251', name:'清水香ボトル', price:300, qty:1, unit:'本' },
+          { id:'S0130', name:'消臭スプレー詰め替え 1L（清水香）', price:1400, qty:1, unit:'本' },
+        ],
+        refillItems: [
+          { id:'S0130', name:'消臭スプレー詰め替え 1L（清水香）', price:1400, qty:1, unit:'本' },
+        ],
+        refillHostNote: '清水香ボトルはホスト様のご準備となります',
+        hasRefillOption: true,
+      },
+    ]
+  },
 ];
 
-// 歯ブラシ（グレード選択・単品）
-const TOOTHBRUSH_OPTIONS = [
-  { grade:'standard', label:'スタンダード', id:'S0071', name:'歯ブラシ①マットシリーズ', price:23, min:100, unit:'本', brand:'ホテルアメニティ', img:'https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg#tp' },
-  { grade:'premium',  label:'プレミアム',   id:'S0072', name:'歯ブラシ②リーフシリーズ', price:43, min:100, unit:'本', brand:'ホテルアメニティ', img:'https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg#tp' },
+// ================================================================
+// 初回必須セット（固定投入品目）
+// ================================================================
+const ESSENTIAL_ITEMS = [
+  // ─── キッチン ───
+  { id:'S0012', name:'水切りネット 30枚', price:250, min:2, unit:'袋', cat:'キッチン', img:'https://m.media-amazon.com/images/I/71h3K-Lp8rL._AC_SL1500_.jpg', brand:'ダストマン' },
+  { id:'S0013', name:'キッチンスポンジ 毎日とりかえ 15個', price:280, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/71p4Y1WcCoL._AC_SL1500_.jpg', brand:'KK物産' },
+  { id:'S0014', name:'ゴミ袋 45L 50枚', price:650, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/71JLcf-yIsL._AC_SL1500_.jpg', brand:'日本サニパック' },
+  { id:'S0047', name:'室内用ゴミ袋 10L 25枚', price:148, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/61RqgkfIMnL._AC_SL1300_.jpg', brand:'日本サニパック' },
+  { id:'S0011', name:'キッチンペーパー 2ロール', price:250, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/71pWbjtiEgL._AC_SL1280_.jpg', brand:'スコッティ' },
+  { id:'S0010', name:'アルミホイル 30cm×50m', price:380, min:1, unit:'本', cat:'キッチン', img:'https://m.media-amazon.com/images/I/71pWbjtiEgL._AC_SL1280_.jpg', brand:'東洋アルミ' },
+  { id:'S0009', name:'ラップ 30cm×50m', price:380, min:1, unit:'本', cat:'キッチン', img:'https://m.media-amazon.com/images/I/71pWbjtiEgL._AC_SL1280_.jpg', brand:'旭化成' },
+  { id:'S0008', name:'ジップロック S 12枚', price:250, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/71pWbjtiEgL._AC_SL1280_.jpg', brand:'旭化成' },
+  { id:'S0007', name:'ジップロック M 12枚', price:280, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/71pWbjtiEgL._AC_SL1280_.jpg', brand:'旭化成' },
+  { id:'S0006', name:'ジップロック L 12枚', price:300, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/71pWbjtiEgL._AC_SL1280_.jpg', brand:'旭化成' },
+  // ─── トイレ ───
+  { id:'S0043', name:'トイレットペーパー パフィー3倍巻 12ロール', price:1590, min:1, unit:'個', cat:'トイレ', img:'https://m.media-amazon.com/images/I/71pWbjtiEgL._AC_SL1280_.jpg', brand:'日本製紙クレシア' },
+  { id:'S0040', name:'サニタリー用ゴミ袋 SN1 30枚', price:320, min:1, unit:'個', cat:'トイレ', img:'https://m.media-amazon.com/images/I/71kXVVl9UpL._AC_SL1500_.jpg', brand:'セイケツネットワーク' },
+  {
+    id:'B0050_S0051', name:'トイレ消臭芳香剤 本体＋詰め替え×6',
+    price:490+1930, min:1, unit:'セット', cat:'トイレ',
+    img:'https://m.media-amazon.com/images/I/81E7-6RFIfL._AC_SL1500_.jpg', brand:'ファブリーズ',
+    isRefillable: true,
+    setPrice: 490+1930, refillOnlyPrice: 1930,
+    setItems: [
+      { id:'B0050', name:'トイレ消臭芳香剤 本体ケース', price:490 },
+      { id:'S0051', name:'ファブリーズ詰め替え×6個', price:1930 },
+    ],
+    refillItems: [{ id:'S0051', name:'ファブリーズ詰め替え×6個', price:1930 }],
+    refillHostNote: 'トイレ消臭芳香剤の本体ケースはホスト様のご準備となります',
+  },
+  { id:'S0128', name:'トイレの消臭力スプレー 無香料', price:380, min:1, unit:'本', cat:'トイレ', img:'https://m.media-amazon.com/images/I/71hmtvdm6vL._AC_SL1500_.jpg', brand:'エステー' },
+  {
+    id:'B0158_S0225', name:'トイレクイックル 本体＋詰め替え',
+    price:400+330, min:1, unit:'セット', cat:'トイレ',
+    img:'https://m.media-amazon.com/images/I/81XL5d0-TIL._SL1500_.jpg', brand:'花王',
+    isRefillable: true,
+    setPrice: 400+330, refillOnlyPrice: 330,
+    setItems: [
+      { id:'B0158', name:'トイレクイックル本体 30枚', price:400 },
+      { id:'S0225', name:'トイレクイックル詰め替え 20枚', price:330 },
+    ],
+    refillItems: [{ id:'S0225', name:'トイレクイックル詰め替え 20枚', price:330 }],
+    refillHostNote: 'トイレクイックル本体はホスト様のご準備となります',
+  },
+  {
+    id:'B0153_S0168', name:'トイレマジックリン 本体＋業務用4.5L',
+    price:450+2800, min:1, unit:'セット', cat:'トイレ',
+    img:'https://m.media-amazon.com/images/I/81pm+06FAxL._AC_SL1500_.jpg', brand:'花王',
+    isRefillable: true,
+    setPrice: 450+2800, refillOnlyPrice: 2800,
+    setItems: [
+      { id:'B0153', name:'トイレマジックリン本体 400ml', price:450 },
+      { id:'S0168', name:'業務用マジックリン 4.5L', price:2800 },
+    ],
+    refillItems: [{ id:'S0168', name:'業務用マジックリン 4.5L', price:2800 }],
+    refillHostNote: 'トイレマジックリン本体はホスト様のご準備となります',
+  },
+  { id:'B0145', name:'ラバーカップ（スッポン）', price:1880, min:1, unit:'個', cat:'トイレ', img:'https://m.media-amazon.com/images/I/517zOgMevtL._AC_SY606_.jpg', brand:'-' },
+  { id:'B0152', name:'トイレブラシ SUS304ステンレス製', price:2500, min:1, unit:'本', cat:'トイレ', img:'https://m.media-amazon.com/images/I/51qInLDfh5L._AC_SL1500_.jpg', brand:'TOURRAMIT' },
+  // ─── バス ───
+  { id:'B0185', name:'バススポンジ 3個', price:250, min:1, unit:'個', cat:'バス', img:'https://m.media-amazon.com/images/I/51w-JKrc-3L._AC_.jpg', brand:'ノーブランド' },
+  {
+    id:'B0154_S0169', name:'バスマジックリン 本体＋業務用4.5L',
+    price:350+2180, min:1, unit:'セット', cat:'バス',
+    img:'https://m.media-amazon.com/images/I/41+CiIrGt6L._AC_.jpg', brand:'花王',
+    isRefillable: true,
+    setPrice: 350+2180, refillOnlyPrice: 2180,
+    setItems: [
+      { id:'B0154', name:'バスマジックリン本体 350ml', price:350 },
+      { id:'S0169', name:'業務用バスマジックリン 4.5L', price:2180 },
+    ],
+    refillItems: [{ id:'S0169', name:'業務用バスマジックリン 4.5L', price:2180 }],
+    refillHostNote: 'バスマジックリン本体はホスト様のご準備となります',
+  },
+  {
+    id:'B0157_S0167', name:'カビキラー 本体＋業務用詰め替え',
+    price:980+4200, min:1, unit:'セット', cat:'バス',
+    img:'https://m.media-amazon.com/images/I/71q918lUgPL._AC_SL1500_.jpg', brand:'ジョンソン',
+    isRefillable: true,
+    setPrice: 980+4200, refillOnlyPrice: 4200,
+    setItems: [
+      { id:'B0157', name:'カビキラー本体 400g', price:980 },
+      { id:'S0167', name:'カビキラー業務用 5L', price:4200 },
+    ],
+    refillItems: [{ id:'S0167', name:'カビキラー業務用 5L', price:4200 }],
+    refillHostNote: 'カビキラー本体はホスト様のご準備となります',
+  },
+  // ─── 室内・掃除 ───
+  { id:'S0039', name:'ティッシュペーパー BOX 5箱セット', price:730, min:1, unit:'個', cat:'室内', img:'https://m.media-amazon.com/images/I/71Xhy-r7+CL._AC_SL1000_.jpg', brand:'クリネックス' },
+  { id:'B0166', name:'マイクロファイバータオル 36枚', price:3700, min:1, unit:'個', cat:'室内', img:'https://m.media-amazon.com/images/I/71VpSDpg29L._AC_SL1500_.jpg', brand:'カークランド' },
+  {
+    id:'B0149_S0081', name:'クイックルワイパー 本体＋ウエットシート',
+    price:2000+390, min:1, unit:'セット', cat:'室内',
+    img:'https://m.media-amazon.com/images/I/81Yzevrr8BL._AC_SL1500_.jpg', brand:'3M/レック',
+    isRefillable: true,
+    setPrice: 2000+390, refillOnlyPrice: 390,
+    setItems: [
+      { id:'B0149', name:'クイックルワイパー本体', price:2000 },
+      { id:'S0081', name:'クイックルワイパー用ウエットシート 20枚', price:390 },
+    ],
+    refillItems: [{ id:'S0081', name:'クイックルワイパー用ウエットシート 20枚', price:390 }],
+    refillHostNote: 'クイックルワイパー本体はホスト様のご準備となります',
+  },
+  { id:'S0034', name:'殺虫剤（蚊・ハエ）アースジェット 450ml', price:480, min:1, unit:'本', cat:'室内', img:'https://m.media-amazon.com/images/I/71sEbMIRohL._AC_SL1500_.jpg', brand:'アース製薬' },
+  { id:'S0052', name:'凍殺殺虫剤（ゴキブリ）ゴキファイター 210ml', price:1200, min:1, unit:'本', cat:'室内', img:'https://m.media-amazon.com/images/I/61zTC7mNeTL._AC_SL1500_.jpg', brand:'フマキラー' },
+  { id:'B0124', name:'ハンガー 8本', price:120, min:1, unit:'組', cat:'室内', img:'https://www.ikea.com/jp/ja/images/products/bumerang-hanger-natural__0710666_pe727700_s5.jpg?f=xl', brand:'IKEA' },
 ];
 
-// 食器洗剤（3択）
-const DISH_SOAP_OPTIONS = [
-  { grade:'standard', label:'A: 本体ポンプ＋詰替', id:'S0155_SET', name:'キュキュット ポンプ本体＋業務用詰替 4.5L',
-    img:'https://m.media-amazon.com/images/I/41HoQN9MqRL._AC_.jpg',
-    items:[{id:'S0155',name:'キュキュット本体 480ml',price:500,min:1,unit:'本'},{id:'S0090',name:'食器洗剤業務用 4.5L',price:2880,min:1,unit:'本'}],
-    totalPrice:3380, description:'ポンプ式本体（キュキュット480ml）＋業務用詰替 4.5L', brand:'花王/キュキュット',
-    priceBreakdown: [{label:'本体ポンプ', price:500},{label:'業務用詰替', price:2880}],
-    hostNote: null },
-  { grade:'premium', label:'B: ステンレスディスペンサー＋詰替', id:'S0154_SET', name:'ステンレスディスペンサー＋業務用詰替 4.5L',
-    img:'https://m.media-amazon.com/images/I/61yHUrq13lL._AC_SL1280_.jpg',
-    items:[{id:'S0154',name:'ステンレスソープディスペンサー',price:2400,min:1,unit:'個'},{id:'S0090',name:'食器洗剤業務用 4.5L',price:2880,min:1,unit:'本'}],
-    totalPrice:5280, description:'ステンレスディスペンサー（HAMILO）＋業務用詰替 4.5L', brand:'HAMILO/花王',
-    priceBreakdown: [{label:'ディスペンサー', price:2400},{label:'業務用詰替', price:2880}],
-    hostNote: null },
-  { grade:'hostbottle', label:'C: 詰替のみ（ディスペンサーはホスト様準備）', id:'S0090_ONLY', name:'業務用詰替 4.5L のみ',
-    img:'https://m.media-amazon.com/images/I/81ago7Fw3EL._AC_SL1500_.jpg',
-    items:[{id:'S0090',name:'食器洗剤業務用 4.5L',price:2880,min:1,unit:'本'}],
-    totalPrice:2880, description:'業務用詰替 4.5L のみ。ディスペンサーはホスト様がご準備ください。', brand:'花王',
-    priceBreakdown: [{label:'業務用詰替', price:2880}],
-    hostNote: '⚠️ ディスペンサー・容器はホスト様のご準備となります' },
-];
-
-// セット品（本体+詰替を1行）
-const SET_ITEMS = {
-  // 初回必須セット（本体+詰替）
-  'B0164_S0176': { id:'B0164_S0176', name:'コロコロ本体＋スペア', price:1205, priceBase:725, priceRefill:480, min:1, unit:'セット', cat:'掃除', req:'必須', img:'https://m.media-amazon.com/images/I/61vgsCFJHEL._AC_SL1500_.jpg', brand:'レック', note:'本体+スペア3本' },
-  'B0172_S0177': { id:'B0172_S0177', name:'ファブリーズ本体＋詰替', price:2200, priceBase:600, priceRefill:1600, min:1, unit:'セット', cat:'掃除', req:'必須', img:'https://m.media-amazon.com/images/I/71BYhPXQPGL._AC_SL1500_.jpg', brand:'ファブリーズ', note:'本体370ml+詰替1280ml×4回分' },
-  'B0167_S0182': { id:'B0167_S0182', name:'バスマジックリン本体＋業務用4.5L', price:3850, priceBase:350, priceRefill:3500, min:1, unit:'セット', cat:'バス', req:'必須', img:'https://m.media-amazon.com/images/I/41+CiIrGt6L._AC_.jpg', brand:'花王', note:'本体350ml+業務用4.5L' },
-  'B0170_S0180': { id:'B0170_S0180', name:'カビキラー本体＋詰替業務1L', price:5180, priceBase:980, priceRefill:4200, min:1, unit:'セット', cat:'バス', req:'必須', img:'https://m.media-amazon.com/images/I/71q918lUgPL._AC_SL1500_.jpg', brand:'ジョンソン', note:'本体400g+業務詰替1L' },
-  'B0166_S0181': { id:'B0166_S0181', name:'トイレマジックリン本体＋業務用4.5L', price:3250, priceBase:450, priceRefill:2800, min:1, unit:'セット', cat:'トイレ', req:'必須', img:'https://m.media-amazon.com/images/I/81pm+06FAxL._AC_SL1500_.jpg', brand:'花王', note:'本体400ml+業務用4.5L' },
-  'B0055_S0056': { id:'B0055_S0056', name:'トイレ芳香剤本体＋詰替×6', price:2420, priceBase:490, priceRefill:1930, min:1, unit:'セット', cat:'トイレ', req:'必須', img:'https://m.media-amazon.com/images/I/81E7-6RFIfL._AC_SL1500_.jpg', brand:'ファブリーズ', note:'本体ケース+詰替6個' },
-  'B0169_S0178': { id:'B0169_S0178', name:'キッチンハイター本体＋詰替業務1L', price:1480, priceBase:780, priceRefill:700, min:1, unit:'セット', cat:'キッチン', req:'必須', img:'https://m.media-amazon.com/images/I/71-ifkHxscL._AC_SL1500_.jpg', brand:'花王', note:'本体1L+業務詰替1L' },
-  // 無印良品 芳香剤セット（香り選択）
-  'MUJI_citrus': { id:'MUJI_citrus', name:'無印良品 芳香剤セット シトラス（本体+詰替+スティック）', price:2600+2500+520, priceBase:2600, priceRefill:2500+520, min:1, unit:'セット', cat:'芳香',
-    img:'https://www.muji.com/public/media/img/item/4550583992316_org.jpg?im=Resize,width=1260', brand:'無印良品', note:'本体200ml + 詰替200ml + ラタンスティック6本' },
-  'MUJI_woody': { id:'MUJI_woody', name:'無印良品 芳香剤セット ウッディ（本体+詰替+スティック）', price:2600+2380+520, priceBase:2600, priceRefill:2380+520, min:1, unit:'セット', cat:'芳香',
-    img:'https://www.muji.com/public/media/img/item/4550583992217_org.jpg?im=Resize,width=1080', brand:'無印良品', note:'本体200ml + 詰替200ml + ラタンスティック6本' },
-  // トイレクイックル
-  'B0171_S0233': { id:'B0171_S0233', name:'トイレクイックル本体＋詰替', price:980, priceBase:650, priceRefill:330, min:1, unit:'セット', cat:'トイレ', req:'必須', img:'https://m.media-amazon.com/images/I/81XL5d0-TIL._SL1500_.jpg', brand:'花王', note:'本体10枚+詰替10枚' },
-  // 子供用シャンプー（ファミリー）
-  'B0032_S0033': { id:'B0032_S0033', name:'子供用シャンプー本体＋詰替', price:2250, priceBase:1050, priceRefill:1200, min:1, unit:'セット', cat:'バス', req:'ファミリー必須', img:'https://m.media-amazon.com/images/I/51AalXd6X1L._AC_SL1000_.jpg', brand:'ピジョン', note:'500ml本体+詰替800ml' },
-};
-
+// ================================================================
+// 全品目データ（各セクション用）
+// ================================================================
 const ITEMS = {
-  // ─── 初回必須セット消耗品 ───
-  'S0016': { id:'S0016', name:'水切りネット 30枚', price:250, min:2, unit:'個', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/71h3K-Lp8rL._AC_SL1500_.jpg', brand:'ダストマン' },
-  'S0153': { id:'S0153', name:'毎日とりかえスポンジ 15個', price:280, min:1, unit:'個', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/71p4Y1WcCoL._AC_SL1500_.jpg', brand:'KK物産' },
-  'S0184': { id:'S0184', name:'ゴミ袋 45L 50枚', price:650, min:1, unit:'個', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/71JLcf-yIsL._AC_SL1500_.jpg', brand:'日本サニパック' },
-  'S0047': { id:'S0047', name:'室内用ゴミ袋 10L 25枚', price:148, min:1, unit:'個', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/61RqgkfIMnL._AC_SL1300_.jpg', brand:'日本サニパック' },
-  'S0183': { id:'S0183', name:'トイレそうじシート 20枚', price:650, min:1, unit:'個', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/71o-y2jcyVS._AC_SL1500_.jpg', brand:'花王' },
-  'B0179': { id:'B0179', name:'マイクロファイバータオル 36枚', price:3700, min:1, unit:'個', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/71VpSDpg29L._AC_SL1500_.jpg', brand:'カークランド' },
-  'S0039': { id:'S0039', name:'アースジェット 殺虫スプレー 450ml', price:480, min:1, unit:'本', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/71sEbMIRohL._AC_SL1500_.jpg', brand:'アース製薬' },
-  'S0057': { id:'S0057', name:'ゴキブリ凍止ジェット 210ml', price:1200, min:1, unit:'本', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/61zTC7mNeTL._AC_SL1500_.jpg', brand:'フマキラー' },
-  'B0190': { id:'B0190', name:'バススポンジ 3個', price:250, min:1, unit:'個', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/51w-JKrc-3L._AC_.jpg', brand:'ノーブランド' },
-  // 洗濯洗剤・柔軟剤の詰替は初回必須（ボトルはホスト様準備）
-  'S0091': { id:'S0091', name:'洗濯洗剤詰替 2000ml（アタックZERO）', price:1980, min:1, unit:'本', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/81oDXh5sL5L._AC_SL1500_.jpg', brand:'花王', note:'詰替のみ。ボトルは次項でホスト様準備' },
-  'S0088': { id:'S0088', name:'柔軟剤詰替 1380ml（レノア）', price:1380, min:1, unit:'本', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/81cSWEbOhzL._AC_SL1500_.jpg', brand:'レノア', note:'詰替のみ。ボトルは次項でホスト様準備' },
-
-  // ─── バスアメニティ ───
-  'S0073': { id:'S0073', name:'ボディースポンジ', price:28, min:100, unit:'個', cat:'バス', req:'推奨', img:'https://www.sintoworld.jp/prod/images/prod_img/8000801.jpg#tp', brand:'ホテルアメニティ' },
-  'S0074': { id:'S0074', name:'コットンセット', price:21, min:100, unit:'セット', cat:'バス', img:'https://www.sintoworld.jp/prod/images/prod_img/8002510.jpg#tp', brand:'ホテルアメニティ' },
-  'S0075': { id:'S0075', name:'カミソリ', price:19, min:100, unit:'本', cat:'バス', img:'https://www.sintoworld.jp/prod/images/prod_img/8000705.jpg#tp', brand:'ホテルアメニティ' },
-  'S0076': { id:'S0076', name:'ヘアブラシ', price:25, min:100, unit:'本', cat:'バス', img:'https://www.sintoworld.jp/prod/images/prod_img/8060009.jpg#tp', brand:'ホテルアメニティ' },
-  'S0082': { id:'S0082', name:'スキンケアキット', price:140, min:100, unit:'セット', cat:'バス', img:'', brand:'ホテルアメニティ' },
-  'S0015': { id:'S0015', name:'フェイスタオル（使い捨て）', price:45, min:100, unit:'枚', cat:'バス', img:'https://jp.images-monotaro.com/Monotaro3/pi/full/mono57588589-200909-04.jpg', brand:'ホテルアメニティ' },
-  'S0081': { id:'S0081', name:'耳栓（ブラック）', price:18, min:100, unit:'双', cat:'バス', img:'https://www.sintoworld.jp/prod/images/prod_img/dummy.jpg#tp', brand:'ホテルアメニティ' },
-  'B0049': { id:'B0049', name:'水切りスキージー', price:580, min:1, unit:'本', cat:'バス', img:'https://m.media-amazon.com/images/I/518wPuwWBgS._AC_SL1500_.jpg', brand:'3M スコッチブライト' },
-  'B0163': { id:'B0163', name:'バスブラシ コンパクト', price:790, min:1, unit:'個', cat:'バス', req:'推奨', img:'https://m.media-amazon.com/images/I/61YeQkQPGZS._AC_SL1500_.jpg', brand:'3M スコッチブライト' },
-  'B0191': { id:'B0191', name:'排水溝ブラシ', price:380, min:1, unit:'個', cat:'バス', req:'推奨', img:'https://m.media-amazon.com/images/I/61nxH+7R4OL._AC_SL1000_.jpg', brand:'オーエ' },
-  'S0054': { id:'S0054', name:'パイプユニッシュ 800g', price:450, min:1, unit:'本', cat:'バス', img:'https://m.media-amazon.com/images/I/71LJsEX7zjL._AC_SL1500_.jpg', brand:'ジョンソン' },
-  'S0236': { id:'S0236', name:'カビキラー特大詰替 1000g', price:700, min:1, unit:'本', cat:'バス', img:'https://m.media-amazon.com/images/I/41iFDWrWkNL._AC_.jpg', brand:'ジョンソン' },
-
-  // ─── バス：ホスト様準備ボトル（洗濯・柔軟剤） ───
-  'B0093': { id:'B0093', name:'洗濯洗剤ボトル 1000ml', price:1120, min:1, unit:'個', cat:'バス', req:'必須', hostPrep:true, img:'https://m.media-amazon.com/images/I/41-u1qTKgwS._AC_SL1500_.jpg', brand:'サラサデザイン', note:'ホスト様準備。詰替は初回セットに含む' },
-  'B0094': { id:'B0094', name:'柔軟剤ボトル 1000ml', price:1120, min:1, unit:'個', cat:'バス', req:'必須', hostPrep:true, img:'https://m.media-amazon.com/images/I/41-u1qTKgwS._AC_SL1500_.jpg', brand:'サラサデザイン', note:'ホスト様準備。詰替は初回セットに含む' },
+  // ─── バスアメニティ（グレード以外） ───
+  'S0067': { id:'S0067', name:'ボディースポンジ', price:28, min:100, unit:'個', cat:'バス', req:'推奨', img:'https://www.sintoworld.jp/prod/images/prod_img/8000801.jpg#tp', brand:'ホテルアメニティ' },
+  'S0068': { id:'S0068', name:'コットンセット', price:21, min:100, unit:'セット', cat:'バス', img:'https://www.sintoworld.jp/prod/images/prod_img/8002510.jpg#tp', brand:'ホテルアメニティ' },
+  'S0069': { id:'S0069', name:'カミソリ', price:19, min:100, unit:'本', cat:'バス', img:'https://www.sintoworld.jp/prod/images/prod_img/8000705.jpg#tp', brand:'ホテルアメニティ' },
+  'S0070': { id:'S0070', name:'ヘアブラシ', price:25, min:100, unit:'本', cat:'バス', img:'https://www.sintoworld.jp/prod/images/prod_img/8060009.jpg#tp', brand:'ホテルアメニティ' },
+  'S0076': { id:'S0076', name:'スキンケアキット', price:140, min:100, unit:'セット', cat:'バス', img:'', brand:'ホテルアメニティ' },
+  'S0075': { id:'S0075', name:'耳栓（ブラック）', price:18, min:100, unit:'双', cat:'バス', img:'https://www.sintoworld.jp/prod/images/prod_img/dummy.jpg#tp', brand:'ホテルアメニティ' },
+  'B0044': { id:'B0044', name:'バス水切りワイパー 22cm', price:680, min:1, unit:'本', cat:'バス', img:'https://m.media-amazon.com/images/I/518wPuwWBgS._AC_SL1500_.jpg', brand:'アズマ' },
+  'B0150': { id:'B0150', name:'バスブラシ コンパクト', price:790, min:1, unit:'個', cat:'バス', req:'推奨', img:'https://m.media-amazon.com/images/I/61YeQkQPGZS._AC_SL1500_.jpg', brand:'3M スコッチブライト' },
+  'B0186': { id:'B0186', name:'バスブラシ（追加）', price:790, min:1, unit:'個', cat:'バス', img:'https://m.media-amazon.com/images/I/61YeQkQPGZS._AC_SL1500_.jpg', brand:'3M スコッチブライト' },
+  'S0049': { id:'S0049', name:'パイプユニッシュ 800g', price:590, min:1, unit:'本', cat:'バス', img:'https://m.media-amazon.com/images/I/71LJsEX7zjL._AC_SL1500_.jpg', brand:'ジョンソン' },
+  // ─── ファミリー対応（バス） ───
+  'B0027': { id:'B0027', name:'ベビー全身泡ソープ本体 500ml（ピジョン）', price:1050, min:1, unit:'本', cat:'バスファミリー', req:'ファミリー必須', img:'https://m.media-amazon.com/images/I/51AalXd6X1L._AC_SL1000_.jpg', brand:'PIGEON' },
+  'S0028': { id:'S0028', name:'ベビー全身泡ソープ詰め替え 800ml（ピジョン）', price:1200, min:1, unit:'本', cat:'バスファミリー', req:'ファミリー必須', img:'https://m.media-amazon.com/images/I/51yDOpI5JrL._AC_SL1000_.jpg', brand:'PIGEON' },
+  'S0071': { id:'S0071', name:'子供用アメニティセット', price:220, min:100, unit:'セット', cat:'バスファミリー', req:'ファミリー必須', img:'https://www.sintoworld.jp/prod/images/prod_img/JK-SET12.jpg#tp', brand:'ホテルアメニティ' },
+  'S0077': { id:'S0077', name:'子供用ボディスポンジ アヒル', price:27, min:100, unit:'個', cat:'バスファミリー', img:'', brand:'ホテルアメニティ' },
+  'S0078': { id:'S0078', name:'子供用歯ブラシ イエロー 250本', price:55, min:100, unit:'本', cat:'バスファミリー', img:'https://prospe.net/uploads/product/aa8fd3df526adebee5eb8d4fe3ecd0bf.jpg', brand:'ミスターフレンドリー' },
+  'S0079': { id:'S0079', name:'子供用歯ブラシ ブルー 250本', price:55, min:100, unit:'本', cat:'バスファミリー', img:'https://prospe.net/uploads/product/aa8fd3df526adebee5eb8d4fe3ecd0bf.jpg', brand:'ミスターフレンドリー' },
 
   // ─── トイレ ───
-  'S0048': { id:'S0048', name:'トイレットペーパー 3倍巻 12R', price:1480, min:1, unit:'個', cat:'トイレ', req:'必須', img:'https://m.media-amazon.com/images/I/71pWbjtiEgL._AC_SL1280_.jpg', brand:'日本製紙クレシア' },
-  'S0235': { id:'S0235', name:'トイレットペーパー 3倍巻 4R', price:600, min:1, unit:'個', cat:'トイレ', req:'必須', img:'https://m.media-amazon.com/images/I/71nhh8u7aYS._AC_SL1500_.jpg', brand:'スコッティ' },
-  'S0045': { id:'S0045', name:'サニタリー用ゴミ袋① 黒 20枚', price:150, min:1, unit:'個', cat:'トイレ', req:'必須', img:'https://m.media-amazon.com/images/I/71kXVVl9UpL._AC_SL1500_.jpg', brand:'セイケツネットワーク' },
-  'S0080': { id:'S0080', name:'サニタリー用ゴミ袋② 100枚', price:4, min:100, unit:'枚', cat:'トイレ', req:'必須', img:'', brand:'ホテルアメニティ' },
-  'S0011': { id:'S0011', name:'トイレ消臭スプレー 280ml', price:380, min:1, unit:'本', cat:'トイレ', req:'必須', img:'https://m.media-amazon.com/images/I/31JbXkKmDsL._AC_PIbundle-24,TopRight,0,0_SH20_.jpg', brand:'小林製薬' },
-  'S0135': { id:'S0135', name:'トイレ消臭スプレー 無香料', price:380, min:1, unit:'本', cat:'トイレ', req:'推奨', img:'https://m.media-amazon.com/images/I/71hmtvdm6vL._AC_SL1500_.jpg', brand:'エステー' },
-  'S0144': { id:'S0144', name:'消臭袋 20L 10枚', price:230, min:1, unit:'個', cat:'トイレ', img:'https://m.media-amazon.com/images/I/31I5YbsFqbL._AC_.jpg', brand:'日本サニパック' },
-  'S0080b': { id:'S0080b', name:'サニタリー用ゴミ袋 黒エンボス', price:180, min:1, unit:'個', cat:'トイレ', img:'https://jp.images-monotaro.com/Monotaro3/pi/full/mono56417856-170316-02.jpg', brand:'日本サニパック' },
-  'B0156': { id:'B0156', name:'ラバーカップ（スッポン）', price:1880, min:1, unit:'個', cat:'トイレ', req:'必須', hostPrep:true, img:'https://m.media-amazon.com/images/I/517zOgMevtL._AC_SY606_.jpg', brand:'ノーブランド' },
-  'B0165': { id:'B0165', name:'トイレブラシ ステンレス', price:2500, min:1, unit:'本', cat:'トイレ', req:'必須', hostPrep:true, img:'https://m.media-amazon.com/images/I/51qInLDfh5L._AC_SL1500_.jpg', brand:'TOURRAMIT' },
-  'S0183b': { id:'S0183b', name:'トイレそうじシート 20枚（追加）', price:650, min:1, unit:'個', cat:'トイレ', img:'https://m.media-amazon.com/images/I/71o-y2jcyVS._AC_SL1500_.jpg', brand:'花王' },
-  'S0234': { id:'S0234', name:'トイレマジックリン業務用4.5L', price:2800, min:1, unit:'本', cat:'トイレ', img:'https://m.media-amazon.com/images/I/41RUKBs3GQL._AC_.jpg', brand:'花王' },
+  'S0170': { id:'S0170', name:'トイレ用そうじシート KT20-M 20枚', price:650, min:1, unit:'個', cat:'トイレ', img:'https://m.media-amazon.com/images/I/71o-y2jcyVS._AC_SL1500_.jpg', brand:'花王' },
+  'S0226': { id:'S0226', name:'トイレマジックリン業務用 4.5L', price:2800, min:1, unit:'本', cat:'トイレ', img:'https://m.media-amazon.com/images/I/41RUKBs3GQL._AC_.jpg', brand:'花王' },
+  'S0227': { id:'S0227', name:'カビキラー特大 付替用 1,000g', price:700, min:1, unit:'個', cat:'トイレ', img:'https://m.media-amazon.com/images/I/41iFDWrWkNL._AC_.jpg', brand:'ジョンソン' },
+  'S0074': { id:'S0074', name:'サニタリー用ゴミ袋②（ホテルアメニティ）', price:4, min:100, unit:'枚', cat:'トイレ', img:'', brand:'ホテルアメニティ' },
 
-  // ─── キッチン調理器具 ───
-  'B0110': { id:'B0110', name:'包丁', price:1770, min:1, unit:'本', cat:'キッチン', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/ikea-365-cooks-knife-stainless-steel__0710388_pe727516_s5.jpg?f=xl', brand:'IKEA' },
-  'B0111': { id:'B0111', name:'鍋（IH対応）', price:3550, min:1, unit:'台', cat:'キッチン', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/hemlagad-pot-with-lid-non-stick-coating-black__1275892_pe930732_s5.jpg?f=xl', brand:'IKEA' },
-  'B0112': { id:'B0112', name:'まな板', price:1460, min:1, unit:'枚', cat:'キッチン', req:'必須', hostPrep:true, img:'https://m.media-amazon.com/images/I/6163IBveEeL._AC_SL1500_.jpg', brand:'IKEA' },
-  'B0113': { id:'B0113', name:'キッチンハサミ', price:190, min:1, unit:'本', cat:'キッチン', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/trojka-household-scissors-light-green__1215208_pe911920_s5.jpg?f=xl', brand:'IKEA' },
-  'B0114': { id:'B0114', name:'しゃもじ', price:150, min:1, unit:'本', cat:'キッチン', req:'必須', hostPrep:true, img:'https://www.ikea.com/pimg/0442900_pe594028_s5.jpg?f=xl', brand:'IKEA' },
-  'B0115': { id:'B0115', name:'フライ返し', price:710, min:1, unit:'本', cat:'キッチン', req:'推奨', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/knorrhane-spatula-light-beige-anthracite__1456027_pe992059_s5.jpg?f=xl', brand:'IKEA' },
-  'B0123': { id:'B0123', name:'トング', price:820, min:1, unit:'個', cat:'キッチン', req:'推奨', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/vardagen-cooking-tweezers-stainless-steel-beech__1300055_pe936938_s5.jpg?f=xl', brand:'IKEA' },
-  'B0124': { id:'B0124', name:'おたま', price:820, min:1, unit:'個', cat:'キッチン', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/vardagen-ladle-stainless-steel-beech__1300113_pe936944_s5.jpg?f=xl', brand:'IKEA' },
-  'B0125': { id:'B0125', name:'菜箸 2本', price:70, min:1, unit:'組', cat:'キッチン', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/saltad-chopsticks-2-pairs-bamboo__0487637_pe622655_s5.jpg?f=xl', brand:'IKEA' },
-  'B0126': { id:'B0126', name:'ピーラー', price:820, min:1, unit:'個', cat:'キッチン', req:'推奨', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/ikea-365-vaerdefull-peeler-black__0713021_pe729200_s5.jpg?f=xl', brand:'IKEA' },
-  'B0128': { id:'B0128', name:'ザル', price:1180, min:1, unit:'個', cat:'キッチン', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/idealisk-colander-stainless-steel__1057986_pe849096_s5.jpg?f=xl', brand:'IKEA' },
-  'B0129': { id:'B0129', name:'ボウル', price:1280, min:1, unit:'個', cat:'キッチン', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/blanda-blank-serving-bowl-stainless-steel__1245291_pe921567_s5.jpg?f=xl', brand:'IKEA' },
-  // キッチン消耗品
-  'S0053': { id:'S0053', name:'キッチンペーパー 4R', price:530, min:1, unit:'個', cat:'キッチン', req:'推奨', img:'https://m.media-amazon.com/images/I/71DFq0Yj-uL._AC_SL1500_.jpg', brand:'エリエール' },
-  'S0089': { id:'S0089', name:'キッチンラップ 30cm×50m', price:320, min:1, unit:'本', cat:'キッチン', req:'推奨', img:'https://m.media-amazon.com/images/I/61bUZiEwK+L._AC_SL1500_.jpg', brand:'宇部フィルム' },
-  'S0142': { id:'S0142', name:'アルミホイル 14m', price:280, min:1, unit:'本', cat:'キッチン', req:'推奨', img:'https://m.media-amazon.com/images/I/51WswV+MFwL._SL1000_.jpg', brand:'東洋アルミエコー' },
-  'S0173': { id:'S0173', name:'カウンタークロス 100枚', price:1500, min:1, unit:'個', cat:'キッチン', req:'推奨', img:'https://m.media-amazon.com/images/I/71m0wXG-UbL._AC_SL1500_.jpg', brand:'フジスーパー' },
-  'S0147': { id:'S0147', name:'冷蔵庫用脱臭剤 1年間', price:250, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/81Kmklv2m4L._AC_SL1500_.jpg', brand:'白元アース' },
-  'S0197': { id:'S0197', name:'マジックリン除菌プラス業務用 4.5L', price:2400, min:1, unit:'本', cat:'キッチン', img:'https://m.media-amazon.com/images/I/81ago7Fw3EL._AC_SL1500_.jpg', brand:'花王' },
-  'S0237': { id:'S0237', name:'がんこたわし コゲ落とし 3個', price:1180, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/81fko+MtF9L._AC_SL1500_.jpg', brand:'3M' },
-  'S0174': { id:'S0174', name:'ニトリル手袋 100枚', price:900, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/61g2wXe-QRL._AC_SX679_PIbundle-30,TopRight,0,0_SH20_.jpg', brand:'宇都宮製作' },
-  'B0168': { id:'B0168', name:'業務用ボトル注ぎ口キャップ', price:80, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/61ap5Jk5KQL._AC_SL1500_.jpg', brand:'花王' },
+  // ─── キッチン ───
+  'B0104': { id:'B0104', name:'包丁', price:1770, min:1, unit:'本', cat:'キッチン', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/ikea-365-cooks-knife-stainless-steel__0710388_pe727516_s5.jpg?f=xl', brand:'IKEA' },
+  'B0105': { id:'B0105', name:'鍋（IH対応）', price:3550, min:1, unit:'台', cat:'キッチン', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/hemlagad-pot-with-lid-non-stick-coating-black__1275892_pe930732_s5.jpg?f=xl', brand:'IKEA' },
+  'B0106': { id:'B0106', name:'まな板', price:1460, min:1, unit:'枚', cat:'キッチン', req:'必須', img:'https://m.media-amazon.com/images/I/6163IBveEeL._AC_SL1500_.jpg', brand:'IKEA' },
+  'B0107': { id:'B0107', name:'キッチンハサミ', price:190, min:1, unit:'本', cat:'キッチン', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/trojka-household-scissors-light-green__1215208_pe911920_s5.jpg?f=xl', brand:'IKEA' },
+  'B0108': { id:'B0108', name:'しゃもじ', price:150, min:1, unit:'本', cat:'キッチン', req:'必須', img:'https://www.ikea.com/pimg/0442900_pe594028_s5.jpg?f=xl', brand:'IKEA' },
+  'B0109': { id:'B0109', name:'フライ返し', price:710, min:1, unit:'本', cat:'キッチン', req:'推奨', img:'https://www.ikea.com/jp/ja/images/products/knorrhane-spatula-light-beige-anthracite__1456027_pe992059_s5.jpg?f=xl', brand:'IKEA' },
+  'B0117': { id:'B0117', name:'トング', price:820, min:1, unit:'個', cat:'キッチン', req:'推奨', img:'https://www.ikea.com/jp/ja/images/products/vardagen-cooking-tweezers-stainless-steel-beech__1300055_pe936938_s5.jpg?f=xl', brand:'IKEA' },
+  'B0118': { id:'B0118', name:'おたま', price:820, min:1, unit:'個', cat:'キッチン', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/vardagen-ladle-stainless-steel-beech__1300113_pe936944_s5.jpg?f=xl', brand:'IKEA' },
+  'B0119': { id:'B0119', name:'菜箸 2本', price:70, min:1, unit:'組', cat:'キッチン', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/saltad-chopsticks-2-pairs-bamboo__0487637_pe622655_s5.jpg?f=xl', brand:'IKEA' },
+  'B0120': { id:'B0120', name:'ピーラー', price:820, min:1, unit:'個', cat:'キッチン', req:'推奨', img:'https://www.ikea.com/jp/ja/images/products/ikea-365-vaerdefull-peeler-black__0713021_pe729200_s5.jpg?f=xl', brand:'IKEA' },
+  'B0122': { id:'B0122', name:'ザル', price:1180, min:1, unit:'個', cat:'キッチン', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/idealisk-colander-stainless-steel__1057986_pe849096_s5.jpg?f=xl', brand:'IKEA' },
+  'B0123': { id:'B0123', name:'ボウル', price:1280, min:1, unit:'個', cat:'キッチン', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/blanda-blank-serving-bowl-stainless-steel__1245291_pe921567_s5.jpg?f=xl', brand:'IKEA' },
+  'S0161': { id:'S0161', name:'使い捨て手袋 ニトリル L 100枚', price:900, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/61g2wXe-QRL._AC_SX679_PIbundle-30,TopRight,0,0_SH20_.jpg', brand:'宇都宮製作' },
+  'B0155': { id:'B0155', name:'業務用ボトル専用小分けキャップ（注ぎ口）', price:80, min:1, unit:'個', cat:'キッチン', img:'https://m.media-amazon.com/images/I/61ap5Jk5KQL._AC_SL1500_.jpg', brand:'花王' },
 
-  // ─── 食器・カトラリー ───
-  'B0107': { id:'B0107', name:'コップ 6個', price:180, min:1, unit:'組', cat:'食器', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/ikea-365-glass-clear-glass__0928958_pe790097_s5.jpg?f=xl', brand:'IKEA' },
-  'B0108': { id:'B0108', name:'ワイングラス 6個', price:220, min:1, unit:'組', cat:'食器', req:'推奨', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/svalka-wine-glass-clear-glass__1328247_pe944761_s5.jpg?f=xl', brand:'IKEA' },
-  'B0109': { id:'B0109', name:'マグカップ', price:380, min:1, unit:'個', cat:'食器', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/dinera-mug-dark-grey__0642538_pe701238_s5.jpg?f=xl', brand:'IKEA' },
-  'B0116': { id:'B0116', name:'皿（平皿）20cm 4枚', price:250, min:1, unit:'組', cat:'食器', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/faergklar-side-plate-matt-light-grey__1028037_pe835183_s5.jpg?f=xl', brand:'IKEA' },
-  'B0117': { id:'B0117', name:'皿（深皿）16cm 4枚', price:250, min:1, unit:'組', cat:'食器', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/faergklar-bowl-matt-light-turquoise__0958943_pe805525_s5.jpg?f=xl', brand:'IKEA' },
-  'B0101': { id:'B0101', name:'カトラリーケース', price:950, min:1, unit:'個', cat:'食器', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/uppdatera-cutlery-tray-white__0968812_pe810555_s5.jpg?f=xl', brand:'IKEA' },
-  'B0102': { id:'B0102', name:'カトラリーセット 4人分', price:500, min:1, unit:'組', cat:'食器', req:'必須', hostPrep:true, img:'https://www.ikea.com/pimg/0711361_pe728204_s5.jpg?f=xl', brand:'IKEA' },
-  'B0103': { id:'B0103', name:'フォーク 4本', price:90, min:1, unit:'組', cat:'食器', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/foernuft-fork-stainless-steel__0714592_pe730133_s5.jpg?f=xl', brand:'IKEA' },
-  'B0104': { id:'B0104', name:'ナイフ 4本', price:90, min:1, unit:'組', cat:'食器', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/foernuft-knife-stainless-steel__0714605_pe730140_s5.jpg?f=xl', brand:'IKEA' },
-  'B0105': { id:'B0105', name:'スプーン 4本', price:90, min:1, unit:'組', cat:'食器', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/foernuft-spoon-stainless-steel__0714606_pe730141_s5.jpg?f=xl', brand:'IKEA' },
-  'B0106': { id:'B0106', name:'ティースプーン 4本', price:90, min:1, unit:'組', cat:'食器', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/foernuft-teaspoon-stainless-steel__0714644_pe730142_s5.jpg?f=xl', brand:'IKEA' },
-  'B0118': { id:'B0118', name:'箸 4膳', price:90, min:1, unit:'組', cat:'食器', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/simpknot-chopsticks-4-pairs-grey__1166761_pe891254_s5.jpg?f=xl', brand:'IKEA' },
-  'B0127': { id:'B0127', name:'ワインオープナー', price:590, min:1, unit:'個', cat:'食器', req:'推奨', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/idealisk-corkscrew-silver-colour-matt__0713023_pe729202_s5.jpg?f=xl', brand:'IKEA' },
-  // ファミリー食器
-  'B0119': { id:'B0119', name:'子供用平皿 6枚', price:45, min:1, unit:'組', cat:'食器', req:'ファミリー必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/kalas-plate-mixed-colours__0998030_pe822920_s5.jpg?f=xl', brand:'IKEA' },
-  'B0120': { id:'B0120', name:'子供用ボウル 6個', price:45, min:1, unit:'組', cat:'食器', req:'ファミリー必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/kalas-bowl-mixed-colours__0998009_pe822911_s5.jpg?f=xl', brand:'IKEA' },
-  'B0121': { id:'B0121', name:'子供用コップ 6個', price:45, min:1, unit:'組', cat:'食器', req:'ファミリー必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/kalas-mug-mixed-colours__0998019_pe822917_s5.jpg?f=xl', brand:'IKEA' },
-  'B0122': { id:'B0122', name:'子供用カトラリー 6セット', price:45, min:1, unit:'組', cat:'食器', req:'ファミリー必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/kalas-18-piece-cutlery-set-mixed-colours__0998014_pe822915_s5.jpg?f=xl', brand:'IKEA' },
-  'S0077': { id:'S0077', name:'子供用アメニティセット', price:220, min:100, unit:'セット', cat:'食器', req:'ファミリー必須', img:'https://www.sintoworld.jp/prod/images/prod_img/JK-SET12.jpg#tp', brand:'ホテルアメニティ' },
-  'S0083': { id:'S0083', name:'子供用ボディスポンジ アヒル', price:27, min:100, unit:'個', cat:'食器', req:'ファミリー必須', img:'', brand:'ホテルアメニティ' },
-  'S0084': { id:'S0084', name:'子供用歯ブラシ イエロー', price:55, min:100, unit:'本', cat:'食器', req:'ファミリー必須', img:'https://prospe.net/uploads/product/aa8fd3df526adebee5eb8d4fe3ecd0bf.jpg', brand:'ミスターフレンドリー' },
-  'S0085': { id:'S0085', name:'子供用歯ブラシ ブルー', price:55, min:100, unit:'本', cat:'食器', req:'ファミリー必須', img:'https://prospe.net/uploads/product/aa8fd3df526adebee5eb8d4fe3ecd0bf.jpg', brand:'ミスターフレンドリー' },
-  'S0025': { id:'S0025', name:'おむつ消臭袋 SSサイズ 200枚', price:1200, min:1, unit:'個', cat:'食器', req:'ファミリー必須', img:'https://m.media-amazon.com/images/I/51g-pvTOQfL._AC_SL1000_.jpg', brand:'BOS' },
-  'B0031': { id:'B0031', name:'哺乳瓶洗い泡スプレー本体', price:780, min:1, unit:'本', cat:'食器', req:'ファミリー必須', img:'https://m.media-amazon.com/images/I/51lD9-3OZlL._AC_SL1000_.jpg', brand:'ピジョン' },
-  'S0029': { id:'S0029', name:'哺乳瓶洗浄剤 36錠', price:1680, min:1, unit:'個', cat:'食器', req:'ファミリー必須', img:'https://m.media-amazon.com/images/I/61URVzwOYzL._AC_SL1000_.jpg', brand:'Milton CP' },
+  // ─── 食器 ───
+  'B0101': { id:'B0101', name:'コップ 6個', price:180, min:1, unit:'組', cat:'食器', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/ikea-365-glass-clear-glass__0928958_pe790097_s5.jpg?f=xl', brand:'IKEA' },
+  'B0102': { id:'B0102', name:'ワイングラス 6個', price:220, min:1, unit:'組', cat:'食器', req:'推奨', img:'https://www.ikea.com/jp/ja/images/products/svalka-wine-glass-clear-glass__1328247_pe944761_s5.jpg?f=xl', brand:'IKEA' },
+  'B0103': { id:'B0103', name:'マグカップ', price:380, min:1, unit:'個', cat:'食器', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/dinera-mug-dark-grey__0642538_pe701238_s5.jpg?f=xl', brand:'IKEA' },
+  'B0110': { id:'B0110', name:'皿（平皿）20cm 4枚', price:250, min:1, unit:'組', cat:'食器', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/faergklar-side-plate-matt-light-grey__1028037_pe835183_s5.jpg?f=xl', brand:'IKEA' },
+  'B0111': { id:'B0111', name:'皿（深皿）16cm 4個', price:250, min:1, unit:'組', cat:'食器', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/faergklar-bowl-matt-light-turquoise__0958943_pe805525_s5.jpg?f=xl', brand:'IKEA' },
+  'B0121': { id:'B0121', name:'ワインオープナー', price:590, min:1, unit:'個', cat:'食器', req:'推奨', img:'https://www.ikea.com/jp/ja/images/products/idealisk-corkscrew-silver-colour-matt__0713023_pe729202_s5.jpg?f=xl', brand:'IKEA' },
+  // ─── 食器（子供用） ───
+  'B0113': { id:'B0113', name:'子供用平皿 6枚', price:45, min:1, unit:'組', cat:'食器子供', req:'ファミリー必須', img:'https://www.ikea.com/jp/ja/images/products/kalas-plate-mixed-colours__0998030_pe822920_s5.jpg?f=xl', brand:'IKEA' },
+  'B0114': { id:'B0114', name:'子供用ボウル 6個', price:45, min:1, unit:'組', cat:'食器子供', req:'ファミリー必須', img:'https://www.ikea.com/jp/ja/images/products/kalas-bowl-mixed-colours__0998009_pe822911_s5.jpg?f=xl', brand:'IKEA' },
+  'B0115': { id:'B0115', name:'子供用コップ 6個', price:45, min:1, unit:'組', cat:'食器子供', req:'ファミリー必須', img:'https://www.ikea.com/jp/ja/images/products/kalas-mug-mixed-colours__0998019_pe822917_s5.jpg?f=xl', brand:'IKEA' },
+  'B0116': { id:'B0116', name:'子供用カトラリー 6セット', price:45, min:1, unit:'組', cat:'食器子供', req:'ファミリー必須', img:'https://www.ikea.com/jp/ja/images/products/kalas-18-piece-cutlery-set-mixed-colours__0998014_pe822915_s5.jpg?f=xl', brand:'IKEA' },
+  // ─── 子供・ベビー衛生 ───
+  'S0020': { id:'S0020', name:'おむつ消臭袋 SSサイズ 200枚', price:1200, min:1, unit:'個', cat:'食器子供', req:'ファミリー必須', img:'https://m.media-amazon.com/images/I/51g-pvTOQfL._AC_SL1000_.jpg', brand:'BOS' },
+  'S0024': { id:'S0024', name:'哺乳瓶洗浄剤 36錠（Milton CP）', price:1680, min:1, unit:'個', cat:'食器子供', req:'ファミリー必須', img:'https://m.media-amazon.com/images/I/61URVzwOYzL._AC_SL1000_.jpg', brand:'Milton CP' },
+  'B0026': { id:'B0026', name:'哺乳びん洗い泡スプレー本体（ピジョン）', price:780, min:1, unit:'本', cat:'食器子供', req:'ファミリー必須', img:'https://m.media-amazon.com/images/I/51lD9-3OZlL._AC_SL1000_.jpg', brand:'PIGEON' },
+  'S0025': { id:'S0025', name:'哺乳びん洗い詰め替え 250ml（ピジョン）', price:680, min:1, unit:'本', cat:'食器子供', req:'ファミリー必須', img:'https://m.media-amazon.com/images/I/51eHts4B9xL._AC_SL1000_.jpg', brand:'PIGEON' },
+  'S0195': { id:'S0195', name:'赤ちゃん用純水 500ml×24本', price:146*24, min:1, unit:'ケース', cat:'食器子供', img:'https://m.media-amazon.com/images/I/71TFwav6bGL._AC_SL1500_.jpg', brand:'ピジョン' },
 
   // ─── 洗濯・掃除 ───
-  'B0130': { id:'B0130', name:'ハンガー 8本', price:120, min:1, unit:'組', cat:'洗濯', req:'必須', hostPrep:true, img:'https://www.ikea.com/jp/ja/images/products/bumerang-hanger-natural__0710666_pe727700_s5.jpg?f=xl', brand:'IKEA' },
-  'B0012': { id:'B0012', name:'ランドリーバッグ 90L', price:1380, min:1, unit:'個', cat:'洗濯', req:'推奨', hostPrep:true, img:'https://m.media-amazon.com/images/I/71CVL-o98iL._AC_SL1500_.jpg', brand:'Caroeas' },
-  'B0162': { id:'B0162', name:'クイックルワイパー本体', price:2000, min:1, unit:'本', cat:'掃除', req:'必須', hostPrep:true, img:'https://jp.images-monotaro.com/Monotaro3/pi/full/mono11749562-170407-02.jpg', brand:'3M スコッチブライト', note:'ホスト様準備。ウエットシートは初回セットに含む' },
-  'S0087': { id:'S0087', name:'クイックルワイパー用ウエットシート 20枚', price:280, min:1, unit:'パック', cat:'初回', req:'必須', img:'https://m.media-amazon.com/images/I/81Yzevrr8BL._AC_SL1500_.jpg', brand:'レック' },
-  'S0141': { id:'S0141', name:'消臭スプレー詰替 1L', price:1200, min:1, unit:'本', cat:'掃除', img:'https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg', brand:'清水香' },
-  'B0157': { id:'B0157', name:'ホウキちりとりセット', price:650, min:1, unit:'個', cat:'掃除', req:'推奨', hostPrep:true, img:'https://jp.daisonet.com/cdn/shop/products/6202193b4f7030247ea2e5f6fa0c4494_700x.jpg?v=1755581234', brand:'ダイソー' },
-  'B0158': { id:'B0158', name:'チリトリ', price:130, min:1, unit:'個', cat:'掃除', hostPrep:true, img:'https://jp.daisonet.com/cdn/shop/products/1iSRFl3wl5xVDmXj1AlfAwxIWuOXG4Up4_700x.jpg?v=1755682139', brand:'ダイソー' },
+  'B0124': { id:'B0124', name:'ハンガー 8本', price:120, min:1, unit:'組', cat:'洗濯', req:'必須', img:'https://www.ikea.com/jp/ja/images/products/bumerang-hanger-natural__0710666_pe727700_s5.jpg?f=xl', brand:'IKEA' },
+  'B0007': { id:'B0007', name:'ランドリーバッグ 90L', price:1380, min:1, unit:'個', cat:'洗濯', req:'推奨', img:'https://m.media-amazon.com/images/I/71CVL-o98iL._AC_SL1500_.jpg', brand:'Caroeas' },
+  'B0023': { id:'B0023', name:'ゴミストッカー', price:8500, min:1, unit:'個', cat:'洗濯', img:'https://m.media-amazon.com/images/I/517OoYkNLHL._AC_SL1500_.jpg', brand:'JEJアステージ' },
+  'S0240': { id:'S0240', name:'アタックZERO 大サイズ本体 580ml', price:790, min:1, unit:'本', cat:'洗濯', img:'', brand:'' },
+  'S0160': { id:'S0160', name:'カウンタークロス薄手 100枚', price:1500, min:1, unit:'個', cat:'掃除', req:'推奨', img:'https://m.media-amazon.com/images/I/71m0wXG-UbL._AC_SL1500_.jpg', brand:'フジスーパー' },
+  'B0146': { id:'B0146', name:'ホウキちりとりセット', price:650, min:1, unit:'個', cat:'掃除', req:'推奨', img:'https://jp.daisonet.com/cdn/shop/products/6202193b4f7030247ea2e5f6fa0c4494_700x.jpg?v=1755581234', brand:'ダイソー' },
+  'B0147': { id:'B0147', name:'チリトリ', price:130, min:1, unit:'個', cat:'掃除', img:'https://jp.daisonet.com/cdn/shop/products/1iSRFl3wl5xVDmXj1AlfAwxIWuOXG4Up4_700x.jpg?v=1755682139', brand:'ダイソー' },
+  'S0215': { id:'S0215', name:'クイックルジョアン 除菌スプレー本体', price:450, min:1, unit:'本', cat:'掃除', req:'推奨', img:'https://m.media-amazon.com/images/I/51Fy9jKd86L._AC_SL1000_.jpg', brand:'Joan' },
+  'S0216': { id:'S0216', name:'除菌スプレー詰め替え 630ml', price:600, min:1, unit:'袋', cat:'掃除', req:'推奨', img:'https://m.media-amazon.com/images/I/71NKmWr1kgL._AC_SL1500_.jpg', brand:'Joan' },
 
   // ─── 食品・飲料 ───
-  'S0036': { id:'S0036', name:'塩胡椒 100g', price:300, min:1, unit:'袋', cat:'食品', img:'https://m.media-amazon.com/images/I/71XbE2eQzyL._AC_SL1500_.jpg', brand:'S&B' },
-  'S0146': { id:'S0146', name:'塩（小袋）100袋', price:350, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/51iY4PpkTiL._AC_.jpg', brand:'伯方の塩' },
-  'S0050': { id:'S0050', name:'醤油（小袋）100袋', price:830, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/91sj8eXKqZL._AC_SL1500_.jpg', brand:'タカラ' },
-  'S0143': { id:'S0143', name:'炒め油 200ml', price:280, min:1, unit:'本', cat:'食品', img:'https://m.media-amazon.com/images/I/710i67fC3OL._AC_SL1500_.jpg', brand:'日清オイリオ' },
-  'S0218': { id:'S0218', name:'EXオリーブオイル ポーション 8g×50P', price:2190, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/71cq3nLvr9L._AC_SL1262_.jpg', brand:'そらみつ' },
-  'S0092': { id:'S0092', name:'砂糖（スティック）100本', price:380, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/61pa-vWTbUL._AC_SL1200_.jpg', brand:'三井製糖' },
-  'S0205': { id:'S0205', name:'コーヒー豆 2kg（500g×4袋）', price:1600, min:2, unit:'袋', cat:'食品', img:'https://m.media-amazon.com/images/I/61WJVG1J6cL._AC_SL1200_.jpg', brand:'ドリップコーヒーファクトリー' },
-  'S0207': { id:'S0207', name:'紅茶ティーバッグ 120袋', price:1750, min:1, unit:'箱', cat:'食品', img:'https://m.media-amazon.com/images/I/61GVTreVT4L._AC_SL1200_.jpg', brand:'リプトン' },
-  'S0208': { id:'S0208', name:'緑茶ティーバッグ 100個', price:1550, min:1, unit:'箱', cat:'食品', img:'https://m.media-amazon.com/images/I/71pHuwHKXZL._AC_SL1500_.jpg', brand:'茶つみの里' },
-  'S0059': { id:'S0059', name:'紙コップ 150ml 100個', price:500, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/810GHCfnjcL._AC_SL1500_.jpg', brand:'ヘイコー' },
-  'S0206': { id:'S0206', name:'コーヒーフィルター 75枚×4P', price:375, min:4, unit:'枚', cat:'食品', img:'https://m.media-amazon.com/images/I/713wA5ORBSL._AC_SL1500_.jpg', brand:'パール金属' },
-  'S0213': { id:'S0213', name:'天然水 500ml×24本', price:1590, min:1, unit:'ケース', cat:'食品', img:'https://m.media-amazon.com/images/I/51hwXLaE-8L._AC_SL1000_.jpg', brand:'Amazon' },
-  'S0209': { id:'S0209', name:'うまい棒 100本詰め合わせ', price:2660, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/A1sRJrU5RtL._AC_SL1500_.jpg', brand:'うまい棒' },
-  'S0217': { id:'S0217', name:'ボンタンアメ 10粒×10箱', price:1280, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/51cwdnrBXdL._AC_.jpg', brand:'セイカ食品' },
-  'S0215': { id:'S0215', name:'金ちゃんヌードル 12個', price:3280, min:1, unit:'ケース', cat:'食品', img:'https://m.media-amazon.com/images/I/410cPbkYzML._AC_.jpg', brand:'金ちゃんヌードル' },
-  'S0216': { id:'S0216', name:'ビーフカレー中辛 10個セット', price:1790, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/41deiQbHvrL._AC_.jpg', brand:'ニチレイ' },
-  'S0214': { id:'S0214', name:'ハタ鉱泉 瓶ラムネ 30本', price:3980, min:1, unit:'ケース', cat:'食品', img:'https://m.media-amazon.com/images/I/41iPLmha+cL._AC_.jpg', brand:'ハタ鉱泉' },
-  'S0219': { id:'S0219', name:'ウェルチ ピンクグレープフルーツ 8本', price:3700, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/81OjsGZcMQL._AC_SL1500_.jpg', brand:'アサヒ飲料' },
-  'S0210': { id:'S0210', name:'サントリー ウイスキー角瓶 700ml', price:2390, min:1, unit:'本', cat:'食品', img:'https://m.media-amazon.com/images/I/61bM6ZheZfL._SL1000_.jpg', brand:'サントリー' },
-  'S0211': { id:'S0211', name:'濃いめのレモンサワーの素 1800ml', price:2180, min:1, unit:'本', cat:'食品', img:'https://m.media-amazon.com/images/I/71Rega-sSfL._SL1500_.jpg', brand:'サッポロ' },
-  'S0220': { id:'S0220', name:'大吟醸 720ml×6本', price:6390, min:1, unit:'個', cat:'食品', img:'https://shop.r10s.jp/se-sake222/cabinet/sake_shouchu/sake_nihonshu1/12145x06.jpg', brand:'れいざん' },
-  'S0035': { id:'S0035', name:'サウナ用アロマオイル 白樺 400ml', price:2200, min:1, unit:'本', cat:'食品', img:'https://m.media-amazon.com/images/I/51l1rqF0+oL._AC_SL1200_.jpg', brand:'RENTO' },
+  'S0031': { id:'S0031', name:'塩胡椒 100g', price:300, min:1, unit:'袋', cat:'食品', img:'https://m.media-amazon.com/images/I/71XbE2eQzyL._AC_SL1500_.jpg', brand:'S&B エスビー食品' },
+  'S0032': { id:'S0032', name:'胡椒（小袋）200袋', price:1400, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/51FXqqeq70L._AC_.jpg', brand:'S&B エスビー食品' },
+  'S0045': { id:'S0045', name:'醤油（小袋）100袋', price:830, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/91sj8eXKqZL._AC_SL1500_.jpg', brand:'タカラ' },
+  'S0132': { id:'S0132', name:'炒め油 200g', price:280, min:1, unit:'本', cat:'食品', img:'https://m.media-amazon.com/images/I/710i67fC3OL._AC_SL1500_.jpg', brand:'日清オイリオ' },
+  'S0135': { id:'S0135', name:'塩（小袋）100袋', price:350, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/51iY4PpkTiL._AC_.jpg', brand:'伯方の塩' },
+  'S0213': { id:'S0213', name:'EXオリーブオイル ポーション 8g×50P', price:2190, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/71cq3nLvr9L._AC_SL1262_.jpg', brand:'そらみつ' },
+  'S0201': { id:'S0201', name:'うまい棒 100本詰め合わせ', price:2660, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/A1sRJrU5RtL._AC_SL1500_.jpg', brand:'うまい棒' },
+  'S0209': { id:'S0209', name:'ボンタンアメ 10粒×10箱', price:1280, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/51cwdnrBXdL._AC_.jpg', brand:'セイカ食品' },
+  'S0210': { id:'S0210', name:'金ちゃんヌードル 12個', price:3280, min:1, unit:'ケース', cat:'食品', img:'https://m.media-amazon.com/images/I/410cPbkYzML._AC_.jpg', brand:'金ちゃんヌードル' },
+  'S0211': { id:'S0211', name:'ビーフカレー中辛 10個セット', price:1790, min:1, unit:'個', cat:'食品', img:'https://m.media-amazon.com/images/I/41deiQbHvrL._AC_.jpg', brand:'ニチレイ' },
+  'S0238': { id:'S0238', name:'かき氷シロップ レインボー 7個', price:800, min:1, unit:'個', cat:'食品', img:'', brand:'' },
 
   // ─── 芳香・空間演出 ───
-  'B0026': { id:'B0026', name:'CULTI TESSUTO 1000mlディフューザー', price:12000, min:1, unit:'個', cat:'芳香', img:'https://m.media-amazon.com/images/I/31xl8cCqJ-L._AC_SL1001_.jpg', brand:'CULTI' },
-  'B0140': { id:'B0140', name:'ウッディーグリーン ディスペンサー（充填済）250ml', price:1680, min:1, unit:'個', cat:'芳香', img:'https://m.media-amazon.com/images/I/81LZrvMy4sL._AC_SL1500_.jpg', brand:'清水香' },
-  'B0148': { id:'B0148', name:'リードディフューザー 300ml ハピネスの香り', price:2000, min:1, unit:'個', cat:'芳香', img:'https://m.media-amazon.com/images/I/71zLtLdvW2L._AC_SL1500_.jpg', brand:'不二貿易' },
-  'B0149': { id:'B0149', name:'インテリアフレグランスオイル シトラス 200ml', price:2600, min:1, unit:'個', cat:'芳香', img:'https://www.muji.com/public/media/img/item/4550583992316_org.jpg?im=Resize,width=1260', brand:'無印良品' },
-  'S0151': { id:'S0151', name:'インテリアフレグランスオイル詰替 シトラス 200ml', price:2500, min:1, unit:'本', cat:'芳香', img:'https://www.muji.com/public/media/img/item/4550583992323_org.jpg?im=Resize,width=1080', brand:'無印良品' },
-  'S0152': { id:'S0152', name:'ラタンスティック 6本入', price:520, min:1, unit:'個', cat:'芳香', img:'https://www.muji.com/public/media/img/item/4550583992408_org.jpg?im=Resize,width=1080', brand:'無印良品' },
-  'S0229': { id:'S0229', name:'インテリアフレグランスオイル詰替 ウッディ 200ml', price:2380, min:1, unit:'本', cat:'芳香', img:'https://www.muji.com/public/media/img/item/4550583992217_org.jpg?im=Resize,width=1080', brand:'無印良品' },
-  'S0141': { id:'S0141', name:'消臭スプレー詰替 1L（清水香）', price:1200, min:1, unit:'本', cat:'芳香', img:'https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg', brand:'清水香' },
+  'B0021': { id:'B0021', name:'CULTI TESSUTO 1000ml ディフューザー', price:12000, min:1, unit:'個', cat:'芳香', img:'https://m.media-amazon.com/images/I/31xl8cCqJ-L._AC_SL1001_.jpg', brand:'CULTI' },
+  'B0137': { id:'B0137', name:'リードディフューザー 300ml ハピネスの香り', price:2000, min:1, unit:'個', cat:'芳香', img:'https://m.media-amazon.com/images/I/71zLtLdvW2L._AC_SL1500_.jpg', brand:'不二貿易' },
+  'B0129': { id:'B0129', name:'ウッディーグリーン ディスペンサー（充填済）250ml', price:1680, min:1, unit:'個', cat:'芳香', img:'https://m.media-amazon.com/images/I/81LZrvMy4sL._AC_SL1500_.jpg', brand:'清水香' },
+  'B0138': { id:'B0138', name:'インテリアフレグランスオイル シトラス 200ml', price:2600, min:1, unit:'個', cat:'芳香', img:'https://www.muji.com/public/media/img/item/4550583992316_org.jpg?im=Resize,width=1260', brand:'無印良品' },
+  'S0140': { id:'S0140', name:'フレグランスオイル詰め替え シトラス 200ml', price:2500, min:1, unit:'本', cat:'芳香', img:'https://www.muji.com/public/media/img/item/4550583992323_org.jpg?im=Resize,width=1080', brand:'無印良品' },
+  'S0221': { id:'S0221', name:'フレグランスオイル詰め替え ウッディ 200ml', price:2380, min:1, unit:'本', cat:'芳香', img:'https://www.muji.com/public/media/img/item/4550583992217_org.jpg?im=Resize,width=1080', brand:'無印良品' },
+  'S0141': { id:'S0141', name:'ラタンスティック 6本入', price:520, min:1, unit:'個', cat:'芳香', img:'https://www.muji.com/public/media/img/item/4550583992408_org.jpg?im=Resize,width=1080', brand:'無印良品' },
+  'S0245': { id:'S0245', name:'RENTOアロマオイル 白樺 400ml', price:2380, min:1, unit:'本', cat:'芳香', img:'https://m.media-amazon.com/images/I/51l1rqF0+oL._AC_SL1200_.jpg', brand:'RENTO' },
+  'S0246': { id:'S0246', name:'RENTOサウナフレグランス 森林 400ml', price:2380, min:1, unit:'本', cat:'芳香', img:'', brand:'RENTO' },
+  'S0247': { id:'S0247', name:'RENTOサウナフレグランス ユーカリ 400ml', price:2380, min:1, unit:'本', cat:'芳香', img:'', brand:'RENTO' },
+  'S0248': { id:'S0248', name:'RENTOサウナフレグランス ベリー 400ml', price:2380, min:1, unit:'本', cat:'芳香', img:'', brand:'RENTO' },
+
+  // ─── 害虫対策 ───
+  'S0035': { id:'S0035', name:'ゴキブリ捕獲器 ブラックキャップ 12個', price:880, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/71Fhfn+EICS._AC_SL1500_.jpg', brand:'アース製薬' },
+  'S0036': { id:'S0036', name:'殺虫剤（カメムシ用）ムシクリン 480ml', price:1980, min:1, unit:'本', cat:'その他', img:'https://m.media-amazon.com/images/I/61lfzF9qxOS._AC_SL1236_.jpg', brand:'イカリ消毒' },
+  'S0046': { id:'S0046', name:'カメムシスプレー 300ml', price:2580, min:1, unit:'本', cat:'その他', img:'https://m.media-amazon.com/images/I/61NY451CdiL._AC_SL1500_.jpg', brand:'テトラケア' },
+  'S0053': { id:'S0053', name:'凍殺殺虫剤（その他害虫）300ml', price:1300, min:1, unit:'本', cat:'その他', img:'https://m.media-amazon.com/images/I/61eZ6+iQcVL._AC_SL1500_.jpg', brand:'フマキラー' },
+  'S0254': { id:'S0254', name:'アースジェット ハチアブ 550ml', price:1380, min:1, unit:'本', cat:'その他', img:'', brand:'' },
 
   // ─── 電球・電池 ───
-  'S0185': { id:'S0185', name:'アルカリボタン電池 LR44 6個', price:700, min:1, unit:'個', cat:'電球電池', img:'https://m.media-amazon.com/images/I/6194HAI0QtL._AC_SL1500_.jpg', brand:'東芝' },
-  'S0186': { id:'S0186', name:'単1電池 4本', price:880, min:1, unit:'個', cat:'電球電池', img:'https://m.media-amazon.com/images/I/614UopWuUIL._AC_SL1500_.jpg', brand:'東芝' },
-  'S0187': { id:'S0187', name:'ボタン電池 CR2032 5個', price:880, min:1, unit:'個', cat:'電球電池', img:'https://m.media-amazon.com/images/I/71K+thogtRL._AC_SL1500_.jpg', brand:'東芝' },
-  'S0188': { id:'S0188', name:'単3電池 20本', price:1000, min:1, unit:'個', cat:'電球電池', img:'https://m.media-amazon.com/images/I/716aOzG8GQL._AC_SL1500_.jpg', brand:'東芝' },
-  'S0189': { id:'S0189', name:'ボタン電池 CR2025 5個', price:850, min:1, unit:'個', cat:'電球電池', img:'https://m.media-amazon.com/images/I/71w3VI0TuML._AC_SL1500_.jpg', brand:'東芝' },
-  'S0190': { id:'S0190', name:'単4電池 20本', price:1000, min:1, unit:'個', cat:'電球電池', img:'https://m.media-amazon.com/images/I/712INok2WPL._AC_SL1500_.jpg', brand:'東芝' },
-  'S0191': { id:'S0191', name:'LED電球 E26 60形相当 電球色', price:500, min:1, unit:'個', cat:'電球電池', img:'https://cache.ymall.jp/webcom/item/multiimage/500/7715184018_001.jpg', brand:'アイリスオーヤマ' },
-  'S0192': { id:'S0192', name:'LED電球 E26 60形相当 昼白色', price:500, min:1, unit:'個', cat:'電球電池', img:'https://cache.ymall.jp/webcom/item/multiimage/500/7715183011_001.jpg', brand:'アイリスオーヤマ' },
-  'S0193': { id:'S0193', name:'LED電球 E17 60形相当 電球色', price:600, min:1, unit:'個', cat:'電球電池', img:'https://tshop.r10s.jp/k-home/cabinet/07101816/imgrc0071399529.jpg?downsize=300:*', brand:'アイリスオーヤマ' },
-  'S0194': { id:'S0194', name:'LED電球 E17 60形相当 昼白色', price:600, min:1, unit:'個', cat:'電球電池', img:'https://tshop.r10s.jp/k-home/cabinet/07101816/imgrc0071399529.jpg?downsize=300:*', brand:'アイリスオーヤマ' },
+  'S0172': { id:'S0172', name:'アルカリボタン電池 LR44 6個', price:700, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/6194HAI0QtL._AC_SL1500_.jpg', brand:'東芝' },
+  'S0173': { id:'S0173', name:'単1電池 4本', price:880, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/614UopWuUIL._AC_SL1500_.jpg', brand:'東芝' },
+  'S0174': { id:'S0174', name:'ボタン電池 CR2032 10個', price:880, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/71K+thogtRL._AC_SL1500_.jpg', brand:'東芝' },
+  'S0175': { id:'S0175', name:'単3電池 20本', price:1000, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/716aOzG8GQL._AC_SL1500_.jpg', brand:'東芝' },
+  'S0176': { id:'S0176', name:'ボタン電池 CR2025 5個', price:850, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/71w3VI0TuML._AC_SL1500_.jpg', brand:'東芝' },
+  'S0177': { id:'S0177', name:'単4電池 20本', price:1000, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/712INok2WPL._AC_SL1500_.jpg', brand:'東芝' },
+  'S0178': { id:'S0178', name:'LED電球 E26 60形相当 電球色', price:500, min:1, unit:'個', cat:'その他', img:'https://cache.ymall.jp/webcom/item/multiimage/500/7715184018_001.jpg', brand:'アイリスオーヤマ' },
+  'S0179': { id:'S0179', name:'LED電球 E26 60形相当 昼白色', price:500, min:1, unit:'個', cat:'その他', img:'https://cache.ymall.jp/webcom/item/multiimage/500/7715183011_001.jpg', brand:'アイリスオーヤマ' },
+  'S0180': { id:'S0180', name:'LED電球 E17 60形相当 電球色', price:600, min:1, unit:'個', cat:'その他', img:'', brand:'アイリスオーヤマ' },
+  'S0181': { id:'S0181', name:'LED電球 E17 60形相当 昼白色', price:600, min:1, unit:'個', cat:'その他', img:'', brand:'アイリスオーヤマ' },
 
-  // ─── スキンケア ───
-  'B0064': { id:'B0064', name:'化粧水ディスペンサー', price:650, min:1, unit:'個', cat:'スキンケア', req:'推奨', hostPrep:true, img:'https://img21.shop-pro.jp/PA01473/149/product/163229981_o1.jpg?cmsp_timestamp=20210909111233', brand:'ホテルアメニティ' },
-  'B0065': { id:'B0065', name:'乳液ディスペンサー', price:650, min:1, unit:'個', cat:'スキンケア', req:'推奨', hostPrep:true, img:'https://img21.shop-pro.jp/PA01473/149/product/163229981_o1.jpg?cmsp_timestamp=20210909111233', brand:'ホテルアメニティ' },
-  'B0066': { id:'B0066', name:'クレンジングディスペンサー', price:650, min:1, unit:'個', cat:'スキンケア', req:'推奨', hostPrep:true, img:'https://img21.shop-pro.jp/PA01473/149/product/163229981_o1.jpg?cmsp_timestamp=20210909111233', brand:'ホテルアメニティ' },
-  'S0007': { id:'S0007', name:'化粧水 2L', price:6200, min:1, unit:'本', cat:'スキンケア', req:'推奨', img:'https://img21.shop-pro.jp/PA01473/149/product/163230225.jpg?cmsp_timestamp=20210909111541', brand:'マーガレット' },
-  'S0008': { id:'S0008', name:'乳液 2L', price:6200, min:1, unit:'本', cat:'スキンケア', req:'推奨', img:'https://img21.shop-pro.jp/PA01473/149/product/163229981.jpg?cmsp_timestamp=20210909111233', brand:'マーガレット' },
-  'S0009': { id:'S0009', name:'クレンジング 2L', price:6200, min:1, unit:'本', cat:'スキンケア', req:'推奨', img:'https://img21.shop-pro.jp/PA01473/149/product/163230279.jpg?cmsp_timestamp=20210909111918', brand:'マーガレット' },
+  // ─── 医療・安全 ───
+  'S0075_ear': { id:'S0075', name:'耳栓（ブラック）', price:18, min:100, unit:'双', cat:'その他', img:'https://www.sintoworld.jp/prod/images/prod_img/dummy.jpg#tp', brand:'ホテルアメニティ' },
+  'S0126': { id:'S0126', name:'絆創膏セット 100枚', price:780, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/711Wx5Fvu0L._AC_SL1500_.jpg', brand:'リバテープ製薬' },
 
-  // ─── レジャー・玩具（子供用） ───
-  'S0215': { id:'S0215', name:'飛行機グライダー工作キット 24個セット', price:1880, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/81s6feJ1cJL._AC_SL1500_.jpg', brand:'ディズニー' },
-  'S0216': { id:'S0216', name:'タケコプター玩具 10個セット', price:1290, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/71D-lRfqlxL._AC_SL1500_.jpg', brand:'小槌の竹とんぼ' },
+  // ─── 文具 ───
+  'S0019': { id:'S0019', name:'両面テープ Lサイズ 40枚（コマンドタブ）', price:800, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/71btB-W42KL._SL1500_.jpg', brand:'3M' },
+  'S0041': { id:'S0041', name:'ひっつき虫 粘着剤', price:800, min:1, unit:'セット', cat:'その他', img:'https://m.media-amazon.com/images/I/61ib716u8jL._SL1080_.jpg', brand:'コクヨ' },
+  'B0094': { id:'B0094', name:'クリアーファイル 茶', price:1680, min:1, unit:'冊', cat:'その他', img:'https://m.media-amazon.com/images/I/4141cY43lpL._AC_SL1000_.jpg', brand:'キングジム' },
+  'S0127': { id:'S0127', name:'ボールペン 10本', price:40*10, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/71yp7aS0kSL._AC_SL1500_.jpg', brand:'Mon amulette' },
 
-  // ─── BBQ ───
+  // ─── 履物 ───
+  'B0017': { id:'B0017', name:'屋外用スリッパ ブラック', price:600, min:1, unit:'足', cat:'その他', req:'推奨', img:'', brand:'TOKYO SLIPPER' },
+  'S0072': { id:'S0072', name:'スリッパ①使い捨て EPEダイヤ ダークグレー', price:55, min:100, unit:'足', cat:'その他', img:'https://www.sintoworld.jp/prod/images/prod_img/60452.jpg#tp', brand:'ホテルアメニティ' },
+  'S0073': { id:'S0073', name:'スリッパ②PS スーペリア白', price:130, min:100, unit:'足', cat:'その他', img:'https://www.sintoworld.jp/prod/images/prod_img/60033.jpg#tp', brand:'ホテルアメニティ' },
 
-  'B0019': { id:'B0019', name:'BBQ網', price:300, min:5, unit:'枚', cat:'BBQ', img:'https://m.media-amazon.com/images/I/61Kf1u5aUtL._AC_SL1000_.jpg', brand:'ゴジマル東京' },
-  'B0020': { id:'B0020', name:'耐熱アルミ皿 700ml', price:80, min:10, unit:'枚', cat:'BBQ', img:'https://m.media-amazon.com/images/I/71H8O0hUdeL._AC_SL1500_.jpg', brand:'ziureunt' },
-  'B0023': { id:'B0023', name:'ファイヤーグローブ', price:1100, min:1, unit:'双', cat:'BBQ', hostPrep:true, img:'https://m.media-amazon.com/images/I/71nV3H-oXiL._SL1500_.jpg', brand:'MinistoreDirect' },
-  'B0096': { id:'B0096', name:'炭ケース', price:1580, min:1, unit:'個', cat:'BBQ', hostPrep:true, img:'https://m.media-amazon.com/images/I/61pQc2UAoQL._AC_SL1500_.jpg', brand:'サンカ' },
-  'B0097': { id:'B0097', name:'BBQトング', price:550, min:1, unit:'個', cat:'BBQ', hostPrep:true, img:'https://m.media-amazon.com/images/I/61mpxzGVAmL._AC_SL1500_.jpg', brand:'CAPTAIN STAG' },
-  'B0098': { id:'B0098', name:'BBQ炭バサミ', price:460, min:1, unit:'個', cat:'BBQ', hostPrep:true, img:'https://m.media-amazon.com/images/I/610dGjWzhVL._AC_SL1500_.jpg', brand:'CAPTAIN STAG' },
-  'S0017': { id:'S0017', name:'着火剤', price:25, min:100, unit:'個', cat:'BBQ', img:'https://m.media-amazon.com/images/I/61j-8953VHL._AC_SL1200_.jpg', brand:'NorwegianStyle' },
-  'S0018': { id:'S0018', name:'チャッカマン', price:380, min:1, unit:'個', cat:'BBQ', img:'https://m.media-amazon.com/images/I/51GtwWfMBNL._AC_SL1500_.jpg', brand:'東海' },
-  'S0021': { id:'S0021', name:'Weberポータブルガス缶（OD缶）', price:1600, min:1, unit:'本', cat:'BBQ', img:'https://m.media-amazon.com/images/I/61WItLfiZDL._AC_SL1500_.jpg', brand:'Weber' },
-  'S0052': { id:'S0052', name:'最高級炭 5kg', price:2500, min:1, unit:'個', cat:'BBQ', img:'https://m.media-amazon.com/images/I/81wrcwBsEJL._AC_SL1500_.jpg', brand:'ベトナム産' },
-  'S0238': { id:'S0238', name:'スベリ止め軍手 12双', price:880, min:1, unit:'個', cat:'BBQ', img:'https://m.media-amazon.com/images/I/61mRO9CLKqL._AC_SL1000_.jpg', brand:'おたふく手袋' },
+  // ─── ペット用品 ───
+  'S0022': { id:'S0022', name:'ペットシーツ 薄型ワイド 400枚', price:4580, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/516pP3MXi0L._AC_SL1000_.jpg', brand:'HAMI PET' },
+  'S0037': { id:'S0037', name:'犬用おむつ S 30枚', price:1800, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/81UhjGKmi7L._AC_SL1500_.jpg', brand:'エリエール' },
+  'S0038': { id:'S0038', name:'犬用おむつ M 26枚', price:1800, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/81-zYiIXHHL._AC_SL1500_.jpg', brand:'エリエール' },
+  'S0134': { id:'S0134', name:'とって付ポリ袋 サニタリー用 50枚', price:180, min:1, unit:'個', cat:'その他', img:'https://jp.images-monotaro.com/Monotaro3/pi/full/mono56417856-170316-02.jpg', brand:'日本サニパック' },
 
-  // ─── その他・室内 ───
-  'B0022': { id:'B0022', name:'屋外用スリッパ（ブラック）', price:600, min:1, unit:'足', cat:'その他', req:'推奨', img:'', brand:'TOKYO SLIPPER' },
-  'S0078': { id:'S0078', name:'スリッパ①使い捨て EPEダイヤ', price:55, min:100, unit:'足', cat:'その他', img:'https://www.sintoworld.jp/prod/images/prod_img/60452.jpg#tp', brand:'ホテルアメニティ' },
-  'S0079': { id:'S0079', name:'スリッパ②PSスーペリア白', price:130, min:100, unit:'足', cat:'その他', img:'https://www.sintoworld.jp/prod/images/prod_img/60033.jpg#tp', brand:'ホテルアメニティ' },
-  'B0100': { id:'B0100', name:'レザークリアーファイル', price:1680, min:1, unit:'冊', cat:'その他', hostPrep:true, img:'https://m.media-amazon.com/images/I/4141cY43lpL._AC_SL1000_.jpg', brand:'キングジム' },
-  'S0134': { id:'S0134', name:'ボールペン', price:40, min:10, unit:'本', cat:'その他', img:'https://m.media-amazon.com/images/I/71yp7aS0kSL._AC_SL1500_.jpg', brand:'Mon amulette' },
-  'S0133': { id:'S0133', name:'絆創膏セット 100枚', price:780, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/711Wx5Fvu0L._AC_SL1500_.jpg', brand:'リバテープ製薬' },
-  'B0028': { id:'B0028', name:'ゴミストッカー', price:8500, min:1, unit:'個', cat:'その他', hostPrep:true, img:'https://m.media-amazon.com/images/I/517OoYkNLHL._AC_SL1500_.jpg', brand:'JEJアステージ' },
-  'B0195': { id:'B0195', name:'南京錠', price:980, min:1, unit:'個', cat:'その他', hostPrep:true, img:'https://m.media-amazon.com/images/I/51JYBr2CpnL._AC_SL1500_.jpg', brand:'ノーブランド' },
-  'S0040': { id:'S0040', name:'ゴキブリ捕獲器 ブラックキャップ 12個', price:880, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/71Fhfn+EICS._AC_SL1500_.jpg', brand:'アース製薬' },
-  'S0041': { id:'S0041', name:'カメムシ用殺虫剤 480ml', price:1980, min:1, unit:'本', cat:'その他', img:'https://m.media-amazon.com/images/I/61lfzF9qxOS._AC_SL1236_.jpg', brand:'イカリ消毒' },
-  'S0058': { id:'S0058', name:'凍殺ジェット（害虫全般）300ml', price:1300, min:1, unit:'本', cat:'その他', img:'https://m.media-amazon.com/images/I/61eZ6+iQcVL._AC_SL1500_.jpg', brand:'フマキラー' },
-  'S0204': { id:'S0204', name:'バイオエタノール 18L', price:8900, min:1, unit:'缶', cat:'その他', img:'https://m.media-amazon.com/images/I/61jMWj-BtRL._SL1000_.jpg', brand:'ヒロバゼロ' },
-  'S0010': { id:'S0010', name:'ペーパータオル 200枚', price:400, min:5, unit:'包', cat:'その他', img:'https://m.media-amazon.com/images/I/611VaRWfH+L._AC_SY300_SX300_QL70_ML2_.jpg', brand:'日本製紙クレシア' },
-  'S0027': { id:'S0027', name:'ペットシーツ 薄型ワイド 400枚', price:4580, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/516pP3MXi0L._AC_SL1000_.jpg', brand:'HAMI PET' },
-  'S0042': { id:'S0042', name:'犬用おむつ S 30枚', price:1800, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/81UhjGKmi7L._AC_SL1500_.jpg', brand:'エリエール' },
-  'S0043': { id:'S0043', name:'犬用おむつ M 26枚', price:1800, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/81-zYiIXHHL._AC_SL1500_.jpg', brand:'エリエール' },
+  // ─── キッズアメニティ ───
+  'S0207': { id:'S0207', name:'飛行機グライダー工作キット 24個セット', price:1880, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/81s6feJ1cJL._AC_SL1500_.jpg', brand:'ディズニー' },
+  'S0208': { id:'S0208', name:'タケコプター玩具 10個セット', price:1290, min:1, unit:'個', cat:'その他', img:'https://m.media-amazon.com/images/I/71D-lRfqlxL._AC_SL1500_.jpg', brand:'小槌の竹とんぼ' },
 };
-
-
-
-// ─── 初回必須セット品ID（固定・削除不可）───
-const MANDATORY_IDS = ['S0016','S0153','S0184','S0047','B0179','S0039','S0057','B0190','S0091','S0088','S0087','B0167_S0182','B0170_S0180','B0166_S0181','B0055_S0056','B0164_S0176','B0169_S0178'];
 
 // ================================================================
 // STATE
 // ================================================================
+let currentStep = 0;
 let state = {
-  currentStep: 0,
-  property: { name: '', number: '', contact: '' },
-  quantities: {},      // id -> qty (数量)
-  hostChoice: {},      // id -> 'cx9' | 'host'
-  gradeSelections: {
-    bath_amenity: 'standard',
-    toiletsheet: '',
-    toiletdeodor: '',
-    handsoap: 'standard',
-    toothbrush: 'standard',
-    dishsoap: 'standard',
-  },
-  gradeQty: {},        // gradeGroupId -> qty
-  webhookUrl: '', // ← 管理者はここにWebhook URLを直接設定可能
+  property: { name:'', rooms:1, webhook:'' },
+  // グレード選択状態 { groupId: { grade, refillMode } }
+  gradeSelections: {},
+  // 数量 { itemId: qty }
+  quantities: {},
 };
 
-// 初回必須セット自動投入
-function initMandatory() {
-  MANDATORY_IDS.forEach(id => {
-    if (!state.quantities[id]) {
-      const item = ITEMS[id] || SET_ITEMS[id];
-      if (item) state.quantities[id] = item.min;
-    }
-  });
-  // バスアメニティグループも初期値1
-  GRADE_GROUPS.forEach(g => {
-    if (!state.gradeQty[g.id]) state.gradeQty[g.id] = 1;
-  });
-}
-initMandatory();
+// グレードグループの初期化（デフォルトグレード設定）
+GRADE_GROUPS.forEach(g => {
+  state.gradeSelections[g.id] = { grade: g.defaultGrade, refillMode: 'set' };
+});
 
 // ================================================================
-// UTILS
+// HELPERS
 // ================================================================
-function getItemPrice(id) {
-  if (ITEMS[id]) return ITEMS[id].price;
-  if (SET_ITEMS[id]) return SET_ITEMS[id].price;
-  return 0;
+function fmt(n) { return '¥' + n.toLocaleString(); }
+
+function getGradeOption(groupId) {
+  const sel = state.gradeSelections[groupId];
+  const group = GRADE_GROUPS.find(g => g.id === groupId);
+  return group.options.find(o => o.grade === sel.grade);
 }
-function getItemMin(id) {
-  if (ITEMS[id]) return ITEMS[id].min;
-  if (SET_ITEMS[id]) return SET_ITEMS[id].min;
-  return 1;
+
+function getGradePrice(groupId) {
+  const sel = state.gradeSelections[groupId];
+  const opt = getGradeOption(groupId);
+  if (!opt) return 0;
+  const items = (sel.refillMode === 'refill' && opt.refillItems) ? opt.refillItems : opt.setItems;
+  return items.reduce((s, i) => s + i.price * i.qty, 0);
 }
 
 function calcTotal() {
   let total = 0;
-  // 通常品
-  for (const [id, qty] of Object.entries(state.quantities)) {
-    total += getItemPrice(id) * qty;
-  }
+  // 初回必須セット
+  ESSENTIAL_ITEMS.forEach(item => {
+    if (item.isRefillable) {
+      const mode = state.quantities['__refill_' + item.id] || 'set';
+      const price = mode === 'refill' ? item.refillOnlyPrice : item.setPrice;
+      const qty = state.quantities[item.id] || item.min;
+      total += price * qty;
+    } else {
+      const qty = state.quantities[item.id] || item.min;
+      total += item.price * qty;
+    }
+  });
   // グレードグループ
   GRADE_GROUPS.forEach(g => {
-    const qty = state.gradeQty[g.id] || 0;
-    const opt = g.options.find(o => o.grade === state.gradeSelections[g.id]);
-    if (opt && qty > 0) total += opt.totalPrice * qty;
+    total += getGradePrice(g.id);
   });
-  // 歯ブラシ
-  const tbGrade = state.gradeSelections.toothbrush;
-  const tbOpt = TOOTHBRUSH_OPTIONS.find(o => o.grade === tbGrade);
-  if (tbOpt && state.quantities['_toothbrush']) {
-    total += tbOpt.price * state.quantities['_toothbrush'];
-  }
-  // 食器洗剤
-  const dsGrade = state.gradeSelections.dishsoap;
-  const dsOpt = DISH_SOAP_OPTIONS.find(o => o.grade === dsGrade);
-  if (dsOpt && state.quantities['_dishsoap']) {
-    total += dsOpt.totalPrice * state.quantities['_dishsoap'];
-  }
-  // 無印芳香剤セット
-  ['MUJI_citrus','MUJI_woody'].forEach(id => {
-    const qty = state.quantities[id] || 0;
-    if (qty > 0 && SET_ITEMS[id]) total += SET_ITEMS[id].price * qty;
+  // 個別品目
+  Object.entries(state.quantities).forEach(([id, qty]) => {
+    if (id.startsWith('__')) return;
+    if (ITEMS[id]) total += ITEMS[id].price * qty;
   });
   return total;
 }
 
-function fmt(n) { return '¥' + Math.round(n).toLocaleString('ja-JP'); }
-
-// ================================================================
-// RENDER HELPERS
-// ================================================================
-function badgeHTML(req, hostPrep, isAuto) {
-  let html = '';
-  if (isAuto) html += `<span class="badge badge-auto">自動補充</span>`;
-  if (req === '必須') html += `<span class="badge badge-essential">必須</span>`;
-  else if (req === 'スタンダード必須') html += `<span class="badge badge-essential">必須</span>`;
-  else if (req === '推奨') html += `<span class="badge badge-recommended">推奨</span>`;
-  else if (req === 'ファミリー必須') html += `<span class="badge badge-family">ファミリー必須</span>`;
-  if (hostPrep) html += `<span class="badge badge-host">ホスト様準備可</span>`;
-  return html;
+function updateTotalDisplay() {
+  document.getElementById('nav-total').textContent = fmt(calcTotal());
 }
 
-function hostToggleHTML(id, hostPrep) {
-  if (!hostPrep) return '';
-  const choice = state.hostChoice[id] || 'cx9';
+// ================================================================
+// RENDER
+// ================================================================
+function render() {
+  const tabs = document.getElementById('progress-tabs');
+  tabs.innerHTML = STEPS.map((s, i) => {
+    let cls = 'tab-item';
+    if (i === currentStep) cls += ' active';
+    else if (i < currentStep) cls += ' done';
+    return `<div class="${cls}" onclick="goStep(${i})">${s}</div>`;
+  }).join('');
+  document.getElementById('step-label').textContent = `STEP ${currentStep+1} / ${STEPS.length}`;
+
+  const main = document.getElementById('main-content');
+  main.innerHTML = '';
+
+  switch(currentStep) {
+    case 0: renderPropertyStep(main); break;
+    case 1: renderEssentialStep(main); break;
+    case 2: renderBathAmenityStep(main); break;
+    case 3: renderToiletStep(main); break;
+    case 4: renderKitchenStep(main); break;
+    case 5: renderLaundryStep(main); break;
+    case 6: renderFoodStep(main); break;
+    case 7: renderFragranceStep(main); break;
+    case 8: renderOtherStep(main); break;
+    case 9: renderSummaryStep(main); break;
+  }
+
+  document.getElementById('btn-back').disabled = currentStep === 0;
+  document.getElementById('btn-next').textContent = currentStep === STEPS.length-1 ? '送信' : '次へ →';
+  updateTotalDisplay();
+  main.scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+// ─── STEP 0: 物件情報 ───
+function renderPropertyStep(el) {
+  el.innerHTML = `
+    <div class="section-head">
+      <div class="section-title">物件情報</div>
+      <div class="section-sub">発注先の物件情報を入力してください</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">物件名・物件番号</label>
+      <input class="form-input" id="inp-name" placeholder="例：0240 ○○荘" value="${state.property.name}" oninput="state.property.name=this.value" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">部屋数（ゲスト最大人数の目安）</label>
+      <input class="form-input" id="inp-rooms" type="number" min="1" max="20" value="${state.property.rooms}" oninput="state.property.rooms=parseInt(this.value)||1" />
+    </div>
+    <div class="notice-blue">
+      <strong>ℹ️ このフォームについて</strong><br>
+      初回・備品発注リストです。各ステップで必要な品目を確認・調整してください。<br>
+      「初回必須セット」は自動投入されます。グレード切替や本体/詰め替え選択も可能です。
+    </div>
+  `;
+}
+
+// ─── STEP 1: 初回必須セット ───
+function renderEssentialStep(el) {
+  const catGroups = {};
+  ESSENTIAL_ITEMS.forEach(item => {
+    if (!catGroups[item.cat]) catGroups[item.cat] = [];
+    catGroups[item.cat].push(item);
+  });
+
+  let html = `
+    <div class="section-head">
+      <div class="section-title">初回必須セット</div>
+      <div class="section-sub">以下の品目は初回発注に自動投入されます。数量調整や本体/詰め替え選択が可能です。</div>
+    </div>
+    <div class="notice">
+      <strong>⚠️ 注意</strong><br>
+      「詰め替えのみ」を選択した場合、本体・ボトル類はホスト様のご準備が必要です。アナウンスが表示されます。
+    </div>
+  `;
+
+  Object.entries(catGroups).forEach(([cat, items]) => {
+    html += `<div class="subsection"><div class="subsection-title">${cat}</div>`;
+    items.forEach(item => {
+      html += renderEssentialCard(item);
+    });
+    html += `</div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+function renderEssentialCard(item) {
+  const qty = state.quantities[item.id] || item.min;
+  const refillMode = state.quantities['__refill_' + item.id] || 'set';
+  const currentPrice = item.isRefillable
+    ? (refillMode === 'refill' ? item.refillOnlyPrice : item.setPrice)
+    : item.price;
+
+  let refillToggleHtml = '';
+  let hostNoteHtml = '';
+  if (item.isRefillable) {
+    refillToggleHtml = `
+      <div class="refill-toggle">
+        <button class="refill-btn ${refillMode==='set'?'active-set':''}" onclick="setRefillMode('${item.id}','set')">本体セット</button>
+        <button class="refill-btn ${refillMode==='refill'?'active-refill':''}" onclick="setRefillMode('${item.id}','refill')">詰め替えのみ</button>
+      </div>`;
+    if (refillMode === 'refill' && item.refillHostNote) {
+      hostNoteHtml = `<div class="host-prep-alert">⚠️ ホスト様準備：${item.refillHostNote}</div>`;
+    }
+  }
+
   return `
-    <div class="host-toggle">
-      <button class="host-btn ${choice==='cx9'?'active-cx9':''}" onclick="setHost('${id}','cx9')">弊社が自動補充</button>
-      <button class="host-btn ${choice==='host'?'active-host':''}" onclick="setHost('${id}','host')">ホスト様準備（補充なし）</button>
+    <div class="item-card mandatory-auto" id="card-${item.id}">
+      <img class="item-img" src="${item.img||''}" onerror="this.style.display='none'" />
+      <div class="item-body">
+        <div class="badge-row">
+          <span class="badge badge-auto">自動投入</span>
+          <span class="badge badge-essential">必須</span>
+          <span class="badge badge-id">${item.id}</span>
+        </div>
+        <div class="item-name">${item.name}</div>
+        <div class="item-meta">${item.brand || ''}</div>
+        <div class="item-price">${fmt(currentPrice * qty)}<span>×${qty}${item.unit}</span></div>
+        ${refillToggleHtml}
+        ${hostNoteHtml}
+      </div>
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty('${item.id}',1)">＋</button>
+        <div class="qty-num">${qty}</div>
+        <button class="qty-btn" onclick="changeQty('${item.id}',-1)" ${qty<=item.min?'disabled':''}>－</button>
+        <div class="qty-unit">${item.unit}</div>
+      </div>
     </div>`;
 }
 
-function hostNoteHTML(id, hostPrep, isAuto) {
-  if (isAuto) return `<div class="host-note auto-locked">🔒 自動補充対象（弊社管理）</div>`;
-  if (!hostPrep) return '';
-  const choice = state.hostChoice[id] || 'cx9';
-  if (choice === 'cx9') return `<div class="host-note cx9">✅ 弊社が自動補充します</div>`;
-  return `<div class="host-note host">⚠️ ホスト様が準備・補充してください</div>`;
+// ─── STEP 2: バスアメニティ ───
+function renderBathAmenityStep(el) {
+  let html = `
+    <div class="section-head">
+      <div class="section-title">バスアメニティ</div>
+      <div class="section-sub">グレードを選択してください。デフォルトはスタンダードです。</div>
+    </div>
+    <div class="notice-blue">
+      <strong>ℹ️ グレードについて</strong><br>
+      スタンダード（最小コスト）→ プレミアム → ミレニアム（最高グレード）の順です。<br>
+      「詰め替えのみ」を選択した場合、ボトル・ディスペンサーはホスト様のご準備が必要です。
+    </div>
+  `;
+
+  // グレードグループ（バス関連）
+  ['bath_amenity', 'handsoap', 'toothbrush'].forEach(gid => {
+    html += renderGradeGroupCard(gid);
+  });
+
+  // 個別バスアメニティ
+  html += `<div class="subsection"><div class="subsection-title">その他バスアメニティ</div>`;
+  ['S0067','S0068','S0069','S0070','S0076','S0075','B0044','B0150','S0049'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  // ファミリー対応
+  html += `<div class="subsection"><div class="subsection-title">ファミリー対応（子供用）</div>`;
+  ['B0027','S0028','S0071','S0077','S0078','S0079'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  el.innerHTML = html;
 }
 
-function itemCardHTML(id, opts = {}) {
-  const item = ITEMS[id] || SET_ITEMS[id];
-  if (!item) return '';
-  const isAuto = MANDATORY_IDS.includes(id);
-  const isMandatory = isAuto;
-  const hostChoice = state.hostChoice[id] || 'cx9';
-  const hidden = item.hostPrep && hostChoice === 'host' && !isAuto;
-  const qty = state.quantities[id] || 0;
-  const min = item.min || 1;
+// ─── STEP 3: トイレ用品 ───
+function renderToiletStep(el) {
+  let html = `
+    <div class="section-head">
+      <div class="section-title">トイレ用品</div>
+      <div class="section-sub">必須品目は初回セットに含まれています。追加品目を選択してください。</div>
+    </div>
+    <div class="subsection"><div class="subsection-title">追加品目</div>`;
+  ['S0170','S0226','S0227','S0074'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+// ─── STEP 4: キッチン・食器 ───
+function renderKitchenStep(el) {
+  let html = `
+    <div class="section-head">
+      <div class="section-title">キッチン・食器</div>
+      <div class="section-sub">調理器具・食器を選択してください。</div>
+    </div>
+  `;
+
+  // 食器洗剤グレード
+  html += renderGradeGroupCard('dish_soap');
+
+  html += `<div class="subsection"><div class="subsection-title">調理器具</div>`;
+  ['B0104','B0105','B0106','B0107','B0108','B0109','B0117','B0118','B0119','B0120','B0122','B0123'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">食器</div>`;
+  ['B0101','B0102','B0103','B0110','B0111','B0121'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">食器（子供用）</div>`;
+  ['B0113','B0114','B0115','B0116'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">子供・ベビー衛生</div>`;
+  ['S0020','S0024','B0026','S0025','S0195'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">その他キッチン消耗品</div>`;
+  ['S0161','B0155'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  el.innerHTML = html;
+}
+
+// ─── STEP 5: 洗濯・掃除 ───
+function renderLaundryStep(el) {
+  let html = `
+    <div class="section-head">
+      <div class="section-title">洗濯・掃除</div>
+      <div class="section-sub">洗濯洗剤・柔軟剤・掃除用品を選択してください。</div>
+    </div>
+  `;
+
+  html += renderGradeGroupCard('laundry_detergent');
+  html += renderGradeGroupCard('fabric_softener');
+  html += renderGradeGroupCard('deodorant_spray');
+
+  html += `<div class="subsection"><div class="subsection-title">洗濯関連用品</div>`;
+  ['B0124','B0007','B0023','S0240'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">掃除用品</div>`;
+  ['S0160','B0146','B0147','S0215','S0216'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  el.innerHTML = html;
+}
+
+// ─── STEP 6: 食品・飲料 ───
+function renderFoodStep(el) {
+  let html = `
+    <div class="section-head">
+      <div class="section-title">食品・飲料</div>
+      <div class="section-sub">調味料・軽食・飲料を選択してください。</div>
+    </div>
+    <div class="subsection"><div class="subsection-title">調味料</div>`;
+  ['S0031','S0032','S0045','S0132','S0135','S0213'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">軽食・お菓子</div>`;
+  ['S0201','S0209','S0210','S0211','S0238'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  el.innerHTML = html;
+}
+
+// ─── STEP 7: 芳香・空間演出 ───
+function renderFragranceStep(el) {
+  let html = `
+    <div class="section-head">
+      <div class="section-title">芳香・空間演出</div>
+      <div class="section-sub">ルームフレグランス・アロマ用品を選択してください。</div>
+    </div>
+    <div class="subsection"><div class="subsection-title">ルームフレグランス</div>`;
+  ['B0021','B0137','B0129','B0138','S0140','S0221','S0141'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">サウナ用アロマ</div>`;
+  ['S0245','S0246','S0247','S0248'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  el.innerHTML = html;
+}
+
+// ─── STEP 8: その他・オプション ───
+function renderOtherStep(el) {
+  let html = `
+    <div class="section-head">
+      <div class="section-title">その他・オプション</div>
+      <div class="section-sub">害虫対策・電球電池・文具・ペット用品などを選択してください。</div>
+    </div>
+    <div class="subsection"><div class="subsection-title">害虫対策</div>`;
+  ['S0035','S0036','S0046','S0053','S0254'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">電球・電池</div>`;
+  ['S0172','S0173','S0174','S0175','S0176','S0177','S0178','S0179','S0180','S0181'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">医療・安全</div>`;
+  ['S0075_ear','S0126'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">文具・備品</div>`;
+  ['S0019','S0041','B0094','S0127'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">履物</div>`;
+  ['B0017','S0072','S0073'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">ペット用品</div>`;
+  ['S0022','S0037','S0038','S0134'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  html += `<div class="subsection"><div class="subsection-title">キッズアメニティ</div>`;
+  ['S0207','S0208'].forEach(id => {
+    if (ITEMS[id]) html += renderItemCard(id);
+  });
+  html += `</div>`;
+
+  el.innerHTML = html;
+}
+
+// ─── STEP 9: 確認・送信 ───
+function renderSummaryStep(el) {
+  let rows = '';
+  let total = 0;
+
+  // 初回必須セット
+  ESSENTIAL_ITEMS.forEach(item => {
+    const qty = state.quantities[item.id] || item.min;
+    const refillMode = state.quantities['__refill_' + item.id] || 'set';
+    const price = item.isRefillable
+      ? (refillMode === 'refill' ? item.refillOnlyPrice : item.setPrice)
+      : item.price;
+    const subtotal = price * qty;
+    total += subtotal;
+    const modeLabel = item.isRefillable ? (refillMode==='refill' ? '詰め替えのみ' : '本体セット') : '';
+    rows += `<div class="summary-row">
+      <div class="summary-name">${item.name}${modeLabel ? ` <span style="font-size:10px;color:var(--amber)">[${modeLabel}]</span>` : ''}</div>
+      <div class="summary-qty">×${qty}${item.unit}</div>
+      <div class="summary-price">${fmt(subtotal)}</div>
+    </div>`;
+  });
+
+  // グレードグループ
+  GRADE_GROUPS.forEach(g => {
+    const sel = state.gradeSelections[g.id];
+    const opt = getGradeOption(g.id);
+    if (!opt) return;
+    const items = (sel.refillMode === 'refill' && opt.refillItems) ? opt.refillItems : opt.setItems;
+    const price = items.reduce((s, i) => s + i.price * i.qty, 0);
+    total += price;
+    const modeLabel = (sel.refillMode === 'refill') ? '詰め替えのみ' : '本体セット';
+    rows += `<div class="summary-row">
+      <div class="summary-name">${g.name}（${opt.label}）<span style="font-size:10px;color:var(--amber)"> [${modeLabel}]</span></div>
+      <div class="summary-qty">1セット</div>
+      <div class="summary-price">${fmt(price)}</div>
+    </div>`;
+  });
+
+  // 個別品目
+  Object.entries(state.quantities).forEach(([id, qty]) => {
+    if (id.startsWith('__') || !ITEMS[id] || qty === 0) return;
+    const item = ITEMS[id];
+    const subtotal = item.price * qty;
+    total += subtotal;
+    rows += `<div class="summary-row">
+      <div class="summary-name">${item.name}</div>
+      <div class="summary-qty">×${qty}${item.unit}</div>
+      <div class="summary-price">${fmt(subtotal)}</div>
+    </div>`;
+  });
+
+  // ホスト様準備リスト
+  let hostPrepList = [];
+  ESSENTIAL_ITEMS.forEach(item => {
+    const refillMode = state.quantities['__refill_' + item.id] || 'set';
+    if (item.isRefillable && refillMode === 'refill' && item.refillHostNote) {
+      hostPrepList.push(item.refillHostNote);
+    }
+  });
+  GRADE_GROUPS.forEach(g => {
+    const sel = state.gradeSelections[g.id];
+    const opt = getGradeOption(g.id);
+    if (!opt) return;
+    if (sel.refillMode === 'refill' && opt.refillHostNote) {
+      hostPrepList.push(`【${g.name}】${opt.refillHostNote}`);
+    } else if (opt.hostPrepNote) {
+      hostPrepList.push(`【${g.name}】${opt.hostPrepNote}`);
+    }
+  });
+
+  let hostPrepHtml = '';
+  if (hostPrepList.length > 0) {
+    hostPrepHtml = `
+      <div class="notice" style="margin-top:16px;">
+        <strong>⚠️ ホスト様準備が必要な品目</strong><br>
+        ${hostPrepList.map(n => `・${n}`).join('<br>')}
+      </div>`;
+  }
+
+  el.innerHTML = `
+    <div class="section-head">
+      <div class="section-title">確認・送信</div>
+      <div class="section-sub">発注内容を確認してください</div>
+    </div>
+    <div class="summary-card">${rows}</div>
+    <div class="summary-total">
+      <div class="total-label">合計金額（目安）</div>
+      <div class="total-amount">${fmt(total)}</div>
+    </div>
+    ${hostPrepHtml}
+    <div class="form-group" style="margin-top:20px;">
+      <label class="form-label">Webhook URL（任意）</label>
+      <input class="form-input" id="inp-webhook" placeholder="https://..." value="${state.property.webhook}" oninput="state.property.webhook=this.value" />
+    </div>
+    <div class="submit-info">内容を確認の上、送信ボタンを押してください</div>
+    <button class="submit-btn" onclick="submitOrder()">発注データを送信</button>
+  `;
+}
+
+// ================================================================
+// GRADE GROUP CARD
+// ================================================================
+function renderGradeGroupCard(groupId) {
+  const group = GRADE_GROUPS.find(g => g.id === groupId);
+  if (!group) return '';
+  const sel = state.gradeSelections[groupId];
+  const opt = getGradeOption(groupId);
+  const price = getGradePrice(groupId);
+
+  const optBtns = group.options.map(o =>
+    `<button class="grade-opt-btn ${sel.grade===o.grade?'active':''}" onclick="setGrade('${groupId}','${o.grade}')">${o.label}</button>`
+  ).join('');
+
+  let refillToggle = '';
+  if (opt && opt.hasRefillOption) {
+    refillToggle = `
+      <div class="refill-toggle" style="margin-top:10px;">
+        <button class="refill-btn ${sel.refillMode==='set'?'active-set':''}" onclick="setGradeRefill('${groupId}','set')">本体セット</button>
+        <button class="refill-btn ${sel.refillMode==='refill'?'active-refill':''}" onclick="setGradeRefill('${groupId}','refill')">詰め替えのみ</button>
+      </div>`;
+  }
+
+  let hostNoteHtml = '';
+  if (opt) {
+    if (sel.refillMode === 'refill' && opt.refillHostNote) {
+      hostNoteHtml = `<div class="host-prep-alert">⚠️ ホスト様準備：${opt.refillHostNote}</div>`;
+    } else if (opt.hostPrepNote) {
+      hostNoteHtml = `<div class="host-prep-alert">⚠️ ホスト様準備：${opt.hostPrepNote}</div>`;
+    }
+  }
+
+  const gradeLabels = { standard:'スタンダード', premium:'プレミアム', millennium:'ミレニアム' };
+  const badgeClass = sel.grade === 'millennium' ? 'badge-millennium' : sel.grade === 'premium' ? 'badge-premium' : 'badge-standard';
 
   return `
-    <div class="item-card ${qty > 0 ? 'selected' : ''} ${isAuto ? 'mandatory-auto' : ''}" id="card-${id.replace(/[^a-z0-9]/gi,'_')}">
-      <img class="item-img" src="${item.img || 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23f1f5f9%22/%3E%3Ctext%20x%3D%2232%22%20y%3D%2228%22%20text-anchor%3D%22middle%22%20font-size%3D%228%22%20fill%3D%22%2394a3b8%22%3ENO%3C/text%3E%3Ctext%20x%3D%2232%22%20y%3D%2240%22%20text-anchor%3D%22middle%22%20font-size%3D%228%22%20fill%3D%22%2394a3b8%22%3EIMG%3C/text%3E%3C/svg%3E'}" loading="lazy" referrerpolicy="no-referrer"
-        onerror="this.onerror=null;this.style.padding='0';this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23f1f5f9%22/%3E%3Ctext%20x%3D%2232%22%20y%3D%2228%22%20text-anchor%3D%22middle%22%20font-size%3D%228%22%20fill%3D%22%2394a3b8%22%3ENO%3C/text%3E%3Ctext%20x%3D%2232%22%20y%3D%2240%22%20text-anchor%3D%22middle%22%20font-size%3D%228%22%20fill%3D%22%2394a3b8%22%3EIMG%3C/text%3E%3C/svg%3E'"
-        alt="${item.name}" />
+    <div class="grade-card selected" id="grade-${groupId}">
+      <div class="badge-row">
+        <span class="badge badge-auto">自動投入</span>
+        <span class="badge badge-essential">必須</span>
+        <span class="badge ${badgeClass}">${gradeLabels[sel.grade]||sel.grade}</span>
+      </div>
+      <div class="grade-name">${group.name}</div>
+      <div class="grade-options">${optBtns}</div>
+      <div class="grade-detail">
+        <img class="grade-img" src="${opt?opt.img:''}" onerror="this.style.display='none'" />
+        <div class="grade-info">
+          <div style="font-size:12px;color:var(--text-sub);margin-bottom:4px;">${opt?opt.brand:''}</div>
+          <div style="font-size:12px;margin-bottom:6px;">${opt?opt.description:''}</div>
+          <div class="grade-price">${fmt(price)}</div>
+          <div class="grade-price-sub">1セット分</div>
+        </div>
+      </div>
+      ${refillToggle}
+      ${hostNoteHtml}
+    </div>`;
+}
+
+// ================================================================
+// ITEM CARD
+// ================================================================
+function renderItemCard(id) {
+  const item = ITEMS[id];
+  if (!item) return '';
+  const qty = state.quantities[id] || 0;
+  const isSelected = qty > 0;
+
+  let reqBadge = '';
+  if (item.req === '必須') reqBadge = `<span class="badge badge-essential">必須</span>`;
+  else if (item.req === '推奨') reqBadge = `<span class="badge badge-recommended">推奨</span>`;
+  else if (item.req === 'ファミリー必須') reqBadge = `<span class="badge badge-family">ファミリー必須</span>`;
+
+  return `
+    <div class="item-card ${isSelected?'selected':''}" id="card-${id}" onclick="toggleItem('${id}')">
+      <img class="item-img" src="${item.img||''}" onerror="this.style.display='none'" />
       <div class="item-body">
         <div class="badge-row">
-          <span class="badge badge-id">${id}</span>
-          ${badgeHTML(item.req, item.hostPrep, isAuto)}
+          ${reqBadge}
+          <span class="badge badge-id">${item.id}</span>
         </div>
         <div class="item-name">${item.name}</div>
         <div class="item-meta">${item.brand||''}</div>
-        ${item.priceBase !== undefined ? `
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:baseline;margin-top:4px;">
-          <div style="font-size:11px;color:var(--text-sub);">本体 <span style="font-family:var(--mono);font-weight:700;color:var(--text);font-size:13px;">${fmt(item.priceBase)}</span></div>
-          <div style="font-size:10px;color:var(--text-sub);">＋</div>
-          <div style="font-size:11px;color:var(--text-sub);">詰替 <span style="font-family:var(--mono);font-weight:700;color:var(--text);font-size:13px;">${fmt(item.priceRefill)}</span></div>
-          <div style="font-size:10px;color:var(--text-sub);">=</div>
-          <div class="item-price" style="margin-top:0;">${fmt(item.price)}<span>/ セット</span></div>
-        </div>` : `<div class="item-price">${fmt(item.price)}<span>× 最小${min}${item.unit}</span></div>`}
-        ${hostNoteHTML(id, item.hostPrep, isAuto)}
-        ${!isAuto ? hostToggleHTML(id, item.hostPrep) : ''}
+        <div class="item-price">${fmt(item.price)}<span>/ ${item.unit}（最小${item.min}${item.unit}）</span></div>
       </div>
-      <div class="qty-control">
-        <button class="qty-btn" onclick="changeQty('${id}',1)" ${hidden ? 'disabled' : ''}>+</button>
-        <div class="qty-num">${hidden ? '—' : qty}</div>
+      <div class="qty-control" onclick="event.stopPropagation()">
+        <button class="qty-btn" onclick="changeQty('${id}',1)">＋</button>
+        <div class="qty-num">${qty}</div>
+        <button class="qty-btn" onclick="changeQty('${id}',-1)" ${qty<=0?'disabled':''}>－</button>
         <div class="qty-unit">${item.unit}</div>
-        <button class="qty-btn" onclick="changeQty('${id}',-1)" ${isMandatory || qty <= 0 || hidden ? 'disabled' : ''}>−</button>
       </div>
     </div>`;
 }
-
-function gradeGroupHTML(group) {
-  const sel = state.gradeSelections[group.id];
-  const opt = group.options.find(o => o.grade === sel);
-  const qty = state.gradeQty[group.id] || 0;
-  const btns = group.options.map(o =>
-    `<button class="grade-opt-btn ${sel===o.grade?'active':''}" onclick="setGrade('${group.id}','${o.grade}')">${o.label}</button>`
-  ).join('');
-  return `
-    <div class="grade-card ${qty>0?'selected':''}">
-      <div class="grade-label">グレード選択</div>
-      <div class="grade-name">${group.name}</div>
-      <div class="grade-options">${btns}</div>
-      <div class="grade-detail">
-        <img class="grade-img" src="${opt.img}" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2256%22%20height%3D%2256%22%3E%3Crect%20width%3D%2256%22%20height%3D%2256%22%20fill%3D%22%23f1f5f9%22/%3E%3Ctext%20x%3D%2228%22%20y%3D%2224%22%20text-anchor%3D%22middle%22%20font-size%3D%227%22%20fill%3D%22%2394a3b8%22%3ENO%3C/text%3E%3Ctext%20x%3D%2228%22%20y%3D%2235%22%20text-anchor%3D%22middle%22%20font-size%3D%227%22%20fill%3D%22%2394a3b8%22%3EIMG%3C/text%3E%3C/svg%3E'" />
-        <div class="grade-info">
-          <div class="badge-row"><span class="badge badge-essential">必須</span><span class="badge badge-id">${opt.brand}</span></div>
-          <div class="badge-row" style="margin-bottom:4px;">${opt.items ? opt.items.map(i=>`<span class="badge badge-id">${i.id}</span>`).join('') : ''}</div>
-          <div class="item-name" style="font-size:12px;">${opt.description}</div>
-          ${opt.priceBreakdown ? `<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:baseline;margin-top:4px;">
-            ${opt.priceBreakdown.map(b => `<span style="font-size:10px;color:var(--text-sub);">${b.label} <strong style="font-family:var(--mono);color:var(--text);font-size:12px;">¥${b.price.toLocaleString()}</strong></span>`).join('<span style="font-size:10px;color:var(--text-sub);">＋</span>')}
-            <span style="font-size:10px;color:var(--text-sub);">＝</span>
-          </div>` : ''}
-          <div class="grade-price">${fmt(opt.totalPrice)}<span style="font-size:10px;font-weight:400;color:#6b7280;margin-left:4px;">/ セット</span></div>
-        </div>
-        <div class="qty-control">
-          <button class="qty-btn" onclick="changeGradeQty('${group.id}',1)">+</button>
-          <div class="qty-num">${qty}</div>
-          <div class="qty-unit">セット</div>
-          <button class="qty-btn" onclick="changeGradeQty('${group.id}',-1)" ${qty<=0?'disabled':''}>−</button>
-        </div>
-      </div>
-    </div>`;
-}
-
-function toothbrushHTML() {
-  const sel = state.gradeSelections.toothbrush;
-  const opt = TOOTHBRUSH_OPTIONS.find(o => o.grade === sel);
-  const qty = state.quantities['_toothbrush'] || 0;
-  const btns = TOOTHBRUSH_OPTIONS.map(o =>
-    `<button class="grade-opt-btn ${sel===o.grade?'active':''}" onclick="setGrade('toothbrush','${o.grade}')">${o.label}</button>`
-  ).join('');
-  return `
-    <div class="grade-card ${qty>0?'selected':''}">
-      <div class="grade-label">グレード選択</div>
-      <div class="grade-name">歯ブラシ</div>
-      <div class="grade-options">${btns}</div>
-      <div class="grade-detail">
-        <img class="grade-img" src="${opt.img}" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2256%22%20height%3D%2256%22%3E%3Crect%20width%3D%2256%22%20height%3D%2256%22%20fill%3D%22%23f1f5f9%22/%3E%3Ctext%20x%3D%2228%22%20y%3D%2224%22%20text-anchor%3D%22middle%22%20font-size%3D%227%22%20fill%3D%22%2394a3b8%22%3ENO%3C/text%3E%3Ctext%20x%3D%2228%22%20y%3D%2235%22%20text-anchor%3D%22middle%22%20font-size%3D%227%22%20fill%3D%22%2394a3b8%22%3EIMG%3C/text%3E%3C/svg%3E'" />
-        <div class="grade-info">
-          <div class="badge-row"><span class="badge badge-essential">必須</span><span class="badge badge-id">${opt.brand}</span></div>
-          <div class="badge-row" style="margin-bottom:4px;"><span class="badge badge-id">${opt.id}</span></div>
-          <div class="item-name" style="font-size:12px;">${opt.name}</div>
-          <div class="grade-price">${fmt(opt.price)}<span style="font-size:10px;font-weight:400;color:#6b7280;margin-left:4px;">/ ${opt.min}${opt.unit}</span></div>
-        </div>
-        <div class="qty-control">
-          <button class="qty-btn" onclick="changeQty('_toothbrush',1,${opt.min})">+</button>
-          <div class="qty-num">${qty}</div>
-          <div class="qty-unit">${opt.unit}</div>
-          <button class="qty-btn" onclick="changeQty('_toothbrush',-1,${opt.min})" ${qty<=0?'disabled':''}>−</button>
-        </div>
-      </div>
-    </div>`;
-}
-
-function dishSoapHTML() {
-  const sel = state.gradeSelections.dishsoap;
-  const opt = DISH_SOAP_OPTIONS.find(o => o.grade === sel);
-  const qty = state.quantities['_dishsoap'] || 0;
-  const btns = DISH_SOAP_OPTIONS.map(o =>
-    `<button class="grade-opt-btn ${sel===o.grade?'active':''}" onclick="setGrade('dishsoap','${o.grade}')" style="font-size:10px;">${o.label}</button>`
-  ).join('');
-  if (!opt) return `
-    <div class="grade-card">
-      <div class="grade-label">選択してください（必須）</div>
-      <div class="grade-name">食器用洗剤</div>
-      <div class="grade-options" style="flex-direction:column;gap:4px;">${btns}</div>
-    </div>`;
-  return `
-    <div class="grade-card ${qty>0?'selected':''}">
-      <div class="grade-label">選択してください（必須）</div>
-      <div class="grade-name">食器用洗剤</div>
-      <div class="grade-options" style="flex-direction:column;gap:4px;">${btns}</div>
-      <div class="grade-detail" style="margin-top:12px;">
-        <img class="grade-img" src="${opt.img}" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2256%22%20height%3D%2256%22%3E%3Crect%20width%3D%2256%22%20height%3D%2256%22%20fill%3D%22%23f1f5f9%22/%3E%3Ctext%20x%3D%2228%22%20y%3D%2224%22%20text-anchor%3D%22middle%22%20font-size%3D%227%22%20fill%3D%22%2394a3b8%22%3ENO%3C/text%3E%3Ctext%20x%3D%2228%22%20y%3D%2235%22%20text-anchor%3D%22middle%22%20font-size%3D%227%22%20fill%3D%22%2394a3b8%22%3EIMG%3C/text%3E%3C/svg%3E'" />
-        <div class="grade-info">
-          <div class="badge-row"><span class="badge badge-essential">必須</span><span class="badge badge-id">${opt.brand}</span></div>
-          <div class="badge-row" style="margin-bottom:4px;">${opt.items ? opt.items.map(i=>`<span class="badge badge-id">${i.id}</span>`).join('') : ''}</div>
-          <div class="item-name" style="font-size:12px;">${opt.description}</div>
-          ${opt.hostNote ? `<div style="font-size:10px;color:var(--amber);background:var(--amber-light);padding:4px 8px;border-radius:6px;margin-top:4px;">${opt.hostNote}</div>` : ''}
-          ${opt.priceBreakdown ? `<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:baseline;margin-top:4px;">
-            ${opt.priceBreakdown.map(b => `<span style="font-size:10px;color:var(--text-sub);">${b.label} <strong style="font-family:var(--mono);color:var(--text);font-size:12px;">¥${b.price.toLocaleString()}</strong></span>`).join('<span style="font-size:10px;color:var(--text-sub);">＋</span>')}
-            <span style="font-size:10px;color:var(--text-sub);">＝</span>
-          </div>` : ''}
-          <div class="grade-price">${fmt(opt.totalPrice)}<span style="font-size:10px;font-weight:400;color:#6b7280;margin-left:4px;">/ セット</span></div>
-        </div>
-        <div class="qty-control">
-          <button class="qty-btn" onclick="changeQty('_dishsoap',1)">+</button>
-          <div class="qty-num">${qty}</div>
-          <div class="qty-unit">セット</div>
-          <button class="qty-btn" onclick="changeQty('_dishsoap',-1)" ${qty<=0?'disabled':''}>−</button>
-        </div>
-      </div>
-    </div>`;
-}
-
 
 // ================================================================
-// VALIDATION
+// ACTIONS
 // ================================================================
-// ホスト様準備不可の必須品目ID一覧（hostPrep:true でないもので req:'必須'）
-function getMandatoryNonHostItems() {
-  const results = [];
-  // 通常品（ファミリー必須は除外）
-  for (const [id, item] of Object.entries(ITEMS)) {
-    if ((item.req === '必須' || item.req === 'スタンダード必須') && !item.hostPrep) {
-      results.push({ id, name: item.name });
+function toggleItem(id) {
+  const item = ITEMS[id];
+  if (!item) return;
+  if ((state.quantities[id] || 0) === 0) {
+    state.quantities[id] = item.min;
+  } else {
+    state.quantities[id] = 0;
+  }
+  render();
+}
+
+function changeQty(id, delta) {
+  // 初回必須セット品目
+  const essItem = ESSENTIAL_ITEMS.find(i => i.id === id);
+  if (essItem) {
+    const cur = state.quantities[id] || essItem.min;
+    const next = cur + delta;
+    if (next >= essItem.min) {
+      state.quantities[id] = next;
+      // カードの数量表示だけ更新（再レンダリングせず）
+      const numEl = document.querySelector(`#card-${id} .qty-num`);
+      const minusBtn = document.querySelector(`#card-${id} .qty-btn:last-of-type`);
+      const priceEl = document.querySelector(`#card-${id} .item-price`);
+      if (numEl) numEl.textContent = next;
+      if (minusBtn) minusBtn.disabled = next <= essItem.min;
+      if (priceEl) {
+        const refillMode = state.quantities['__refill_' + id] || 'set';
+        const price = essItem.isRefillable
+          ? (refillMode === 'refill' ? essItem.refillOnlyPrice : essItem.setPrice)
+          : essItem.price;
+        priceEl.innerHTML = `${fmt(price * next)}<span>×${next}${essItem.unit}</span>`;
+      }
     }
+    updateTotalDisplay();
+    return;
   }
-  // セット品（ファミリー必須は除外）
-  for (const [id, item] of Object.entries(SET_ITEMS)) {
-    if ((item.req === '必須' || item.req === 'スタンダード必須') && !item.hostPrep) {
-      results.push({ id, name: item.name });
-    }
-  }
-  return results;
-}
-
-function validateMandatory() {
-  const missing = [];
-  const mandatoryItems = getMandatoryNonHostItems();
-
-  for (const { id, name } of mandatoryItems) {
-    const qty = state.quantities[id] || 0;
-    if (qty <= 0) missing.push(name);
-  }
-
-  // トイレ掃除シートはどちらか選択必須
-  const toiletSheetSel = state.gradeSelections['toiletsheet'];
-  if (!toiletSheetSel) missing.push('トイレ掃除シート（どちらか選択）');
-
-  // トイレットペーパーはどちらか選択必須
-  const tpSel = state.gradeSelections['toiletpaper'];
-  if (!tpSel) missing.push('トイレットペーパー（どちらか選択）');
-
-  // トイレ消臭スプレーはどちらか選択必須
-  const toiletDeodoSel = state.gradeSelections['toiletdeodor'];
-  if (!toiletDeodoSel) missing.push('トイレ消臭スプレー（どちらか選択）');
-
-  // サニタリー袋はどちらか選択必須
-  const sanSel = state.gradeSelections['sanitary'];
-  if (!sanSel) missing.push('サニタリー用ゴミ袋（どちらか選択）');
-
-  // ティッシュはどちらか選択必須
-  const tissueSel = state.gradeSelections['tissue'];
-  if (!tissueSel) missing.push('ティッシュペーパー（どちらか選択）');
-
-  // 室内消臭スプレーはどちらか選択必須
-  const roomDeodSel = state.gradeSelections['roomdeodor'];
-  if (!roomDeodSel) missing.push('室内消臭スプレー（ファブリーズ or 清水香）');
-
-  // グレードグループ（必須扱い）は数量1以上必要
-  GRADE_GROUPS.forEach(g => {
-    const qty = state.gradeQty[g.id] || 0;
-    if (qty <= 0) missing.push(g.name);
-  });
-
-  // 歯ブラシ
-  if (!state.quantities['_toothbrush'] || state.quantities['_toothbrush'] <= 0) {
-    missing.push('歯ブラシ');
-  }
-
-  // 食器洗剤
-  if (!state.quantities['_dishsoap'] || state.quantities['_dishsoap'] <= 0) {
-    missing.push('食器用洗剤セット');
-  }
-
-  return missing;
-}
-
-function showValidationError(missing) {
-  const existing = document.getElementById('validation-toast');
-  if (existing) existing.remove();
-
-  const toast = document.createElement('div');
-  toast.id = 'validation-toast';
-  toast.style.cssText = `
-    position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
-    max-width:640px; width:calc(100% - 32px);
-    background:#fef2f2; border:1.5px solid #fca5a5; border-radius:14px;
-    padding:14px 16px; z-index:300; box-shadow:0 4px 20px rgba(0,0,0,.12);
-    animation: slideUp .3s ease;
-  `;
-  toast.innerHTML = `
-    <div style="font-weight:700;color:#dc2626;font-size:13px;margin-bottom:8px;">⚠️ 以下の必須項目が未入力です</div>
-    <ul style="margin:0;padding-left:16px;font-size:12px;color:#7f1d1d;line-height:1.8;">
-      ${missing.map(n => `<li>${n}</li>`).join('')}
-    </ul>
-    <div style="font-size:10px;color:#ef4444;margin-top:8px;">各ステップに戻って数量を入力してください</div>
-  `;
-  document.body.appendChild(toast);
-  setTimeout(() => { if (toast.parentNode) toast.remove(); }, 6000);
-}
-
-// ================================================================
-// EVENT HANDLERS
-// ================================================================
-function changeQty(id, delta, customMin) {
-  const min = customMin || getItemMin(id);
-  const isMandatory = MANDATORY_IDS.includes(id);
-  if (isMandatory && delta < 0) return;
+  // 通常品目
+  const item = ITEMS[id];
+  if (!item) return;
   const cur = state.quantities[id] || 0;
-  const next = Math.max(0, cur + delta * min);
-  if (next === 0) delete state.quantities[id];
-  else state.quantities[id] = next;
-  render();
+  const next = Math.max(0, cur + delta * item.min);
+  state.quantities[id] = next;
+  const numEl = document.querySelector(`#card-${id} .qty-num`);
+  const minusBtn = document.querySelector(`#card-${id} .qty-btn:last-of-type`);
+  const card = document.getElementById('card-' + id);
+  if (numEl) numEl.textContent = next;
+  if (minusBtn) minusBtn.disabled = next <= 0;
+  if (card) {
+    if (next > 0) card.classList.add('selected');
+    else card.classList.remove('selected');
+  }
+  updateTotalDisplay();
 }
 
-function changeGradeQty(groupId, delta) {
-  const cur = state.gradeQty[groupId] || 0;
-  state.gradeQty[groupId] = Math.max(0, cur + delta);
-  render();
+function setRefillMode(itemId, mode) {
+  state.quantities['__refill_' + itemId] = mode;
+  // 該当カードだけ再描画
+  const essItem = ESSENTIAL_ITEMS.find(i => i.id === itemId);
+  if (essItem) {
+    const card = document.getElementById('card-' + itemId);
+    if (card) card.outerHTML = renderEssentialCard(essItem);
+  }
+  updateTotalDisplay();
 }
 
 function setGrade(groupId, grade) {
-  state.gradeSelections[groupId] = grade;
-  render();
-}
-
-function selectTP(type) {
-  delete state.quantities['S0235'];
-  delete state.quantities['S0048'];
-  const mapped = type === 'a' ? '4r' : (type === 'b' ? '12r' : type);
-  state.gradeSelections['toiletpaper'] = mapped;
-  if (mapped === '4r') state.quantities['S0235'] = 1;
-  else state.quantities['S0048'] = 1;
-  render();
-}
-
-function selectSanitary(type) {
-  delete state.quantities['S0045'];
-  delete state.quantities['S0080'];
-  const mapped = type === 'a' ? 'black' : (type === 'b' ? 'hotel' : type);
-  state.gradeSelections['sanitary'] = mapped;
-  if (mapped === 'black') state.quantities['S0045'] = 1;
-  else state.quantities['S0080'] = 100;
-  render();
-}
-
-function selectToiletDeodor(type) {
-  delete state.quantities['S0011'];
-  delete state.quantities['S0135'];
-  state.gradeSelections['toiletdeodor'] = type;
-  if (type === 'a') state.quantities['S0011'] = 1;
-  else state.quantities['S0135'] = 1;
-  render();
-}
-
-function selectToiletSheet(type) {
-  delete state.quantities['B0171_S0233'];
-  delete state.quantities['S0183'];
-  state.gradeSelections['toiletsheet'] = type;
-  if (type === 'set') state.quantities['B0171_S0233'] = 1;
-  else state.quantities['S0183'] = 1;
-  render();
-}
-
-function selectRoomDeodor(type) {
-  delete state.quantities['B0172_S0177'];
-  delete state.quantities['S0141'];
-  state.gradeSelections['roomdeodor'] = type;
-  if (type === 'fab') state.quantities['B0172_S0177'] = 1;
-  else state.quantities['S0141'] = 1;
-  render();
-}
-
-function selectMuji(type) {
-  delete state.quantities['MUJI_citrus'];
-  delete state.quantities['MUJI_woody'];
-  state.gradeSelections['muji_fragrance'] = type;
-  if (type === 'citrus') state.quantities['MUJI_citrus'] = 1;
-  else state.quantities['MUJI_woody'] = 1;
-  render();
-}
-
-function selectTissue(type) {
-  delete state.quantities['S0044'];
-  delete state.quantities['S0150'];
-  state.gradeSelections['tissue'] = type;
-  if (type === 'box') state.quantities['S0044'] = 1;
-  else state.quantities['S0150'] = 5;
-  render();
-}
-
-function setHost(id, choice) {
-  state.hostChoice[id] = choice;
-  if (choice === 'host') {
-    delete state.quantities[id];
+  state.gradeSelections[groupId].grade = grade;
+  // プレミアムは詰め替えオプションなし→setに戻す
+  const opt = GRADE_GROUPS.find(g=>g.id===groupId).options.find(o=>o.grade===grade);
+  if (!opt || !opt.hasRefillOption) {
+    state.gradeSelections[groupId].refillMode = 'set';
   }
-  render();
+  const card = document.getElementById('grade-' + groupId);
+  if (card) card.outerHTML = renderGradeGroupCard(groupId);
+  updateTotalDisplay();
 }
 
-// ================================================================
-// STEP RENDERERS
-// ================================================================
-function renderStep0() {
-  return `
-    <div class="section-head">
-      <div class="section-title">物件情報</div>
-      <div class="section-sub">発注する物件の基本情報を入力してください</div>
-    </div>
-    <div class="notice">
-      <strong>📋 ご確認ください</strong><br>
-      ① <strong>「必須」マークのついた項目はすべて数量の入力が必要です。</strong>未入力のまま送信できません。<br>
-      ② 金額はすべて<strong>概算</strong>です。価格は変動する場合があります。<br>
-      ③ 欠品の場合は<strong>代替商品での対応</strong>となることがあります。<br>
-      ④ <strong>弊社が自動補充</strong>を選んだ備品は弊社が補充管理します。<strong>ホスト様準備</strong>を選んだ場合は、補充もホスト様のご負担となります。<br>
-      ⑤ 食器・コップ類は<strong>弊社指定品のみ自動補充対応</strong>（ホスト様手配品は対象外）。<br>
-      ⑥ 備品代金は<strong>実費精算</strong>となります。
-    </div>
-    <div class="form-group">
-      <label class="form-label">物件名</label>
-      <input class="form-input" type="text" placeholder="例：渋谷マンション301" value="${state.property.name}" oninput="state.property.name=this.value" />
-    </div>
-    <div class="form-group">
-      <label class="form-label">物件番号</label>
-      <input class="form-input" type="text" placeholder="例：1234" value="${state.property.number}" oninput="state.property.number=this.value" />
-    </div>
-    <div class="form-group">
-      <label class="form-label">担当者名</label>
-      <input class="form-input" type="text" placeholder="例：田中 太郎" value="${state.property.contact}" oninput="state.property.contact=this.value" />
-    </div>`;
-}
-
-function renderStep1() {
-  const mandatoryItemIds = MANDATORY_IDS.filter(id => ITEMS[id] || SET_ITEMS[id]);
-  return `
-    <div class="section-head">
-      <div class="section-title">初回必須セット</div>
-      <div class="section-sub">運営開始に必要な20品目です。数量は最小発注数で自動設定されています（削除不可）。</div>
-    </div>
-    <div class="notice" style="background:#f5f3ff;border-color:#c4b5fd;">
-      <strong style="color:#7c3aed;">🔒 自動補充対象</strong> — これらはすべて弊社が自動補充管理します
-    </div>
-    ${mandatoryItemIds.map(id => itemCardHTML(id)).join('')}`;
-}
-
-function renderStep2() {
-  return `
-    <div class="section-head">
-      <div class="section-title">バスアメニティ</div>
-      <div class="section-sub">グレードを選んで数量を設定してください</div>
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">グレード選択アメニティ</div>
-      ${GRADE_GROUPS.map(g => gradeGroupHTML(g)).join('')}
-      ${toothbrushHTML()}
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">アメニティ追加品（任意）</div>
-      ${['S0073','S0074','S0075','S0076','S0082','S0015','S0081'].map(id => itemCardHTML(id)).join('')}
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">子供用（ファミリー向け）</div>
-      ${itemCardHTML('B0032_S0033')}
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">浴室清掃用品</div>
-      ${['B0163','B0191','S0054'].map(id => itemCardHTML(id)).join('')}
-    </div>`;
-}
-
-function renderStep3() {
-  const tpSel    = state.gradeSelections['toiletpaper'] || '';
-  const tp4r     = state.quantities['S0235'] || 0;
-  const tp12r    = state.quantities['S0048'] || 0;
-  const sanSel   = state.gradeSelections['sanitary'] || '';
-  const sanBlack = state.quantities['S0045'] || 0;
-  const sanHotel = state.quantities['S0080'] || 0;
-  const sheetSel  = state.gradeSelections['toiletsheet'] || '';
-  const sheetSet  = state.quantities['B0171_S0233'] || 0;
-  const sheetSingle = state.quantities['S0183'] || 0;
-  const deodorSel = state.gradeSelections['toiletdeodor'] || '';
-  const deodorA   = state.quantities['S0011'] || 0;
-  const deodorB   = state.quantities['S0135'] || 0;
-
-  function choiceCard(cfg) {
-    const aActive = cfg.sel === 'a';
-    const bActive = cfg.sel === 'b';
-    const base = 'flex:1;border-radius:10px;padding:12px;cursor:pointer;border:1.5px solid ';
-    const styleA = base + (aActive ? 'var(--accent);background:var(--accent-light)' : 'var(--border);background:var(--bg)');
-    const styleB = base + (bActive ? 'var(--accent);background:var(--accent-light)' : 'var(--border);background:var(--bg)');
-    const selQty = aActive ? cfg.a.qty : (bActive ? cfg.b.qty : 0);
-    const selId  = aActive ? cfg.a.id : cfg.b.id;
-    const selMin = aActive ? (cfg.a.min||1) : (cfg.b.min||1);
-    const selLabel = aActive ? cfg.a.label : (bActive ? cfg.b.label : '');
-    function img(src) {
-      if (!src) return '<div style="width:100%;height:70px;background:#f1f5f9;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#94a3b8;">NO IMG</div>';
-      return '<img src="' + src + '" style="width:100%;height:70px;object-fit:contain;border-radius:6px;background:#f8fafc;" loading="lazy" referrerpolicy="no-referrer" />';
-    }
-    function badge(active) { return active ? '<div style="font-size:10px;color:var(--accent);font-weight:700;margin-top:4px;">✓ 選択中</div>' : ''; }
-    const qtyRow = cfg.sel ? (
-      '<div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-radius:10px;padding:10px 14px;">' +
-        '<div style="font-size:13px;font-weight:700;">' + selLabel + '</div>' +
-        '<div style="display:flex;align-items:center;gap:6px;">' +
-          '<button class="qty-btn" onclick="changeQty(' + "'" + selId + "'," + selMin + ',' + selMin + ')">+</button>' +
-          '<div class="qty-num">' + selQty + '</div>' +
-          '<button class="qty-btn" onclick="changeQty(' + "'" + selId + "',-" + selMin + ',' + selMin + ')" ' + (selQty <= 0 ? 'disabled' : '') + '>−</button>' +
-        '</div>' +
-      '</div>'
-    ) : '<div style="font-size:11px;color:var(--amber);background:var(--amber-light);padding:8px 12px;border-radius:8px;font-weight:600;">⚠️ どちらかを選んでください</div>';
-    return (
-      '<div class="grade-card" style="margin-bottom:10px;">' +
-        '<div class="grade-label">どちらか選択（必須）</div>' +
-        '<div class="grade-name">' + cfg.title + '</div>' +
-        '<div style="display:flex;gap:10px;margin-bottom:14px;">' +
-          '<div style="' + styleA + '" onclick="' + cfg.fnA + '">' +
-            img(cfg.a.img) +
-            '<div class="badge-row" style="margin-top:6px;"><span class="badge badge-id">' + cfg.a.id + '</span></div>' +
-            '<div style="font-size:12px;font-weight:700;margin-top:2px;">' + cfg.a.name + '</div>' +
-            '<div style="font-size:10px;color:var(--text-sub);">' + cfg.a.brand + '</div>' +
-            '<div style="font-family:var(--mono);font-size:14px;font-weight:900;margin-top:4px;">' + cfg.a.priceStr + '</div>' +
-            badge(aActive) +
-          '</div>' +
-          '<div style="' + styleB + '" onclick="' + cfg.fnB + '">' +
-            img(cfg.b.img) +
-            '<div class="badge-row" style="margin-top:6px;"><span class="badge badge-id">' + cfg.b.id + '</span></div>' +
-            '<div style="font-size:12px;font-weight:700;margin-top:2px;">' + cfg.b.name + '</div>' +
-            '<div style="font-size:10px;color:var(--text-sub);">' + cfg.b.brand + '</div>' +
-            '<div style="font-family:var(--mono);font-size:14px;font-weight:900;margin-top:4px;">' + cfg.b.priceStr + '</div>' +
-            badge(bActive) +
-          '</div>' +
-        '</div>' +
-        qtyRow +
-      '</div>'
-    );
-  }
-
-  const tpCard = choiceCard({
-    title: 'トイレットペーパー 3倍巻',
-    sel: tpSel === '4r' ? 'a' : (tpSel === '12r' ? 'b' : ''),
-    fnA: "selectTP('4r')", fnB: "selectTP('12r')",
-    a: { id:'S0235', name:'4ロール', brand:'スコッティ', priceStr:'¥600', label:'S0235 スコッティ 4R × ¥600', qty:tp4r, min:1, img:'https://m.media-amazon.com/images/I/71nhh8u7aYS._AC_SL1500_.jpg' },
-    b: { id:'S0048', name:'12ロール', brand:'日本製紙クレシア', priceStr:'¥1,480', label:'S0048 クレシア 12R × ¥1,480', qty:tp12r, min:1, img:'https://m.media-amazon.com/images/I/71pWbjtiEgL._AC_SL1280_.jpg' }
-  });
-
-  const sanCard = choiceCard({
-    title: 'サニタリー用ゴミ袋',
-    sel: sanSel === 'black' ? 'a' : (sanSel === 'hotel' ? 'b' : ''),
-    fnA: "selectSanitary('black')", fnB: "selectSanitary('hotel')",
-    a: { id:'S0045', name:'① 黒 20枚', brand:'セイケツネットワーク', priceStr:'¥150', label:'S0045 20枚 × ¥150', qty:sanBlack, min:1, img:'https://m.media-amazon.com/images/I/71kXVVl9UpL._AC_SL1500_.jpg' },
-    b: { id:'S0080', name:'② 100枚', brand:'ホテルアメニティ', priceStr:'¥400（¥4×100枚）', label:'S0080 100枚 × ¥400', qty:sanHotel, min:100, img:'' }
-  });
-
-  const sheetCard = choiceCard({
-    title: 'トイレ掃除シート',
-    sel: sheetSel === 'set' ? 'a' : (sheetSel === 'single' ? 'b' : ''),
-    fnA: "selectToiletSheet('set')", fnB: "selectToiletSheet('single')",
-    a: { id:'B0171+S0233', name:'本体＋詰替セット', brand:'花王', priceStr:'¥980（本体¥650＋詰替¥330）', label:'B0171+S0233 本体+詰替 × ¥980', qty:sheetSet, min:1, img:'https://m.media-amazon.com/images/I/81XL5d0-TIL._SL1500_.jpg' },
-    b: { id:'S0183', name:'シート単体 20枚', brand:'花王', priceStr:'¥650', label:'S0183 シート単体 20枚 × ¥650', qty:sheetSingle, min:1, img:'https://m.media-amazon.com/images/I/71o-y2jcyVS._AC_SL1500_.jpg' }
-  });
-
-  const deodorCard = choiceCard({
-    title: 'トイレ消臭スプレー',
-    sel: deodorSel === 'a' ? 'a' : (deodorSel === 'b' ? 'b' : ''),
-    fnA: "selectToiletDeodor('a')", fnB: "selectToiletDeodor('b')",
-    a: { id:'S0011', name:'トイレ消臭スプレー上位モデル 280ml', brand:'小林製薬', priceStr:'¥380', label:'S0011 小林製薬 × ¥380', qty:deodorA, min:1, img:'https://m.media-amazon.com/images/I/31JbXkKmDsL._AC_PIbundle-24,TopRight,0,0_SH20_.jpg' },
-    b: { id:'S0135', name:'トイレ消臭スプレー 無香料', brand:'エステー', priceStr:'¥380', label:'S0135 エステー × ¥380', qty:deodorB, min:1, img:'https://m.media-amazon.com/images/I/71hmtvdm6vL._AC_SL1500_.jpg' }
-  });
-
-  return (
-    '<div class="section-head"><div class="section-title">トイレ用品</div></div>' +
-    '<div class="subsection"><div class="subsection-title">トイレットペーパー</div>' + tpCard + '</div>' +
-    '<div class="subsection"><div class="subsection-title">サニタリー用ゴミ袋</div>' + sanCard + '</div>' +
-    '<div class="subsection"><div class="subsection-title">トイレ掃除シート</div>' + sheetCard + '</div>' +
-    '<div class="subsection"><div class="subsection-title">トイレ消臭スプレー</div>' + deodorCard + '</div>' +
-    '<div class="subsection"><div class="subsection-title">清掃用具（備品）</div>' +
-      itemCardHTML('B0156') + itemCardHTML('B0165') + itemCardHTML('B0166_S0181') + itemCardHTML('B0055_S0056') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">その他消耗品</div>' +
-      itemCardHTML('S0144') +
-    '</div>'
-  );
-}
-
-function renderStep4() {
-  return `
-    <div class="section-head">
-      <div class="section-title">キッチン用品</div>
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">食器用洗剤</div>
-      ${dishSoapHTML()}
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">衛生・除菌</div>
-      ${itemCardHTML('B0169_S0178')}
-      ${['S0173','S0147'].map(id => itemCardHTML(id)).join('')}
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">調理器具（備品）</div>
-      ${['B0110','B0111','B0112','B0113','B0114','B0115','B0123','B0124','B0125','B0126','B0128','B0129'].map(id => itemCardHTML(id)).join('')}
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">キッチン消耗品</div>
-      ${['S0053','S0089','S0142'].map(id => itemCardHTML(id)).join('')}
-    </div>`;
-}
-
-function renderStep5() {
-  return `
-    <div class="section-head">
-      <div class="section-title">食器・カトラリー</div>
-      <div class="section-sub">弊社指定品を選ぶと割れても自動補充対応</div>
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">大人用食器</div>
-      ${['B0107','B0108','B0109','B0116','B0117'].map(id => itemCardHTML(id)).join('')}
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">カトラリー</div>
-      ${['B0101','B0102','B0118','B0127'].map(id => itemCardHTML(id)).join('')}
-    </div>
-    <div class="subsection">
-      <div class="subsection-title">ファミリー・子供用</div>
-      ${['B0119','B0120','B0121','B0122','S0077'].map(id => itemCardHTML(id)).join('')}
-      ${itemCardHTML('B0032_S0033')}
-    </div>`;
-}
-
-function renderStep6() {
-  const tissueSel  = state.gradeSelections['tissue'] || '';
-  const tissueBox  = state.quantities['S0044'] || 0;
-  const tissueSoft = state.quantities['S0150'] || 0;
-  const aActive = tissueSel === 'box';
-  const bActive = tissueSel === 'soft';
-  const base = 'flex:1;border-radius:10px;padding:12px;cursor:pointer;border:1.5px solid ';
-  const styleA = base + (aActive ? 'var(--accent);background:var(--accent-light)' : 'var(--border);background:var(--bg)');
-  const styleB = base + (bActive ? 'var(--accent);background:var(--accent-light)' : 'var(--border);background:var(--bg)');
-  const selQty   = aActive ? tissueBox : (bActive ? tissueSoft : 0);
-  const selId    = aActive ? 'S0044' : 'S0150';
-  const selMin   = aActive ? 1 : 5;
-  const selLabel = aActive ? 'BOXタイプ 5箱 × ¥730' : 'ソフトパック ×5P × ¥375';
-
-  const qtyRow = tissueSel ? (
-    '<div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-radius:10px;padding:10px 14px;">' +
-      '<div style="font-size:13px;font-weight:700;">' + selLabel + '</div>' +
-      '<div style="display:flex;align-items:center;gap:6px;">' +
-        '<button class="qty-btn" onclick="changeQty(' + "'" + selId + "'," + selMin + ',' + selMin + ')">+</button>' +
-        '<div class="qty-num">' + selQty + '</div>' +
-        '<button class="qty-btn" onclick="changeQty(' + "'" + selId + "',-" + selMin + ',' + selMin + ')" ' + (selQty <= 0 ? 'disabled' : '') + '>−</button>' +
-      '</div>' +
-    '</div>'
-  ) : '<div style="font-size:11px;color:var(--amber);background:var(--amber-light);padding:8px 12px;border-radius:8px;font-weight:600;">⚠️ どちらかを選んでください</div>';
-
-  const tissueCard = (
-    '<div class="grade-card" style="margin-bottom:10px;">' +
-      '<div class="grade-label">どちらか選択（必須）</div>' +
-      '<div class="grade-name">ティッシュペーパー</div>' +
-      '<div style="display:flex;gap:10px;margin-bottom:14px;">' +
-        '<div style="' + styleA + '" onclick="selectTissue(\'box\')">' +
-          '<img src="https://m.media-amazon.com/images/I/71Xhy-r7+CL._AC_SL1000_.jpg" style="width:100%;height:70px;object-fit:contain;border-radius:6px;background:#f8fafc;" loading="lazy" referrerpolicy="no-referrer" />' +
-          '<div class="badge-row" style="margin-top:6px;"><span class="badge badge-id">S0044</span></div>' +
-          '<div style="font-size:12px;font-weight:700;margin-top:2px;">BOXタイプ 5箱</div>' +
-          '<div style="font-size:10px;color:var(--text-sub);">クリネックス</div>' +
-          '<div style="font-family:var(--mono);font-size:14px;font-weight:900;margin-top:4px;">¥730</div>' +
-          (aActive ? '<div style="font-size:10px;color:var(--accent);font-weight:700;margin-top:4px;">✓ 選択中</div>' : '') +
-        '</div>' +
-        '<div style="' + styleB + '" onclick="selectTissue(\'soft\')">' +
-          '<img src="https://m.media-amazon.com/images/I/81uKlGF2c7L._AC_SL1500_.jpg" style="width:100%;height:70px;object-fit:contain;border-radius:6px;background:#f8fafc;" loading="lazy" referrerpolicy="no-referrer" />' +
-          '<div class="badge-row" style="margin-top:6px;"><span class="badge badge-id">S0150</span></div>' +
-          '<div style="font-size:12px;font-weight:700;margin-top:2px;">ソフトパック 150組×5P</div>' +
-          '<div style="font-size:10px;color:var(--text-sub);">コアレックス</div>' +
-          '<div style="font-family:var(--mono);font-size:14px;font-weight:900;margin-top:4px;">¥375 <span style="font-size:9px;font-weight:400;">（¥75×5）</span></div>' +
-          (bActive ? '<div style="font-size:10px;color:var(--accent);font-weight:700;margin-top:4px;">✓ 選択中</div>' : '') +
-        '</div>' +
-      '</div>' +
-      qtyRow +
-    '</div>'
-  );
-
-  return (
-    '<div class="section-head"><div class="section-title">洗濯・室内掃除</div></div>' +
-    '<div class="subsection"><div class="subsection-title">ティッシュペーパー</div>' + tissueCard + '</div>' +
-    '<div class="subsection"><div class="subsection-title">洗濯関連</div>' +
-      itemCardHTML('B0162') + itemCardHTML('B0130') + itemCardHTML('B0012') + itemCardHTML('B0093') + itemCardHTML('B0094') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">室内掃除</div>' +
-      itemCardHTML('S0010') + itemCardHTML('S0087') + itemCardHTML('B0157') +
-    '</div>'
-  );
-}
-
-function renderStep7() {
-  return (
-    '<div class="section-head"><div class="section-title">食品・飲料</div></div>' +
-    '<div class="subsection"><div class="subsection-title">調味料</div>' +
-      itemCardHTML('S0036') + itemCardHTML('S0146') + itemCardHTML('S0050') +
-      itemCardHTML('S0143') + itemCardHTML('S0218') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">コーヒー・お茶</div>' +
-      itemCardHTML('S0205') + itemCardHTML('S0207') + itemCardHTML('S0208') +
-      itemCardHTML('S0092') + itemCardHTML('S0059') + itemCardHTML('S0206') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">ソフトドリンク・お菓子</div>' +
-      itemCardHTML('S0213') + itemCardHTML('S0214') + itemCardHTML('S0219') +
-      itemCardHTML('S0209') + itemCardHTML('S0217') + itemCardHTML('S0215') + itemCardHTML('S0216') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">アルコール</div>' +
-      itemCardHTML('S0210') + itemCardHTML('S0211') + itemCardHTML('S0220') +
-    '</div>'
-  );
-}
-
-function renderStep8() {
-  // ── 消臭スプレー 2択 ──
-  const deodSel   = state.gradeSelections['roomdeodor'] || '';
-  const deodFabQty = state.quantities['B0172_S0177'] || 0;
-  const deodShiQty = state.quantities['S0141'] || 0;
-
-  const base = 'flex:1;border-radius:10px;padding:12px;cursor:pointer;border:1.5px solid ';
-  const styleFA = base + (deodSel==='fab' ? 'var(--accent);background:var(--accent-light)' : 'var(--border);background:var(--bg)');
-  const styleSH = base + (deodSel==='shi' ? 'var(--accent);background:var(--accent-light)' : 'var(--border);background:var(--bg)');
-  const deodSelQty = deodSel==='fab' ? deodFabQty : deodShiQty;
-  const deodSelId  = deodSel==='fab' ? 'B0172_S0177' : 'S0141';
-  const deodLabel  = deodSel==='fab' ? 'ファブリーズ本体+詰替 × ¥2,200' : '清水香 詰替1L × ¥1,200';
-
-  const deodQtyRow = deodSel ? (
-    '<div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-radius:10px;padding:10px 14px;">' +
-      '<div style="font-size:13px;font-weight:700;">' + deodLabel + '</div>' +
-      '<div style="display:flex;align-items:center;gap:6px;">' +
-        '<button class="qty-btn" onclick="changeQty(\'' + deodSelId + '\',1)">+</button>' +
-        '<div class="qty-num">' + deodSelQty + '</div>' +
-        '<button class="qty-btn" onclick="changeQty(\'' + deodSelId + '\',-1)" ' + (deodSelQty<=0?'disabled':'') + '>−</button>' +
-      '</div>' +
-    '</div>'
-  ) : '<div style="font-size:11px;color:var(--amber);background:var(--amber-light);padding:8px 12px;border-radius:8px;font-weight:600;">⚠️ どちらかを選んでください</div>';
-
-  function badgeTxt(id) { return '<div class="badge-row" style="margin-top:6px;"><span class="badge badge-id">' + id + '</span></div>'; }
-
-  const deodCard = (
-    '<div class="grade-card" style="margin-bottom:10px;">' +
-      '<div class="grade-label">どちらか選択（必須）</div>' +
-      '<div class="grade-name">室内消臭スプレー</div>' +
-      '<div style="display:flex;gap:10px;margin-bottom:14px;">' +
-        '<div style="' + styleFA + '" onclick="selectRoomDeodor(\'fab\')">' +
-          '<img src="https://m.media-amazon.com/images/I/71BYhPXQPGL._AC_SL1500_.jpg" style="width:100%;height:70px;object-fit:contain;border-radius:6px;background:#f8fafc;" loading="lazy" referrerpolicy="no-referrer" />' +
-          badgeTxt('B0172 / S0177') +
-          '<div style="font-size:12px;font-weight:700;margin-top:2px;">ファブリーズ 本体＋詰替</div>' +
-          '<div style="font-size:10px;color:var(--text-sub);">ファブリーズ</div>' +
-          '<div style="font-family:var(--mono);font-size:13px;font-weight:900;margin-top:4px;">¥2,200</div>' +
-          '<div style="font-size:9px;color:var(--text-sub);margin-top:2px;">本体¥600 + 詰替¥1,600</div>' +
-          (deodSel==='fab' ? '<div style="font-size:10px;color:var(--accent);font-weight:700;margin-top:4px;">✓ 選択中</div>' : '') +
-        '</div>' +
-        '<div style="' + styleSH + '" onclick="selectRoomDeodor(\'shi\')">' +
-          '<img src="https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg" style="width:100%;height:70px;object-fit:contain;border-radius:6px;background:#f8fafc;" loading="lazy" referrerpolicy="no-referrer" />' +
-          badgeTxt('S0141') +
-          '<div style="font-size:12px;font-weight:700;margin-top:2px;">清水香 詰替 1L</div>' +
-          '<div style="font-size:10px;color:var(--text-sub);">清水香</div>' +
-          '<div style="font-family:var(--mono);font-size:13px;font-weight:900;margin-top:4px;">¥1,200</div>' +
-          '<div style="font-size:9px;color:var(--amber);margin-top:2px;">※本体ボトルは別途ホスト様ご用意</div>' +
-          (deodSel==='shi' ? '<div style="font-size:10px;color:var(--accent);font-weight:700;margin-top:4px;">✓ 選択中</div>' : '') +
-        '</div>' +
-      '</div>' +
-      deodQtyRow +
-    '</div>'
-  );
-
-  // ── 無印良品 芳香剤 香り選択 ──
-  const mujiSel = state.gradeSelections['muji_fragrance'] || '';
-  const mujiCiQty = state.quantities['MUJI_citrus'] || 0;
-  const mujiWoQty = state.quantities['MUJI_woody'] || 0;
-
-  const styleMC = base + (mujiSel==='citrus' ? 'var(--accent);background:var(--accent-light)' : 'var(--border);background:var(--bg)');
-  const styleMW = base + (mujiSel==='woody'  ? 'var(--accent);background:var(--accent-light)' : 'var(--border);background:var(--bg)');
-  const mujiSelQty = mujiSel==='citrus' ? mujiCiQty : mujiWoQty;
-  const mujiSelId  = mujiSel==='citrus' ? 'MUJI_citrus' : 'MUJI_woody';
-  const mujiLabel  = mujiSel==='citrus' ? 'シトラス セット × ¥5,620' : 'ウッディ セット × ¥5,500';
-
-  const mujiQtyRow = mujiSel ? (
-    '<div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-radius:10px;padding:10px 14px;">' +
-      '<div style="font-size:13px;font-weight:700;">' + mujiLabel + '</div>' +
-      '<div style="display:flex;align-items:center;gap:6px;">' +
-        '<button class="qty-btn" onclick="changeQty(\'' + mujiSelId + '\',1)">+</button>' +
-        '<div class="qty-num">' + mujiSelQty + '</div>' +
-        '<button class="qty-btn" onclick="changeQty(\'' + mujiSelId + '\',-1)" ' + (mujiSelQty<=0?'disabled':'') + '>−</button>' +
-      '</div>' +
-    '</div>'
-  ) : '<div style="font-size:11px;color:var(--text-sub);background:var(--bg);padding:8px 12px;border-radius:8px;">選択任意</div>';
-
-  const mujiCard = (
-    '<div class="grade-card" style="margin-bottom:10px;">' +
-      '<div class="grade-label">香り選択（任意）</div>' +
-      '<div class="grade-name">無印良品 インテリアフレグランスオイル セット</div>' +
-      '<div style="font-size:11px;color:var(--text-sub);margin-bottom:10px;">本体200ml + 詰替200ml + ラタンスティック6本</div>' +
-      '<div style="display:flex;gap:10px;margin-bottom:14px;">' +
-        '<div style="' + styleMC + '" onclick="selectMuji(\'citrus\')">' +
-          '<img src="https://www.muji.com/public/media/img/item/4550583992316_org.jpg?im=Resize,width=1260" style="width:100%;height:70px;object-fit:contain;border-radius:6px;background:#f8fafc;" loading="lazy" referrerpolicy="no-referrer" />' +
-          '<div class="badge-row" style="margin-top:6px;"><span class="badge badge-id">B0149 / S0151 / S0152</span></div>' +
-          '<div style="font-size:12px;font-weight:700;margin-top:2px;">シトラスの香り</div>' +
-          '<div style="font-size:10px;color:var(--text-sub);">無印良品</div>' +
-          '<div style="font-family:var(--mono);font-size:13px;font-weight:900;margin-top:4px;">¥5,620</div>' +
-          (mujiSel==='citrus' ? '<div style="font-size:10px;color:var(--accent);font-weight:700;margin-top:4px;">✓ 選択中</div>' : '') +
-        '</div>' +
-        '<div style="' + styleMW + '" onclick="selectMuji(\'woody\')">' +
-          '<img src="https://www.muji.com/public/media/img/item/4550583992217_org.jpg?im=Resize,width=1080" style="width:100%;height:70px;object-fit:contain;border-radius:6px;background:#f8fafc;" loading="lazy" referrerpolicy="no-referrer" />' +
-          '<div class="badge-row" style="margin-top:6px;"><span class="badge badge-id">B0149 / S0229 / S0152</span></div>' +
-          '<div style="font-size:12px;font-weight:700;margin-top:2px;">ウッディの香り</div>' +
-          '<div style="font-size:10px;color:var(--text-sub);">無印良品</div>' +
-          '<div style="font-family:var(--mono);font-size:13px;font-weight:900;margin-top:4px;">¥5,500</div>' +
-          (mujiSel==='woody' ? '<div style="font-size:10px;color:var(--accent);font-weight:700;margin-top:4px;">✓ 選択中</div>' : '') +
-        '</div>' +
-      '</div>' +
-      mujiQtyRow +
-    '</div>'
-  );
-
-  return (
-    '<div class="section-head"><div class="section-title">芳香・室内備品</div></div>' +
-    '<div class="subsection"><div class="subsection-title">室内消臭スプレー</div>' + deodCard + '</div>' +
-    '<div class="subsection"><div class="subsection-title">無印良品 芳香剤</div>' + mujiCard + '</div>' +
-    '<div class="subsection"><div class="subsection-title">その他芳香剤</div>' +
-      itemCardHTML('B0026') + itemCardHTML('B0140') + itemCardHTML('B0148') + itemCardHTML('S0035') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">スキンケア（ディスペンサー）</div>' +
-      itemCardHTML('B0064') + itemCardHTML('S0007') +
-      itemCardHTML('B0065') + itemCardHTML('S0008') +
-      itemCardHTML('B0066') + itemCardHTML('S0009') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">電球</div>' +
-      itemCardHTML('S0191') + itemCardHTML('S0192') + itemCardHTML('S0193') + itemCardHTML('S0194') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">電池</div>' +
-      itemCardHTML('S0185') + itemCardHTML('S0186') + itemCardHTML('S0187') +
-      itemCardHTML('S0188') + itemCardHTML('S0189') + itemCardHTML('S0190') +
-    '</div>'
-  );
-}
-
-function renderStep9() {
-  return (
-    '<div class="section-head"><div class="section-title">BBQ</div><div class="section-sub">BBQ設備がある物件のみ選択してください</div></div>' +
-    '<div class="subsection"><div class="subsection-title">BBQ消耗品</div>' +
-      itemCardHTML('B0019') + itemCardHTML('B0020') + itemCardHTML('S0017') +
-      itemCardHTML('S0018') + itemCardHTML('S0021') + itemCardHTML('S0052') + itemCardHTML('S0238') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">BBQ備品（ホスト様準備可）</div>' +
-      itemCardHTML('B0023') + itemCardHTML('B0096') + itemCardHTML('B0097') + itemCardHTML('B0098') +
-    '</div>'
-  );
-}
-
-function renderStep10() {
-  return (
-    '<div class="section-head"><div class="section-title">その他・オプション</div></div>' +
-    '<div class="subsection"><div class="subsection-title">スリッパ</div>' +
-      itemCardHTML('B0022') + itemCardHTML('S0078') + itemCardHTML('S0079') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">室内備品・文具</div>' +
-      itemCardHTML('B0100') + itemCardHTML('S0134') + itemCardHTML('S0133') +
-      itemCardHTML('B0168') + itemCardHTML('S0010') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">子供向けレジャー</div>' +
-      itemCardHTML('S0215') + itemCardHTML('S0216') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">害虫対策追加</div>' +
-      itemCardHTML('S0040') + itemCardHTML('S0041') + itemCardHTML('S0058') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">ペット用品</div>' +
-      itemCardHTML('S0027') + itemCardHTML('S0042') + itemCardHTML('S0043') +
-    '</div>' +
-    '<div class="subsection"><div class="subsection-title">設備・その他</div>' +
-      itemCardHTML('B0028') + itemCardHTML('B0195') + itemCardHTML('S0204') +
-    '</div>'
-  );
-}
-
-function renderStep11() {
-  // 確認・送信
-  const rows = [];
-  for (const [id, qty] of Object.entries(state.quantities)) {
-    const item = ITEMS[id] || SET_ITEMS[id];
-    if (!item || qty <= 0) continue;
-    if (id === '_toothbrush') {
-      const opt = TOOTHBRUSH_OPTIONS.find(o => o.grade === state.gradeSelections.toothbrush);
-      if (opt) rows.push({ name: opt.name, qty, total: opt.price * qty, unit: opt.unit });
-      continue;
-    }
-    if (id === '_dishsoap') {
-      const opt = DISH_SOAP_OPTIONS.find(o => o.grade === state.gradeSelections.dishsoap);
-      if (opt) rows.push({ name: opt.name, qty, total: opt.totalPrice * qty, unit: 'セット' });
-      continue;
-    }
-    const hc = state.hostChoice[id];
-    if (item.hostPrep && hc === 'host') continue;
-    rows.push({ name: item.name, qty, total: item.price * qty, unit: item.unit });
-  }
-  GRADE_GROUPS.forEach(g => {
-    const qty = state.gradeQty[g.id] || 0;
-    if (qty <= 0) return;
-    const opt = g.options.find(o => o.grade === state.gradeSelections[g.id]);
-    if (!opt) return;
-    rows.push({ name: g.name + '（' + opt.label + '）', qty, total: opt.totalPrice * qty, unit: 'セット' });
-  });
-  const total = calcTotal();
-  return (
-    '<div class="section-head"><div class="section-title">確認・送信</div><div class="section-sub">内容を確認して送信してください</div></div>' +
-    '<div class="summary-card">' +
-      '<div style="font-size:12px;font-weight:700;color:#6b7280;margin-bottom:12px;">📦 物件情報</div>' +
-      '<div class="summary-row"><span class="summary-name">物件名</span><span class="summary-price">' + (state.property.name||'—') + '</span></div>' +
-      '<div class="summary-row"><span class="summary-name">物件番号</span><span class="summary-price" style="font-family:var(--mono)">' + (state.property.number||'—') + '</span></div>' +
-      '<div class="summary-row"><span class="summary-name">担当者</span><span class="summary-price">' + (state.property.contact||'—') + '</span></div>' +
-    '</div>' +
-    '<div class="summary-card">' +
-      '<div style="font-size:12px;font-weight:700;color:#6b7280;margin-bottom:12px;">🛒 発注品目一覧</div>' +
-      rows.map(r =>
-        '<div class="summary-row">' +
-          '<span class="summary-name">' + r.name + '</span>' +
-          '<span class="summary-qty">' + r.qty + r.unit + '</span>' +
-          '<span class="summary-price">' + fmt(r.total) + '</span>' +
-        '</div>'
-      ).join('') +
-    '</div>' +
-    '<div class="summary-total">' +
-      '<div class="total-label">TOTAL ESTIMATE</div>' +
-      '<div class="total-amount">' + fmt(total) + '</div>' +
-    '</div>' +
-    '<button class="submit-btn" id="submit-btn" onclick="submitOrder()">📤 送信する</button>'
-  );
-}
-
-const STEP_RENDERERS = [renderStep0, renderStep1, renderStep2, renderStep3, renderStep4, renderStep5, renderStep6, renderStep7, renderStep8, renderStep9, renderStep10, renderStep11];
-
-// ================================================================
-// NAVIGATION & MAIN RENDER
-// ================================================================
-function render() {
-  const main = document.getElementById('main-content');
-  main.innerHTML = STEP_RENDERERS[state.currentStep]();
-
-  // footer
-  document.getElementById('nav-total').textContent = fmt(calcTotal());
-  document.getElementById('step-label').textContent = `STEP ${state.currentStep+1} / ${STEPS.length}`;
-  document.getElementById('btn-back').style.visibility = state.currentStep === 0 ? 'hidden' : 'visible';
-  const btnNext = document.getElementById('btn-next');
-  if (state.currentStep === STEPS.length - 1) {
-    btnNext.textContent = '✓ 確認完了';
-    btnNext.style.display = 'none';
-  } else {
-    btnNext.textContent = '次へ →';
-    btnNext.style.display = '';
-  }
-
-  // progress tabs
-  const tabsEl = document.getElementById('progress-tabs');
-  tabsEl.innerHTML = STEPS.map((s,i) => {
-    let cls = '';
-    if (i === state.currentStep) cls = 'active';
-    else if (i < state.currentStep) cls = 'done';
-    return `<div class="tab-item ${cls}" onclick="goStep(${i})">${s}</div>`;
-  }).join('');
-
-  // scroll active tab into view
-  const activeTab = tabsEl.querySelector('.tab-item.active');
-  if (activeTab) activeTab.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+function setGradeRefill(groupId, mode) {
+  state.gradeSelections[groupId].refillMode = mode;
+  const card = document.getElementById('grade-' + groupId);
+  if (card) card.outerHTML = renderGradeGroupCard(groupId);
+  updateTotalDisplay();
 }
 
 function goStep(i) {
-  state.currentStep = i;
-  window.scrollTo(0,0);
+  currentStep = i;
   render();
 }
 
 function nextStep() {
-  if (state.currentStep < STEPS.length - 1) {
-    state.currentStep++;
-    window.scrollTo(0,0);
+  if (currentStep < STEPS.length - 1) {
+    currentStep++;
     render();
+  } else {
+    submitOrder();
   }
 }
 
 function prevStep() {
-  if (state.currentStep > 0) {
-    state.currentStep--;
-    window.scrollTo(0,0);
+  if (currentStep > 0) {
+    currentStep--;
     render();
   }
 }
 
-// ================================================================
-// SUBMIT
-// ================================================================
 async function submitOrder() {
-  // バリデーション
-  const missing = validateMandatory();
-  if (missing.length > 0) {
-    showValidationError(missing);
-    return;
-  }
-
-  const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.innerHTML = `<span class="spinner"></span> 送信中...`;
-
-  const payload = buildPayload();
-
-  if (!state.webhookUrl) {
-    // webhook未設定時はJSONダウンロード
-    downloadJson(payload);
-    showSuccess(false);
-    return;
-  }
-
-  try {
-    await fetch(state.webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      mode: 'no-cors'
-    });
-    showSuccess(true);
-  } catch (e) {
-    console.error(e);
-    downloadJson(payload);
-    showSuccess(false);
-  }
-}
-
-function buildPayload() {
-  const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
-  const items = [];
-
-  for (const [id, qty] of Object.entries(state.quantities)) {
-    if (qty <= 0) continue;
-    let item, name, price, unit, grade = null;
-    if (id === '_toothbrush') {
-      const opt = TOOTHBRUSH_OPTIONS.find(o => o.grade === state.gradeSelections.toothbrush);
-      if (!opt) continue;
-      name = opt.name; price = opt.price; unit = opt.unit; grade = opt.label;
-    } else if (id === '_dishsoap') {
-      const opt = DISH_SOAP_OPTIONS.find(o => o.grade === state.gradeSelections.dishsoap);
-      if (!opt) continue;
-      name = opt.name; price = opt.totalPrice; unit = 'セット'; grade = opt.label;
-    } else {
-      item = ITEMS[id] || SET_ITEMS[id];
-      if (!item) continue;
-      const hc = state.hostChoice[id];
-      if (item.hostPrep && hc === 'host') continue;
-      name = item.name; price = item.price; unit = item.unit;
-    }
-    items.push({ id, name, qty, unitPrice: price, subtotal: price * qty, unit, grade, hostPrepare: false });
-  }
-
-  GRADE_GROUPS.forEach(g => {
-    const qty = state.gradeQty[g.id] || 0;
-    if (qty <= 0) return;
-    const opt = g.options.find(o => o.grade === state.gradeSelections[g.id]);
-    if (!opt) return;
-    items.push({ id: g.id, name: `${g.name}（${opt.label}）`, qty, unitPrice: opt.totalPrice, subtotal: opt.totalPrice * qty, unit: 'セット', grade: opt.label, hostPrepare: false });
-  });
-
-  return {
-    timestamp,
+  const payload = {
     property: state.property,
-    items,
-    totalAmount: calcTotal(),
-    summary: `【弊社自動補充】${state.property.name}（${state.property.number}） 合計${fmt(calcTotal())} ${items.length}品目`
+    gradeSelections: state.gradeSelections,
+    quantities: state.quantities,
+    total: calcTotal(),
+    timestamp: new Date().toISOString(),
   };
-}
 
-function downloadJson(payload) {
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `order_${payload.property.number || 'draft'}_${Date.now()}.json`;
-  a.click(); URL.revokeObjectURL(url);
-}
+  const btn = document.querySelector('.submit-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>送信中...';
+  }
 
-function showSuccess(sent) {
+  if (state.property.webhook) {
+    try {
+      await fetch(state.property.webhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch(e) { console.error(e); }
+  }
+
   document.getElementById('main-content').innerHTML = `
     <div class="success-box">
-      <div class="success-icon">${sent ? '✅' : '📥'}</div>
-      <div class="success-title">${sent ? '発注を送信しました' : 'JSONをダウンロードしました'}</div>
+      <div class="success-icon">✅</div>
+      <div class="success-title">発注データを送信しました</div>
       <div class="success-sub">
-        ${sent
-          ? `Googleスプレッドシートへの記録とSlack通知が実行されました。<br>担当者をご確認ください。`
-          : `Webhook URLが未設定のため、発注データをJSONファイルとして保存しました。<br>n8nのWebhookノードにこのJSONを手動で送信するか、URLを設定して再送してください。`
-        }
-        <br><br>
-        <button class="submit-btn" style="max-width:200px;margin:0 auto;" onclick="location.reload()">🔄 最初に戻る</button>
+        物件：${state.property.name || '未入力'}<br>
+        合計金額（目安）：${fmt(calcTotal())}<br><br>
+        担当者にて内容を確認の上、発注処理を行います。
       </div>
     </div>`;
   document.querySelector('.footer-nav').style.display = 'none';
