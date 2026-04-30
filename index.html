@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>民泊管理バンク 発注フォーム</title>
+<title>初回セット・補充備品発注フォーム | 民泊管理バンク</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -197,7 +197,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
         </svg>
       </div>
       <div>
-        <div class="logo-title">初回・備品発注フォーム</div>
+        <div class="logo-title">初回セット・補充備品発注フォーム</div>
         <div class="logo-sub">民泊管理バンク・ホスト様用発注シート</div>
       </div>
     </div>
@@ -754,6 +754,7 @@ const REFILL_CHOICE_DEFS = {
 const state = {
   currentStep: 0,
   property: {name:'',number:'',contact:'',email:''},
+  hostInfo: {propName:'',propNum:'',owner:'',contact:'',email:''},
   quantities: {},      // id→数量（通常品目＋バーチャルID）
   gradeSelections: {}, // グループid→grade
   gradeQty: {},        // グループid→セット数
@@ -865,9 +866,44 @@ function renderStep12() {
     + '</div>'
     + '<div class="summary-total"><div class="total-label">合計金額（目安）</div><div class="total-amount">'+fmt(total)+'</div></div>'
     + '<div class="summary-card"><div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:8px">発注品目</div>'+rows+'</div>'
-    + '<button onclick="submitOrder()" class="btn-submit" style="width:100%;margin-top:16px;padding:16px;border-radius:14px;border:none;background:var(--accent);color:#fff;font-size:16px;font-weight:800;cursor:pointer">📦 この内容で発注する</button>';
+    + '<button onclick="openStep(\'hostInfo\')" class="btn-submit" style="width:100%;margin-top:16px">📦 この内容で発注する</button>';
 }
 
+
+// ══════════════════════════════════════════════
+// ホスト様情報入力画面
+// ══════════════════════════════════════════════
+function renderHostInfo() {
+  const total = calcTotal();
+  return `<div class="section-head"><div class="section-title">ホスト様情報の入力</div><div class="section-sub">発注メールに記載するホスト様の情報を入力してください</div></div>
+  <div class="summary-card" style="margin-bottom:16px">
+    <div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:12px">📧 送信先：<span style="font-family:var(--mono);color:var(--brand)">customer@bizpato.com</span></div>
+    <div style="font-size:11px;color:var(--text-sub)">以下の情報を入力すると、発注内容をメールで送信できます。</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">物件名 <span style="color:var(--accent)">*</span></label>
+    <input class="form-input" id="hi-propname" type="text" placeholder="例：〇〇ヴィラ 〇〇号室" value="${state.hostInfo.propName||state.property.name||''}" oninput="state.hostInfo.propName=this.value">
+  </div>
+  <div class="form-group">
+    <label class="form-label">物件番号</label>
+    <input class="form-input" id="hi-propnum" type="text" placeholder="例：0240" value="${state.hostInfo.propNum||state.property.number||''}" oninput="state.hostInfo.propNum=this.value">
+  </div>
+  <div class="form-group">
+    <label class="form-label">ご契約者様名 <span style="color:var(--accent)">*</span></label>
+    <input class="form-input" id="hi-owner" type="text" placeholder="例：山田 太郎" value="${state.hostInfo.owner||''}" oninput="state.hostInfo.owner=this.value">
+  </div>
+  <div class="form-group">
+    <label class="form-label">担当者名</label>
+    <input class="form-input" id="hi-contact" type="text" placeholder="例：田中 花子" value="${state.hostInfo.contact||state.property.contact||''}" oninput="state.hostInfo.contact=this.value">
+  </div>
+  <div class="form-group">
+    <label class="form-label">連絡先メールアドレス <span style="color:var(--accent)">*</span></label>
+    <input class="form-input" id="hi-email" type="email" placeholder="例：host@example.com" value="${state.hostInfo.email||state.property.email||''}" oninput="state.hostInfo.email=this.value">
+  </div>
+  <div class="summary-total"><div class="total-label">合計金額（目安）</div><div class="total-amount">${fmt(total)}</div></div>
+  <button onclick="sendOrderEmail()" class="btn-submit" style="width:100%;margin-top:16px">📧 メールを送信する</button>
+  <div style="text-align:center;font-size:11px;color:var(--text-sub);margin-top:8px">お使いのメールアプリが開きます。内容を確認して送信してください。</div>`;
+}
 
 const STEPS = ['ダッシュボード'];
 const STEP_RENDERERS = [function(){return renderDashboard();}];
@@ -914,6 +950,12 @@ function render(scrollToTop) {
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
+  } else if (v === 'hostInfo') {
+    html = renderHostInfo();
+    (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='ホスト様情報の入力';})();
+    (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
+    (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
+    (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
   }
   mc.innerHTML = html;
   document.getElementById('total-display').textContent = fmt(calcTotal());
@@ -945,6 +987,8 @@ function render(scrollToTop) {
       btnArea.innerHTML = BACK_OPT + '<button class="btn-next" onclick="' + doneCall2 + '">完了 ✓</button>';
     } else if (state.view === 'confirm') {
       btnArea.innerHTML = BACK_DASH;
+    } else if (state.view === 'hostInfo') {
+      btnArea.innerHTML = '<button class="btn-back" onclick="openStep(\'confirm\')">← 戻る</button>';
     }
   }
 
@@ -958,6 +1002,8 @@ function openStep(key) {
     state.view = 'optList';
   } else if (key === 'confirm') {
     state.view = 'confirm';
+  } else if (key === 'hostInfo') {
+    state.view = 'hostInfo';
   } else {
     state.view = 'step';
     state.currentStepKey = key;
@@ -1014,6 +1060,99 @@ function nextStep(){
 }
 
 // ─── 送信 ───
+function sendOrderEmail() {
+  const hi = state.hostInfo;
+  if (!hi.propName) { showToast('物件名を入力してください'); return; }
+  if (!hi.owner)    { showToast('ご契約者様名を入力してください'); return; }
+  if (!hi.email)    { showToast('連絡先メールアドレスを入力してください'); return; }
+
+  const total = calcTotal();
+  let body = '【初回セット・補充備品発注】\n';
+  body += '============================\n';
+  body += '物件名：' + hi.propName + '\n';
+  body += '物件番号：' + (hi.propNum||'—') + '\n';
+  body += 'ご契約者様名：' + hi.owner + '\n';
+  body += '担当者名：' + (hi.contact||'—') + '\n';
+  body += '連絡先メール：' + hi.email + '\n';
+  body += '============================\n';
+  body += '合計金額（目安）：' + fmt(total) + '\n';
+  body += '============================\n\n';
+  body += '【発注品目】\n';
+
+  // グレードグループ
+  for (const g of GRADE_GROUPS) {
+    const sel = state.gradeSelections[g.id];
+    const qty = state.gradeQty[g.id]||0;
+    if (sel && qty>0) {
+      const opt = g.options.find(o=>o.grade===sel);
+      if (opt) {
+        const p = opt.items.reduce((s,i)=>s+i.price,0);
+        body += '■ '+g.name+'（'+opt.label+'） x'+qty+'セット '+fmt(p*qty)+'\n';
+        opt.items.forEach(i=>{ body += '  - ['+i.id+'] '+i.name+'\n'; });
+      }
+    }
+  }
+  // セット
+  for (const [k,def] of Object.entries(SET_DEFS)) {
+    const qty = state.setQty[k]||0;
+    if (qty>0) {
+      const p = def.items.reduce((s,i)=>s+(state.hostChoice[i.id]==='host'?0:i.price),0);
+      body += '■ '+def.title+' x'+qty+'セット '+fmt(p*qty)+'\n';
+      def.items.forEach(i=>{
+        const hc = state.hostChoice[i.id]==='host'?'（ホスト様準備）':'';
+        body += '  - ['+i.id+'] '+i.name+hc+'\n';
+      });
+    }
+  }
+  // 選択カード
+  for (const [k,def] of Object.entries(CHOICE_DEFS)) {
+    const sel = state.choiceSelections[k];
+    const qty = state.choiceQty[k]||0;
+    if (sel && qty>0) {
+      const opt = def.opts.find(o=>o.key===sel);
+      if (opt) body += '■ '+def.title+'（'+opt.label+'） x'+qty+' '+fmt(opt.price*qty)+'\n';
+    }
+  }
+  // 通常品目
+  for (const [id,qty] of Object.entries(state.quantities)) {
+    if (qty<=0) continue;
+    const item = ITEMS[id];
+    if (item) {
+      const hc = state.hostChoice[id]==='host'?'（ホスト様準備）':'';
+      body += '■ ['+id+'] '+item.name+hc+' x'+qty+item.unit+' '+fmt(item.price*qty)+'\n';
+    }
+  }
+
+  body += '\n============================\n';
+  body += '送信日時：' + new Date().toLocaleString('ja-JP') + '\n';
+
+  const subject = encodeURIComponent('【発注】' + hi.propName + '（' + (hi.propNum||'番号未記入') + '） 初回セット・補充備品');
+  const bodyEnc = encodeURIComponent(body);
+  const mailto = 'mailto:customer@bizpato.com?cc=' + encodeURIComponent(hi.email) + '&subject=' + subject + '&body=' + bodyEnc;
+  window.location.href = mailto;
+
+  // 送信完了画面へ
+  setTimeout(function() {
+    document.getElementById('main-content').innerHTML = `
+      <div style="text-align:center;padding:40px 20px">
+        <div style="font-size:48px;margin-bottom:16px">📧</div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:8px">メールアプリが起動しました</div>
+        <div style="color:var(--text-sub);font-size:13px;margin-bottom:24px">内容を確認して送信してください</div>
+        <div style="background:var(--bg);border-radius:var(--radius);padding:16px;text-align:left">
+          <div style="font-size:11px;color:var(--text-sub)">送信先</div>
+          <div style="font-weight:700;margin-bottom:8px;font-family:var(--mono)">customer@bizpato.com</div>
+          <div style="font-size:11px;color:var(--text-sub)">物件名</div>
+          <div style="font-weight:700;margin-bottom:8px">${hi.propName}</div>
+          <div style="font-size:11px;color:var(--text-sub)">合計金額（目安）</div>
+          <div style="font-size:24px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(total)}</div>
+        </div>
+        <button onclick="openStep('dashboard')" class="btn-back" style="margin-top:20px;width:100%">ダッシュボードに戻る</button>
+      </div>`;
+    const btnArea = document.getElementById('nav-btns-area');
+    if (btnArea) btnArea.innerHTML = '';
+  }, 800);
+}
+
 async function submitOrder() {
   if (!state.webhookUrl){showToast('Webhook URLが設定されていません');return;}
   const btn = document.getElementById('btn-submit');
@@ -1491,7 +1630,7 @@ function renderDashboard() {
       + '</div>';
   }
 
-  let html = '<div class="section-head"><div class="section-title">発注フォーム</div><div class="section-sub">各項目を確認・入力して発注してください</div></div>';
+  let html = '<div class="section-head"><div class="section-title">初回セット・補充備品発注フォーム</div><div class="section-sub">各項目を入力して発注を送信してください</div></div>';
 
   html += '<div class="section-label">必須項目</div>';
   REQUIRED_STEPS.forEach(s => { html += taskCard(s, true); });
