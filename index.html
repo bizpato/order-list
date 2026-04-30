@@ -1450,7 +1450,6 @@ function choiceCardHTML(key) {
       <img class="choice-opt-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy">
       <div class="choice-opt-badges">${opt.ids.filter(i=>!i.startsWith('MUJI_')).map(i=>`<span class="badge badge-id">${i}</span>`).join('')}</div>
       <div class="choice-opt-name">${opt.label}</div>
-      ${opt.desc?`<div class="choice-opt-desc">${opt.desc}</div>`:''}
       ${opt.note?`<div style="font-size:10px;color:var(--amber);margin-top:2px">${opt.note}</div>`:''}
       <div class="choice-opt-price">${fmt(opt.price)}</div>
       ${active?'<div class="choice-opt-check">✓ 選択中</div>':''}
@@ -1513,7 +1512,7 @@ function refillCardHTML(key) {
     optsHTML += '<img class="choice-opt-img" src="'+(opt.img||NI)+'" onerror="this.onerror=null;this.src=\''+NI+'\'" referrerpolicy="no-referrer" loading="lazy">';
     optsHTML += '<div class="choice-opt-badges"><span class="badge badge-id">'+def.base.id+'</span>'+(opt.extraId?'<span class="badge badge-id">'+opt.extraId+'</span>':'')+'</div>';
     optsHTML += '<div class="choice-opt-name">'+opt.label+'</div>';
-    if (opt.desc) optsHTML += '<div class="choice-opt-desc">'+opt.desc+'</div>';
+
     if (opt.note) optsHTML += '<div style="font-size:10px;color:var(--amber);margin-top:2px">'+opt.note+'</div>';
     optsHTML += '<div class="choice-opt-price">'+fmt(optTotal)+'</div>';
     if (active) optsHTML += '<div class="choice-opt-check">\u2713 選択中</div>';
@@ -1784,6 +1783,14 @@ function renderStep1() {
 
   <div class="subsection"><div class="subsection-title">害虫対策</div>
   ${['S0034','S0052'].map(itemCardHTML).join('')}
+  </div>
+
+  <div class="subsection"><div class="subsection-title">浴室清掃道具</div>
+  ${['B0185'].map(itemCardHTML).join('')}
+  </div>
+
+  <div class="subsection"><div class="subsection-title">拭き掃除</div>
+  ${['B0166'].map(itemCardHTML).join('')}
   </div>`;
 }
 
@@ -1801,12 +1808,6 @@ function renderStep2() {
   </div>
   <div class="subsection"><div class="subsection-title">カトラリー</div>
   ${['B0095','B0096','B0112'].map(itemCardHTML).join('')}
-  </div>
-  <div class="subsection"><div class="subsection-title">浴室清掃道具</div>
-  ${['B0185'].map(itemCardHTML).join('')}
-  </div>
-  <div class="subsection"><div class="subsection-title">拭き掃除</div>
-  ${['B0166'].map(itemCardHTML).join('')}
   </div>
   <div class="subsection"><div class="subsection-title">トイレ掃除道具</div>
   ${['B0145','B0152'].map(itemCardHTML).join('')}
