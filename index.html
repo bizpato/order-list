@@ -55,7 +55,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .item-card.has-qty{border-color:var(--brand)}
 .item-card.mandatory{border-left:3px solid var(--purple)}
 .item-card.host-mode .qty-control{opacity:.35;pointer-events:none}
-.item-img{width:64px;height:64px;border-radius:10px;object-fit:contain;background:#fff;border:1px solid var(--border);flex-shrink:0;padding:4px}
+.item-img{width:64px;height:64px;border-radius:10px;object-fit:contain;background:#fff;border:1.5px solid var(--border);flex-shrink:0;padding:4px}
 .item-body{flex:1;min-width:0}
 .badge-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}
 .badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700}
@@ -71,7 +71,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 /* ── ホストトグル ── */
 .host-toggle-wrap{margin-top:8px}
-.host-toggle-required{font-size:11px;color:var(--amber);background:var(--amber-light);padding:6px 10px;border-radius:8px;font-weight:600;margin-bottom:6px;border:1px solid #fde68a}
+.host-toggle-required{font-size:11px;color:var(--amber);background:var(--amber-light);padding:6px 10px;border-radius:8px;font-weight:600;margin-bottom:6px;border:1.5px solid #fde68a}
 .host-toggle{display:flex;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);font-size:11px}
 .host-toggle-btn{flex:1;padding:6px 8px;text-align:center;cursor:pointer;transition:all .15s;font-weight:600;line-height:1.3}
 .host-toggle-btn.active-us{background:var(--brand);color:#fff}
@@ -92,7 +92,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .set-title{font-size:13px;font-weight:800;margin-bottom:8px}
 .set-items{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .set-item{display:flex;align-items:center;gap:6px;background:var(--bg);border-radius:8px;padding:6px 8px;flex:1;min-width:140px}
-.set-item-img{width:40px;height:40px;border-radius:6px;object-fit:contain;background:#fff;border:1px solid var(--border);flex-shrink:0;padding:2px}
+.set-item-img{width:40px;height:40px;border-radius:6px;object-fit:contain;background:#fff;border:1.5px solid var(--border);flex-shrink:0;padding:2px}
 .set-item-info{min-width:0}
 .set-item-id{font-size:9px;font-family:var(--mono);color:#94a3b8}
 .set-item-name{font-size:11px;font-weight:600;line-height:1.3}
@@ -129,7 +129,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .grade-opt-btn{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
 .grade-opt-btn.active{background:var(--brand);color:#fff;border-color:var(--brand)}
 .grade-detail{display:flex;align-items:flex-start;gap:10px}
-.grade-img{width:56px;height:56px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid var(--border);flex-shrink:0;padding:3px}
+.grade-img{width:56px;height:56px;border-radius:8px;object-fit:contain;background:#fff;border:1.5px solid var(--border);flex-shrink:0;padding:3px}
 .grade-info{flex:1;min-width:0}
 .grade-price{font-size:15px;font-weight:900;font-family:var(--mono);color:var(--brand);margin-top:4px}
 .host-note{font-size:10px;color:var(--amber);background:var(--amber-light);padding:4px 8px;border-radius:6px;margin-top:4px}
@@ -152,7 +152,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .form-label span.req{color:var(--danger);margin-left:2px}
 .form-input{width:100%;padding:12px 14px;border:1.5px dashed #f97316;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;background:#fff}
 .form-input:focus{border-color:var(--brand);border-style:solid}
-.form-card{background:#fff;border-radius:20px;border:1px solid var(--border);box-shadow:0 1px 6px rgba(0,0,0,.04);padding:20px 24px;margin-bottom:20px}
+.form-card{background:#fff;border-radius:20px;border:1.5px solid var(--border);box-shadow:0 1px 6px rgba(0,0,0,.04);padding:20px 24px;margin-bottom:20px}
 .form-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .form-card-title{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
 .form-card-badge{font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;background:#f1f5f9;padding:3px 8px;border-radius:20px}
@@ -1496,7 +1496,7 @@ function refillCardHTML(key) {
   const NI = NO_IMG_SM;
 
   let baseHTML = '<div style="display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:8px;padding:8px;margin-bottom:10px">';
-  baseHTML += '<img style="width:40px;height:40px;border-radius:6px;object-fit:contain;background:#fff;border:1px solid var(--border)"';
+  baseHTML += '<img style="width:40px;height:40px;border-radius:6px;object-fit:contain;background:#fff;border:1.5px solid var(--border)"';
   baseHTML += ' src="'+(def.base.img||NI)+'" onerror="this.onerror=null;this.src=\''+NI+'\'" referrerpolicy="no-referrer" loading="lazy">';
   baseHTML += '<div>';
   baseHTML += '<div style="font-size:9px;font-family:var(--mono);color:#94a3b8">'+def.base.id+' <span style="color:var(--text-sub)">本体（固定）</span></div>';
@@ -1750,7 +1750,8 @@ function renderStep1() {
   return `<div class="section-head"><div class="section-title">初回必須セット①</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。</div></div>
 
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>
-  ${['S0011','S0239','S0142'].map(itemCardHTML).join('')}
+  ${choiceCardHTML('mizukiri')}
+  ${['S0142'].map(itemCardHTML).join('')}
   </div>
 
   <div class="subsection"><div class="subsection-title">ゴミ袋</div>
