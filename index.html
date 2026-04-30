@@ -1750,7 +1750,6 @@ function renderStep1() {
   return `<div class="section-head"><div class="section-title">初回必須セット①</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。</div></div>
 
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>
-  ${choiceCardHTML('mizukiri')}
   ${['S0142'].map(itemCardHTML).join('')}
   </div>
 
@@ -1822,6 +1821,7 @@ function renderStep2() {
   <div class="subsection"><div class="subsection-title">シャンプー・コンディショナー</div>${gradeGroupHTML(GRADE_GROUPS[0])}</div>
   <div class="subsection"><div class="subsection-title">ボディソープ</div>${gradeGroupHTML(GRADE_GROUPS[1])}</div>
   <div class="subsection"><div class="subsection-title">ハンドソープ</div>${gradeGroupHTML(GRADE_GROUPS[2])}</div>
+  <div class="subsection"><div class="subsection-title">水切りネット</div>${choiceCardHTML('mizukiri')}</div>
   <div class="subsection"><div class="subsection-title">歯ブラシ</div>${choiceCardHTML('toothbrush')}</div>
   <div class="subsection"><div class="subsection-title">食器用洗剤</div>${choiceCardHTML('dishsoap')}</div>
   <div class="subsection"><div class="subsection-title">洗濯洗剤</div>${choiceCardHTML('laundry')}</div>
