@@ -1278,10 +1278,12 @@ function changeChoiceQty(key, delta) {
 }
 function setHostChoice(id, val) {
   state.hostChoice[id] = val;
-  if (val === 'host') state.quantities[id] = 0;
-  else {
-    const item = ITEMS[id];
-    if (item && !(state.quantities[id] > 0)) state.quantities[id] = item.min;
+  const item = ITEMS[id];
+  if (val === 'host') {
+    state.quantities[id] = 0;
+  } else {
+    // 弊社選択 → 最小発注数をセット
+    if (item) state.quantities[id] = item.min;
   }
   render();
 }
@@ -1702,14 +1704,22 @@ function renderFamily() {
 
 // ─── ステップ描画 ───
 function initDefaults() {
-  // hostPrepなし・必須品目のみデフォルト数量をセット
+  // hostPrepなし・必須品目のみデフォルト数量をセット（hostPrepアイテムは初期値0）
   const mandatoryIds = [
     'S0142','S0034','S0052','B0166','B0185','S0043',
   ];
   mandatoryIds.forEach(function(id) {
-    if (!state.quantities[id]) {
+    if (state.quantities[id] === undefined || state.quantities[id] === null) {
       const item = ITEMS[id];
       if (item && !item.hostPrep) state.quantities[id] = item.min;
+      else if (item && item.hostPrep) state.quantities[id] = 0; // 未選択
+    }
+  });
+  // hostPrepアイテムは全て初期値0（選択待ち）
+  Object.keys(ITEMS).forEach(function(id) {
+    const item = ITEMS[id];
+    if (item && item.hostPrep && (state.quantities[id] === undefined || state.quantities[id] === null)) {
+      state.quantities[id] = 0;
     }
   });
   // セットデフォルト数量
@@ -1733,18 +1743,6 @@ function renderStep0() {
 function renderStep1() {
   return `<div class="section-head"><div class="section-title">初回必須セット①</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。</div></div>
 
-  <div class="subsection"><div class="subsection-title">調理器具</div>
-  ${['B0104','B0105','B0106','B0107','B0108','B0118','B0119','B0122','B0123'].map(itemCardHTML).join('')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">食器</div>
-  ${['B0101','B0103','B0110','B0111'].map(itemCardHTML).join('')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">カトラリー</div>
-  ${['B0095','B0096','B0112'].map(itemCardHTML).join('')}
-  </div>
-
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>
   ${['S0011','S0239','S0142'].map(itemCardHTML).join('')}
   </div>
@@ -1765,21 +1763,9 @@ function renderStep1() {
   ${setCardHTML('quickle')}
   </div>
 
-  <div class="subsection"><div class="subsection-title">拭き掃除</div>
-  ${['B0166'].map(itemCardHTML).join('')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">浴室清掃道具</div>
-  ${['B0185'].map(itemCardHTML).join('')}
-  </div>
-
   <div class="subsection"><div class="subsection-title">浴室洗剤</div>
   ${setCardHTML('bath_magic')}
   ${setCardHTML('kabikiller')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">トイレ掃除道具</div>
-  ${['B0145','B0152'].map(itemCardHTML).join('')}
   </div>
 
   <div class="subsection"><div class="subsection-title">トイレ用消耗品</div>
@@ -1790,10 +1776,6 @@ function renderStep1() {
   ${setCardHTML('toilet_magic')}
   </div>
 
-  <div class="subsection"><div class="subsection-title">衣類管理</div>
-  ${['B0124'].map(itemCardHTML).join('')}
-  </div>
-
   <div class="subsection"><div class="subsection-title">害虫対策</div>
   ${['S0034','S0052'].map(itemCardHTML).join('')}
   </div>`;
@@ -1802,6 +1784,33 @@ function renderStep1() {
 function renderStep2() {
   return `<div class="section-head"><div class="section-title">初回必須セット②</div><div class="section-sub">グレード・選択肢のある必須品目です。各項目のグレードまたは選択肢を確認・変更してください。</div></div>
   <div class="mandatory-banner"><div class="mandatory-banner-title">⚠ 全項目のグレード・選択設定が必須です</div><div class="mandatory-banner-sub">デフォルトはスタンダード（最下位グレード）に設定されています</div></div>
+
+  <div class="subsection"><div class="subsection-title">🏠 弊社/ホスト構成品目（調理器具・食器・清掃用具等）</div>
+  <div style="font-size:12px;color:var(--text-sub);margin-bottom:12px;padding:8px 12px;background:#f0f7ff;border-radius:8px;border-left:3px solid var(--brand)">弊社が自動補充するか、ホスト様がご準備いただくかを選択してください。「弊社が自動補充」を選択すると数量が1になります。</div>
+  <div class="subsection"><div class="subsection-title">調理器具</div>
+  ${['B0104','B0105','B0106','B0107','B0108','B0118','B0119','B0122','B0123'].map(itemCardHTML).join('')}
+  </div>
+  <div class="subsection"><div class="subsection-title">食器</div>
+  ${['B0101','B0103','B0110','B0111'].map(itemCardHTML).join('')}
+  </div>
+  <div class="subsection"><div class="subsection-title">カトラリー</div>
+  ${['B0095','B0096','B0112'].map(itemCardHTML).join('')}
+  </div>
+  <div class="subsection"><div class="subsection-title">浴室清掃道具</div>
+  ${['B0185'].map(itemCardHTML).join('')}
+  </div>
+  <div class="subsection"><div class="subsection-title">拭き掃除</div>
+  ${['B0166'].map(itemCardHTML).join('')}
+  </div>
+  <div class="subsection"><div class="subsection-title">トイレ掃除道具</div>
+  ${['B0145','B0152'].map(itemCardHTML).join('')}
+  </div>
+  <div class="subsection"><div class="subsection-title">衣類管理</div>
+  ${['B0124'].map(itemCardHTML).join('')}
+  </div>
+  </div>
+
+  <div class="subsection"><div class="subsection-title">🛁 グレード選択品目</div>
 
   <div class="subsection"><div class="subsection-title">シャンプー・コンディショナー</div>${gradeGroupHTML(GRADE_GROUPS[0])}</div>
   <div class="subsection"><div class="subsection-title">ボディソープ</div>${gradeGroupHTML(GRADE_GROUPS[1])}</div>
@@ -1816,7 +1825,8 @@ function renderStep2() {
   <div class="subsection"><div class="subsection-title">トイレ消臭スプレー</div>${choiceCardHTML('toilet_deodor')}</div>
   <div class="subsection"><div class="subsection-title">トイレ清掃シート</div>${choiceCardHTML('toilet_sheet')}</div>
   <div class="subsection"><div class="subsection-title">サニタリー用ゴミ袋</div>${choiceCardHTML('sanitary_bag')}</div>
-  <div class="subsection"><div class="subsection-title">子供用シャンプー</div>${setCardHTML('kids_shampoo')}</div>`;
+  <div class="subsection"><div class="subsection-title">子供用シャンプー</div>${setCardHTML('kids_shampoo')}</div>
+  </div>`;
 }
 
 function renderStep3() {
