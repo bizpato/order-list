@@ -70,7 +70,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .item-price-sub{font-size:10px;color:var(--text-sub)}
 
 /* ── ホストトグル ── */
-.host-toggle{display:flex;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);margin-top:8px;font-size:11px}
+.host-toggle-wrap{margin-top:8px}
+.host-toggle-required{font-size:11px;color:var(--amber);background:var(--amber-light);padding:6px 10px;border-radius:8px;font-weight:600;margin-bottom:6px;border:1px solid #fde68a}
+.host-toggle{display:flex;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);font-size:11px}
 .host-toggle-btn{flex:1;padding:6px 8px;text-align:center;cursor:pointer;transition:all .15s;font-weight:600;line-height:1.3}
 .host-toggle-btn.active-us{background:var(--brand);color:#fff}
 .host-toggle-btn.active-host{background:var(--danger);color:#fff}
@@ -1359,10 +1361,14 @@ function itemCardHTML(id) {
   const hostBadge = item.hostPrep?'<span class="badge badge-host">ホスト様準備可</span>':'';
   const src = item.img || NO_IMG;
   let hostToggle = '';
+  const noChoice = item.hostPrep && hc === undefined;
   if (item.hostPrep) {
-    hostToggle = `<div class="host-toggle">
-      <div class="host-toggle-btn ${!isHost?'active-us':''}" onclick="setHostChoice('${id}','us')">弊社が自動補充</div>
-      <div class="host-toggle-btn ${isHost?'active-host':''}" onclick="setHostChoice('${id}','host')">ホスト様準備（補充なし）</div>
+    hostToggle = `<div class="host-toggle-wrap">
+      ${noChoice ? '<div class="host-toggle-required">⚠️ 選択してください（必須）</div>' : ''}
+      <div class="host-toggle">
+        <div class="host-toggle-btn ${!isHost && hc!==undefined?'active-us':''}" onclick="setHostChoice('${id}','us')">弊社が自動補充</div>
+        <div class="host-toggle-btn ${isHost?'active-host':''}" onclick="setHostChoice('${id}','host')">ホスト様準備（補充なし）</div>
+      </div>
     </div>`;
   }
   return `<div class="item-card ${qty>0?'has-qty':''} ${isHost?'host-mode':''}">
@@ -1436,7 +1442,7 @@ function choiceCardHTML(key) {
   const sel = state.choiceSelections[key];
   const selOpt = def.opts.find(o=>o.key===sel);
   const qty = state.choiceQty[key] || 0;
-  const reqBadge = def.req?`<span class="choice-label">${def.reqLabel||'必須'} — どちらか選択</span>`:'<span class="choice-label">任意 — 選択してください</span>';
+  const reqBadge = def.req?'<span class="badge badge-essential" style="margin-bottom:6px;display:inline-block">必須</span>':'<span class="badge" style="background:#f1f5f9;color:#64748b;margin-bottom:6px;display:inline-block">任意</span>';
   const optsHTML = def.opts.map(opt=>{
     const active = sel===opt.key;
     const src = opt.img || NO_IMG;
@@ -1463,7 +1469,7 @@ function choiceCardHTML(key) {
       </div>
     </div>`;
   } else if (def.req) {
-    qtyRow = `<div class="choice-warn">⚠️ どちらかを選んでください（必須）</div>`;
+    qtyRow = `<div class="choice-warn">⚠️ いずれかを選択してください（必須）</div>`;
   }
   return `<div class="choice-card-wrap ${sel?'has-sel':''}">
     ${reqBadge}
@@ -1769,7 +1775,7 @@ function renderStep1() {
   </div>
 
   <div class="subsection"><div class="subsection-title">トイレ用消耗品</div>
-  ${['S0040','S0074','S0043'].map(itemCardHTML).join('')}
+  ${['S0043'].map(itemCardHTML).join('')}
   </div>
 
   <div class="subsection"><div class="subsection-title">トイレ洗剤</div>
