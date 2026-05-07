@@ -1407,7 +1407,7 @@ function itemCardHTML(id, forceReq) {
       </div>
       <div class="item-brand">${item.brand}</div>
       ${hostToggle}
-      ${(qty>0&&!isHost)?`<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px">¥${(item.price*qty).toLocaleString()}</div>`:''}
+      ${(qty>0&&!isHost)?`<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:11px;font-weight:600;margin-right:4px">合計</span>¥${(item.price*qty).toLocaleString()}</div>`:''}
     </div>
     <div class="qty-control">
       <button class="qty-btn" onclick="changeQty('${id}',1)">+</button>
@@ -1474,7 +1474,7 @@ function setCardHTML(key) {
       ${subHTML}
       ${def.hostNote?`<div class="host-note" style="margin-top:6px">${def.hostNote}</div>`:''}
       <div style="border-top:1px solid #e8edf2;margin-top:8px;padding-top:8px">
-        <span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP)}</span>
+        <span style="font-size:11px;font-weight:600;margin-right:4px">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span>
       </div>
     </div>
     <div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">
@@ -1537,7 +1537,7 @@ function choiceCardHTML(key) {
 
   // 合計価格（枠内左下・単位なし）
   const totalRow = (selOpt && qty > 0)
-    ? `<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px">¥${(selOpt.price * qty).toLocaleString()}</div>`
+    ? `<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px">合計</span>¥${(selOpt.price * qty).toLocaleString()}</div>`
     : '';
 
   let warnRow = '';
@@ -1617,7 +1617,7 @@ function refillCardHTML(key) {
   if (selOpt && qty > 0) {
     const optExtra2 = selOpt.extraId ? selOpt.extraPrice : 0;
     const optTotal2 = def.base.price + optExtra2;
-    totalRow = '<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px">¥'+(optTotal2 * qty).toLocaleString()+'</div>';
+    totalRow = '<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px">合計</span>¥'+(optTotal2 * qty).toLocaleString()+'</div>';
   }
 
   let warnRow = '';
@@ -1731,7 +1731,7 @@ function gradeGroupHTML(g) {
       ${opt.hostNote?`<div class="host-note" style="margin-top:6px">${opt.hostNote}</div>`:''}
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid #e8edf2">
-      <div><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP)}</span></div>
+      <div><span style="font-size:11px;font-weight:600;margin-right:4px">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span></div>
       <div class="qty-control">
         <button class="qty-btn" onclick="changeGradeQty('${g.id}',1)">+</button>
         <div class="qty-num">${qty}</div>
