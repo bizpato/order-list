@@ -2674,10 +2674,17 @@ function renderStep1() {
 }
 
 function renderStep2() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 2/3</span></div><div class="section-title">初回必須品目 — メーカー・担当選択</div><div class="section-sub">このページでは、<strong>全ての項目に対して選択が必要</strong>です。デフォルトでは最もシンプルなメーカーが選ばれています。変更したい場合はタブをタップしてください。また「弊社が自動補充」は弊社が購入・補充を担当する選択肢、「ホスト様準備」はホスト様が自分で用意する選択肢です（弊社の発注対象外）。</div></div>
-
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 2/3</span></div><div class="section-title">初回必須品目 — メーカー・担当選択</div><div class="section-sub">弊社が購入・補充する品目と、ホスト様が自分で用意する品目を選択してください。グレード・メーカー選択のある品目は必ず選択しないと次に進めません。</div></div>
+  <div style="display:flex;align-items:flex-start;gap:10px;background:#fff5f5;border:1.5px solid #fca5a5;border-left:4px solid #ef4444;border-radius:10px;padding:12px 14px;margin-bottom:16px">
+    <div style="flex-shrink:0;width:28px;height:28px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:800;color:#dc2626;margin-bottom:3px">ホスト様にてご準備の品目は「ホスト様準備」に変更してください</div>
+      <div style="font-size:11px;color:#b91c1c;line-height:1.6">デフォルトは「弊社が自動補充」で発注対象になっています。ホスト様が自分で用意される場合は必ず「ホスト様準備（補充なし）」を選択してください。</div>
+    </div>
+  </div>
   <div class="subsection"><div class="subsection-title"> 弊社/ホスト構成品目（調理器具・食器・清掃用具等）</div>
-  <div style="font-size:12px;color:var(--text-sub);margin-bottom:12px;padding:8px 12px;background:#f0f7ff;border-radius:8px;border-left:3px solid var(--brand)">弊社が自動補充するか、ホスト様がご準備いただくかを選択してください。「弊社が自動補充」を選択すると数量が1になります。</div>
   <div class="subsection"><div class="subsection-title">調理器具</div>
   ${['B0104','B0105','B0106','B0107','B0108','B0118','B0119','B0122','B0123'].map(id => itemCardHTML(id)).join('')}
   </div>
