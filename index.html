@@ -1389,11 +1389,11 @@ function itemCardHTML(id, forceReq) {
   if (item.hostPrep && (reqVal==='必須' || reqVal==='ファミリー必須')) {
     const noChoice = hc === undefined;
     hostToggle = `<div class="host-toggle-wrap">
-      ${noChoice ? '<div class="host-toggle-required">⚠️ 選択してください（必須）</div>' : ''}
       <div class="host-toggle">
         <div class="host-toggle-btn ${!isHost && hc!==undefined?'active-us':''}" onclick="setHostChoice('${id}','us')">弊社が自動補充</div>
         <div class="host-toggle-btn ${isHost?'active-host':''}" onclick="setHostChoice('${id}','host')">ホスト様準備（補充なし）</div>
       </div>
+      ${noChoice ? '<div class="host-toggle-required" style="margin-top:6px">⚠️ 選択してください</div>' : ''}
     </div>`;
   }
   const forceShow = item.hostPrep && (reqVal==='必須' || reqVal==='ファミリー必須');
@@ -1462,22 +1462,28 @@ function setCardHTML(key) {
     ? `<div style="margin-left:16px;border-left:2px solid #e8edf2;padding-left:12px">${subItems.map(i => itemRow(i, false)).join('')}</div>`
     : '';
 
+  // setCardHTML: 数量コントロールを右端縦配置、合計価格を枠内下部に表示
+  const setDetailHTML = `<div style="display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--brand-base);border-radius:12px;margin-bottom:0">
+    <div style="flex:1;min-width:0">
+      ${mainHTML}
+      ${subHTML}
+      ${def.hostNote?`<div class="host-note" style="margin-top:6px">${def.hostNote}</div>`:''}
+      <div style="border-top:1px solid #e8edf2;margin-top:8px;padding-top:8px">
+        <span class="set-total">${fmt(totalP)}</span><span class="set-total-sub"> / セット</span>
+      </div>
+    </div>
+    <div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">
+      <button class="qty-btn" onclick="changeSetQty('${key}',1)">+</button>
+      <div class="qty-num">${qty}</div>
+      <div class="qty-unit">セット</div>
+      <button class="qty-btn" onclick="changeSetQty('${key}',-1)" ${qty<=0?'disabled':''}>−</button>
+    </div>
+  </div>`;
   return `<div class="set-card ${qty>0?'has-qty':''} ${def.req?'mandatory':''}">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
       ${reqBadge}<div class="set-title" style="margin:0">${def.title}</div>
-      <div style="margin-left:auto;font-size:11px;color:var(--text-sub)">合計 <strong style="font-family:var(--mono);color:var(--accent)">${fmt(totalP)}</strong></div>
     </div>
-    ${mainHTML}
-    ${subHTML}
-    <div class="set-footer">
-      <div><span class="set-total">${fmt(totalP)}</span><span class="set-total-sub"> / セット</span></div>
-      <div class="choice-qty-ctrl">
-        <button class="qty-btn" onclick="changeSetQty('${key}',1)">+</button>
-        <div class="qty-num">${qty}</div>
-        <div class="qty-unit">セット</div>
-        <button class="qty-btn" onclick="changeSetQty('${key}',-1)" ${qty<=0?'disabled':''}>−</button>
-      </div>
-    </div>
+    ${setDetailHTML}
   </div>`;
 }
 
@@ -1487,7 +1493,9 @@ function choiceCardHTML(key) {
   const sel = state.choiceSelections[key];
   const selOpt = def.opts.find(o=>o.key===sel);
   const qty = state.choiceQty[key] || 0;
-  const reqBadge = def.req?'<span class="badge badge-essential" style="margin-bottom:6px;display:inline-block">必須</span>':'<span class="badge" style="background:#f1f5f9;color:#64748b;margin-bottom:6px;display:inline-block">任意</span>';
+  const reqBadge = def.req==='必須'?'<span class="badge badge-essential" style="margin-bottom:6px;display:inline-block">必須</span>':
+    def.req==='ファミリー必須'?'<span class="badge badge-family" style="margin-bottom:6px;display:inline-block">ファミリー必須</span>':
+    def.req==='推奨'?'<span class="badge badge-recommend" style="margin-bottom:6px;display:inline-block">推奨</span>':'';
   const unit = selOpt?.unit || '個';
 
   // タブ：全選択肢を常時表示、選択中はハイライト
@@ -1520,22 +1528,23 @@ function choiceCardHTML(key) {
     </div>`;
   }
 
-  // 合計価格（カード枠外・下部）
+  // 合計価格（枠内下部）
   const totalRow = (selOpt && qty > 0)
-    ? `<div style="text-align:right;font-size:13px;font-weight:900;color:var(--brand);font-family:var(--mono);padding:6px 4px 0">合計 ${fmt(selOpt.price * qty)}</div>`
+    ? `<div style="text-align:right;font-size:13px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px">合計 ${fmt(selOpt.price * qty)}</div>`
     : '';
 
   let warnRow = '';
   if (!sel && def.req) {
-    warnRow = `<div class="choice-warn" style="margin-top:10px">⚠️ いずれかを選択してください（必須）</div>`;
+    warnRow = `<div class="choice-warn" style="margin-top:10px">⚠️ 選択してください</div>`;
   }
   return `<div class="choice-card-wrap ${sel?'has-sel':''}">
     ${reqBadge}
     <div class="choice-title">${def.title}</div>
     <div class="choice-opts" style="margin-bottom:0">${tabsHTML}</div>
     ${detailHTML}
+    ${totalRow}
     ${warnRow}
-  </div>${totalRow}`;
+  </div>`;
 }
 
 
@@ -1594,17 +1603,17 @@ function refillCardHTML(key) {
     detailHTML += '</div>';
   }
 
-  // 合計価格（カード枠外・下部）
+  // 合計価格（枠内下部）
   let totalRow = '';
   if (selOpt && qty > 0) {
     const optExtra2 = selOpt.extraId ? selOpt.extraPrice : 0;
     const optTotal2 = def.base.price + optExtra2;
-    totalRow = '<div style="text-align:right;font-size:13px;font-weight:900;color:var(--brand);font-family:var(--mono);padding:6px 4px 0">合計 '+fmt(optTotal2 * qty)+'</div>';
+    totalRow = '<div style="text-align:right;font-size:13px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px">合計 '+fmt(optTotal2 * qty)+'</div>';
   }
 
   let warnRow = '';
   if (!sel) {
-    warnRow = '<div class="choice-warn" style="margin-top:10px">⚠️ どちらか選択してください（必須）</div>';
+    warnRow = '<div class="choice-warn" style="margin-top:10px">⚠️ 選択してください</div>';
   }
 
   let html = '<div class="choice-card-wrap '+(sel?'has-sel':'')+'">';
@@ -1613,8 +1622,9 @@ function refillCardHTML(key) {
   html += baseHTML;
   html += '<div class="choice-opts" style="margin-bottom:0">'+tabsHTML+'</div>';
   html += detailHTML;
+  html += totalRow;
   html += warnRow;
-  html += '</div>'+totalRow;
+  html += '</div>';
   return html;
 }
 
@@ -1655,7 +1665,7 @@ function gradeGroupHTML(g) {
     <div class="badge-row" style="margin-bottom:6px">${reqBadgeG}</div>
     <div class="grade-name">${g.name}</div>
     <div class="grade-options">${btns}</div>
-    <div class="choice-warn">⚠️ グレードを選択してください（必須）</div>
+    <div class="choice-warn">⚠️ 選択してください</div>
   </div>`;
 
   // 本体（ボトル/ディスペンサー）と詰替を分類
