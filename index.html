@@ -30,7 +30,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 /* ── ヘッダー ── */
 .header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-.header-inner{max-width:720px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-inner{max-width:640px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .header-logo{display:flex;align-items:center;gap:12px}
 .logo-icon{background:var(--brand);padding:9px;border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(33,83,135,0.22);flex-shrink:0}
 .logo-icon svg{width:22px;height:22px;color:#fff;display:block}
@@ -43,9 +43,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .progress-pct{font-size:13px;font-weight:900;color:var(--brand);min-width:32px;text-align:right}
 
 /* ── メイン ── */
-.main{padding:20px 16px;max-width:720px;margin:0 auto}
+.main{padding:20px 16px;max-width:640px;margin:0 auto}
 .section-head{margin-bottom:20px}
-.section-title{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.section-title{font-size:16px;font-weight:800;letter-spacing:-.3px}
 .section-sub{font-size:12px;color:var(--text-sub);margin-top:4px}
 .subsection{margin-bottom:24px}
 .subsection-title{font-size:10px;font-weight:900;color:var(--text-sub);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding-left:2px}
@@ -138,7 +138,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 /* ── フッター ── */
 .footer{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-top:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100}
-.footer-inner{max-width:720px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:flex-end;gap:12px}
+.footer-inner{max-width:640px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:flex-end;gap:12px}
 .total-wrap .total-label{font-size:10px;color:var(--text-sub);font-weight:700}
 .total-wrap .total-amount{font-size:18px;font-weight:900;font-family:var(--mono);color:var(--brand)}
 .nav-btns{display:flex;gap:8px}
@@ -164,7 +164,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 @media(max-width:480px){.form-row{grid-template-columns:1fr}}
 
 /* ── ダッシュボード タスクカード ── */
-.task-card{display:flex;align-items:center;gap:14px;padding:20px 24px;background:#fff;border:1px solid #e2e8f0;border-radius:28px;margin-bottom:12px;cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .2s;box-shadow:0 1px 4px rgba(0,0,0,0.03);user-select:none;-webkit-tap-highlight-color:transparent}
+.task-card{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#fff;border:1px solid #e2e8f0;border-radius:20px;margin-bottom:10px;cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .2s;box-shadow:0 1px 4px rgba(0,0,0,0.03);user-select:none;-webkit-tap-highlight-color:transparent}
 .task-card:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 16px rgba(33,83,135,0.08)}
 .task-card.done{background:#f0f9ff;border-color:#bfdbfe;opacity:0.65}
 .task-card.done:hover{transform:none;box-shadow:0 1px 4px rgba(0,0,0,0.03)}
@@ -177,9 +177,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .checkbox-done svg{width:16px;height:16px;color:white;display:block}
 .task-card-icon{width:40px;height:40px;border-radius:12px;background:var(--brand-accent);display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;flex-shrink:0}
 .task-card-body{flex:1;min-width:0}
-.task-card-title{font-size:15px;font-weight:800;color:#1e293b}
+.task-card-title{font-size:13px;font-weight:800;color:#1e293b}
 .task-card.done .task-card-title{color:#94a3b8;text-decoration:line-through}
-.task-card-sub{font-size:12px;color:var(--text-sub);margin-top:3px;font-weight:500}
+.task-card-sub{font-size:11px;color:var(--text-sub);margin-top:2px;font-weight:500}
 .task-card.done .task-card-sub{color:#cbd5e1}
 .task-card-sub.done-text{color:var(--brand);font-weight:600}
 .task-card-arrow{font-size:20px;color:#cbd5e1;flex-shrink:0}
@@ -187,7 +187,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 /* スティッキー発注バー */
 .sticky-submit{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-top:1px solid #e2e8f0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .4s cubic-bezier(0.65,0,0.35,1);box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
 .sticky-submit.visible{transform:translateY(0)}
-.sticky-submit-inner{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:8px}
+.sticky-submit-inner{max-width:640px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:8px}
 .sticky-submit-msg{font-size:13px;font-weight:700;color:#10b981}
 .sticky-submit-msg span{font-size:11px;color:#64748b;font-weight:500;display:block;margin-top:2px}
 /* 商品選択画面の総額固定バー */
@@ -205,15 +205,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .reset-dialog-btns .btn-cancel{flex:1;padding:12px;border-radius:12px;border:1.5px solid #e2e8f0;background:#fff;font-size:14px;font-weight:700;cursor:pointer;color:#64748b}
 .reset-dialog-btns .btn-confirm-reset{flex:1;padding:12px;border-radius:12px;border:none;background:#dc2626;font-size:14px;font-weight:700;cursor:pointer;color:#fff}
 
-.btn-add-cart{width:100%;padding:11px 16px;border-radius:12px;border:none;background:#f97316;color:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;letter-spacing:.03em;margin-top:10px}
-.btn-add-cart:hover{background:#ea6c0a}
-.btn-add-cart-sm{padding:8px 14px;border-radius:10px;border:none;background:#f97316;color:#fff;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
-.btn-add-cart-sm:hover{background:#ea6c0a}
+.btn-add-cart{width:100%;padding:11px 16px;border-radius:12px;border:none;background:#215387;color:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;letter-spacing:.03em;margin-top:10px}
+.btn-add-cart:hover{background:#1a4270}
+.btn-add-cart-sm{padding:8px 14px;border-radius:10px;border:none;background:#215387;color:#fff;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.btn-add-cart-sm:hover{background:#1a4270}
 
 .total-bar.visible{display:flex}
 .total-bar-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.8)}
 .total-bar-amount{font-size:20px;font-weight:900;font-family:var(--mono);color:#fff}
-.total-bar-inner{max-width:720px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+.total-bar-inner{max-width:640px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
 
 
 /* ── サマリー ── */
@@ -239,10 +239,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .qty-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .qty-label{font-size:11px;color:var(--text-sub);font-weight:500}
 /* ── カートに追加ボタン ── */
-.btn-add-cart{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:none;background:#f97316;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap}
-.btn-add-cart:hover:not(:disabled){opacity:.85;transform:translateY(-1px)}
+.btn-add-cart{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:none;background:#215387;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap}
+.btn-add-cart:hover:not(:disabled){background:#1a4270;transform:translateY(-1px)}
 .btn-add-cart:disabled{background:#cbd5e1;color:#94a3b8;cursor:not-allowed;transform:none}
-.btn-add-cart.in-cart{background:#0284c7}
+.btn-add-cart.in-cart{background:#059669}
 .cart-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding-top:8px;border-top:1px solid #e8edf2}
 .cart-row-left{display:flex;align-items:center;gap:8px}
 
@@ -274,7 +274,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <div class="footer-inner">
     <div class="nav-btns" id="nav-btns-area">
       <button class="btn-back" id="btn-back" onclick="prevStep()">← 戻る</button>
-      <button class="btn-reset" id="btn-reset-footer" onclick="showResetDialog()" style="display:none">リセット</button>
+      <button class="btn-reset" id="btn-reset-footer" onclick="showResetDialog()" style="display:none">すべてリセット（入力内容を全て削除）</button>
       <button class="btn-next" id="btn-next" onclick="nextStep()">次へ →</button>
     </div>
   </div>
@@ -1182,14 +1182,14 @@ function render(scrollToTop) {
   const mc = document.getElementById('main-content');
   const v = state.view;
   let html = '';
-  if (v === 'dashboard') {
+    if (v === 'dashboard') {
     html = renderDashboard();
     // タブ・ヘッダーを隠す
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.add('with-total-bar');const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='none';},10);
+      setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.add('with-total-bar');const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
   } else if (v === 'step') {
     const stepDef = [...REQUIRED_STEPS, RECOMMEND_STEP, FAMILY_STEP].find(s => s.key === state.currentStepKey);
     if (stepDef) {
@@ -2458,10 +2458,10 @@ function renderDashboard() {
   function stepBlock(num, done, partial, title, desc, cardsHtml) {
     const borderColor = done ? '#bbf7d0' : (partial ? '#fde68a' : '#e2e8f0');
     const bg = done ? '#f8fffe' : '#fff';
-    return '<div style="background:'+bg+';border:1.5px solid '+borderColor+';border-radius:24px;padding:20px;margin-bottom:16px">'
+    return '<div style="background:'+bg+';border:1.5px solid '+borderColor+';border-radius:20px;padding:16px;margin-bottom:14px">'
       + stepBadge(num, done, partial)
-      + '<div style="font-size:16px;font-weight:800;color:#1e293b;margin-bottom:4px">'+title+'</div>'
-      + '<div style="font-size:12px;color:#64748b;margin-bottom:16px;line-height:1.6">'+desc+'</div>'
+      + '<div style="font-size:14px;font-weight:800;color:#1e293b;margin-bottom:3px">'+title+'</div>'
+      + '<div style="font-size:11px;color:#64748b;margin-bottom:14px;line-height:1.6">'+desc+'</div>'
       + cardsHtml
       + '</div>';
   }
@@ -2476,19 +2476,19 @@ function renderDashboard() {
     ? '必須項目の入力が完了しました。'
     : '初回必須セット①→②の順に入力し、最後にファミリー物件必須品目を確認してください。初回必須セット①②は必須、ファミリー物件必須品目は任意です。';
 
-  let html = '<div style="margin-bottom:24px"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><div style="width:4px;height:28px;background:linear-gradient(180deg,var(--brand),var(--brand-light));border-radius:2px"></div><div class="section-title">初回セット・補充備品発注フォーム</div></div><button class="btn-reset" onclick="showResetDialog()">リセット</button></div><div class="section-sub">下記の3ステップを順に進めてください</div></div>';
+  let html = '';
 
-  html += stepBlock(1, step1Done, step1Partial, '必須項目の入力', step1Desc, step1Cards);
+  html += stepBlock(1, step1Done, step1Partial, '初回必須品目の選択・数量確認', step1Desc, step1Cards);
 
   const step2Desc = step2Done
     ? '推奨品目の確認が完了しました。'
     : '弊社がお勧めする品目をまとめています。追加希望のものを選んでください。不要な場合はスキップできます。';
-  html += stepBlock(2, step2Done, false, '推奨品目の確認', step2Desc, taskCard(RECOMMEND_STEP, false));
+  html += stepBlock(2, step2Done, false, '推奨品目の追加（任意）', step2Desc, taskCard(RECOMMEND_STEP, false));
 
   const step3Desc = step3Done
     ? step3Count + 'カテゴリ選択済みです。'
     : 'アメニティ・キッチン・BBQなどの任意品目を選べます。不要な場合はスキップできます。';
-  html += stepBlock(3, step3Done, false, 'その他任意追加品目', step3Desc, optCard());
+  html += stepBlock(3, step3Done, false, '任意追加品目の選択', step3Desc, optCard());
 
   // スティッキーバー制御（ダッシュボード表示時のみ）
   setTimeout(function() {
@@ -2507,11 +2507,7 @@ function renderDashboard() {
       + '</div>'
       + '</div>';
   }
-  html += '<div style="margin-top:32px;padding-top:20px;border-top:1px solid #f1f5f9;text-align:center">'
-    + '<button class="btn-step-reset" onclick="showResetDialog()" style="color:#dc2626;border-color:#fca5a5;background:#fff5f5">'
-    + '🗑️ すべてリセット（入力内容を全て削除）'
-    + '</button>'
-    + '</div>';
+  
   return html;
 }
 
