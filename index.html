@@ -1490,19 +1490,30 @@ function choiceCardHTML(key) {
   const reqBadge = def.req?'<span class="badge badge-essential" style="margin-bottom:6px;display:inline-block">必須</span>':'<span class="badge" style="background:#f1f5f9;color:#64748b;margin-bottom:6px;display:inline-block">任意</span>';
 
   // 選択肢ボタン（選択前：名前のみ、選択後：選択中のみ画像・金額表示）
+  const unit = selOpt?.unit || '個';
   const optsHTML = def.opts.map(opt=>{
     const active = sel===opt.key;
     if (active) {
-      // 選択中：画像・品番・名前・注記・金額・選択中マーク を表示
+      // 選択中：画像・品番・名前・注記・金額・数量コントロールを右端に表示
       const src = opt.img || NO_IMG;
-      return `<div class="choice-opt active" onclick="selectChoice('${key}','${opt.key}')">
-        <img class="choice-opt-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy">
-        <div class="choice-opt-badges">${(opt.ids||[]).filter(i=>!i.startsWith('MUJI_')).map(i=>`<span class="badge badge-id">${i}</span>`).join('')}</div>
-        <div class="choice-opt-name">${opt.label}</div>
-        ${opt.note?`<div style="font-size:10px;color:var(--amber);margin-top:2px">${opt.note}</div>`:''}
-        ${opt.desc?`<div style="font-size:10px;color:var(--text-sub);margin-top:2px">${opt.desc}</div>`:''}
-        <div class="choice-opt-price">${fmt(opt.price)}</div>
-        <div class="choice-opt-check">✓ 選択中</div>
+      const totalAmt = opt.price * qty;
+      return `<div class="choice-opt active" onclick="selectChoice('${key}','${opt.key}')" style="display:flex;align-items:flex-start;gap:10px;padding:10px">
+        <img class="choice-opt-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy" style="width:56px;height:56px;flex-shrink:0;object-fit:contain;border-radius:8px;background:var(--bg)">
+        <div style="flex:1;min-width:0">
+          <div class="choice-opt-badges">${(opt.ids||[]).filter(i=>!i.startsWith('MUJI_')).map(i=>`<span class="badge badge-id">${i}</span>`).join('')}</div>
+          <div class="choice-opt-name">${opt.label}</div>
+          ${opt.note?`<div style="font-size:10px;color:var(--amber);margin-top:2px">${opt.note}</div>`:''}
+          ${opt.desc?`<div style="font-size:10px;color:var(--text-sub);margin-top:2px">${opt.desc}</div>`:''}
+          <div class="choice-opt-price" style="margin-top:4px">${fmt(opt.price)}<span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / ${unit}</span></div>
+          ${qty>0?`<div style="font-size:11px;font-weight:700;color:var(--brand);margin-top:2px">合計 ${fmt(totalAmt)}</div>`:''}
+          <div class="choice-opt-check">✓ 選択中</div>
+        </div>
+        <div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">
+          <button class="qty-btn" onclick="changeChoiceQty('${key}',1)">+</button>
+          <div class="qty-num">${qty}</div>
+          <div class="qty-unit">${unit}</div>
+          <button class="qty-btn" onclick="changeChoiceQty('${key}',-1)" ${qty<=0?'disabled':''}>−</button>
+        </div>
       </div>`;
     } else {
       // 未選択：名前のみのコンパクトボタン
@@ -1510,26 +1521,15 @@ function choiceCardHTML(key) {
     }
   }).join('');
 
-  let qtyRow = '';
-  if (sel) {
-    const unit = selOpt?.unit || '個';
-    qtyRow = `<div class="choice-qty-row">
-      <div class="choice-qty-label">${selOpt?.label}</div>
-      <div class="choice-qty-ctrl">
-        <button class="qty-btn" onclick="changeChoiceQty('${key}',1)">+</button>
-        <div class="qty-num">${qty}</div>
-        <div class="qty-unit">${unit}</div>
-        <button class="qty-btn" onclick="changeChoiceQty('${key}',-1)" ${qty<=0?'disabled':''}>−</button>
-      </div>
-    </div>`;
-  } else if (def.req) {
-    qtyRow = `<div class="choice-warn">⚠️ いずれかを選択してください（必須）</div>`;
+  let warnRow = '';
+  if (!sel && def.req) {
+    warnRow = `<div class="choice-warn">⚠️ いずれかを選択してください（必須）</div>`;
   }
   return `<div class="choice-card-wrap ${sel?'has-sel':''}">
     ${reqBadge}
     <div class="choice-title">${def.title}</div>
     <div class="choice-opts">${optsHTML}</div>
-    ${qtyRow}
+    ${warnRow}
   </div>`;
 }
 
@@ -1563,35 +1563,33 @@ function refillCardHTML(key) {
     const active = sel===opt.key;
     const optExtra = opt.extraId ? opt.extraPrice : 0;
     const optTotal = def.base.price + optExtra;
-    optsHTML += '<div class="choice-opt '+(active?'active':'')+'" onclick="selectRefill(\''+key+'\',\''+opt.key+'\')" style="flex:1;min-width:120px">';
-    optsHTML += '<img class="choice-opt-img" src="'+(opt.img||NI)+'" onerror="this.onerror=null;this.src=\''+NI+'\'" referrerpolicy="no-referrer" loading="lazy">';
-    optsHTML += '<div class="choice-opt-badges"><span class="badge badge-id">'+def.base.id+'</span>'+(opt.extraId?'<span class="badge badge-id">'+opt.extraId+'</span>':'')+'</div>';
-    optsHTML += '<div class="choice-opt-name">'+opt.label+'</div>';
-
-    if (opt.note) optsHTML += '<div style="font-size:10px;color:var(--amber);margin-top:2px">'+opt.note+'</div>';
-    optsHTML += '<div class="choice-opt-price">'+fmt(optTotal)+'</div>';
-    if (active) optsHTML += '<div class="choice-opt-check">\u2713 選択中</div>';
-    optsHTML += '</div>';
+    const totalAmt = optTotal * qty;
+    if (active) {
+      optsHTML += '<div class="choice-opt active" onclick="selectRefill(\''+key+'\',\''+opt.key+'\')" style="display:flex;align-items:flex-start;gap:10px;padding:10px;flex:1">';
+      optsHTML += '<img class="choice-opt-img" src="'+(opt.img||NI)+'" onerror="this.onerror=null;this.src=\''+NI+'\'" referrerpolicy="no-referrer" loading="lazy" style="width:56px;height:56px;flex-shrink:0;object-fit:contain;border-radius:8px;background:var(--bg)">';
+      optsHTML += '<div style="flex:1;min-width:0">';
+      optsHTML += '<div class="choice-opt-badges"><span class="badge badge-id">'+def.base.id+'</span>'+(opt.extraId?'<span class="badge badge-id">'+opt.extraId+'</span>':'')+'</div>';
+      optsHTML += '<div class="choice-opt-name">'+opt.label+'</div>';
+      if (opt.note) optsHTML += '<div style="font-size:10px;color:var(--amber);margin-top:2px">'+opt.note+'</div>';
+      if (selOpt.extraId) optsHTML += '<div style="font-size:10px;color:var(--text-sub)">'+fmt(def.base.price)+' + '+fmt(selOpt.extraPrice)+'</div>';
+      optsHTML += '<div class="choice-opt-price" style="margin-top:4px">'+fmt(optTotal)+'<span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / セット</span></div>';
+      if (qty>0) optsHTML += '<div style="font-size:11px;font-weight:700;color:var(--brand);margin-top:2px">合計 '+fmt(totalAmt)+'</div>';
+      optsHTML += '<div class="choice-opt-check">\u2713 選択中</div>';
+      optsHTML += '</div>';
+      optsHTML += '<div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">';
+      optsHTML += '<button class="qty-btn" onclick="changeRefillQty(\''+key+'\',1)">+</button>';
+      optsHTML += '<div class="qty-num">'+qty+'</div>';
+      optsHTML += '<div class="qty-unit">セット</div>';
+      optsHTML += '<button class="qty-btn" onclick="changeRefillQty(\''+key+'\',-1)" '+(qty<=0?'disabled':'')+'>&#x2212;</button>';
+      optsHTML += '</div>';
+      optsHTML += '</div>';
+    } else {
+      optsHTML += '<div class="choice-opt-btn" onclick="selectRefill(\''+key+'\',\''+opt.key+'\')" style="flex:1;min-width:120px;text-align:center">'+opt.label+'</div>';
+    }
   });
 
   let qtyRow = '';
-  if (sel && selOpt) {
-    qtyRow  = '<div class="choice-qty-row" style="flex-direction:column;align-items:stretch;gap:8px;margin-top:10px">';
-    qtyRow += '<div style="display:flex;align-items:center;justify-content:space-between">';
-    qtyRow += '<div><div class="choice-qty-label">'+selOpt.label+'</div>';
-    if (selOpt.extraId) qtyRow += '<div style="font-size:10px;color:var(--text-sub)">'+fmt(def.base.price)+' + '+fmt(selOpt.extraPrice)+'</div>';
-    qtyRow += '</div>';
-    qtyRow += '<div style="text-align:right">';
-    qtyRow += '<div style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--accent)">'+fmt(totalPrice)+'</div>';
-    qtyRow += '<div style="font-size:10px;color:var(--text-sub)">'+fmt(setPrice)+' \xd7 '+qty+'\u30bb\u30c3\u30c8</div>';
-    qtyRow += '</div></div>';
-    qtyRow += '<div class="choice-qty-ctrl" style="justify-content:flex-end">';
-    qtyRow += '<button class="qty-btn" onclick="changeRefillQty(\''+key+'\',-1)" '+(qty<=0?'disabled':'')+'>&#x2212;</button>';
-    qtyRow += '<div class="qty-num">'+qty+'</div>';
-    qtyRow += '<div class="qty-unit">\u30bb\u30c3\u30c8</div>';
-    qtyRow += '<button class="qty-btn" onclick="changeRefillQty(\''+key+'\',1)">+</button>';
-    qtyRow += '</div></div>';
-  } else {
+  if (!sel) {
     qtyRow = '<div class="choice-warn" style="margin-top:10px">\u26a0\ufe0f \u3069\u3061\u3089\u304b\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\uff08\u5fc5\u9808\uff09</div>';
   }
 
@@ -1877,7 +1875,7 @@ function renderStep0() {
 
 function renderStep1() {
   return `<div class="section-head"><div class="section-title">初回必須セット①</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。</div></div>
-  <div class="mandatory-banner" style="background:#fff7ed;border-left:3px solid #f97316"><div class="mandatory-banner-title" style="color:#c2410c">⚠ 各品目の数量を必ず「1以上」に設定してください</div><div class="mandatory-banner-sub">初期値はデフォルト数量で設定されていますが、内容をご確認の上、必要に応じて数量を調整してください</div></div>
+  <div class="mandatory-banner" style="background:#eff6ff;border-left:3px solid var(--brand)"><div class="mandatory-banner-title" style="color:var(--brand)">ℹ︎ 各品目の数量はデフォルトで「1」が設定されています</div><div class="mandatory-banner-sub">2個以上必要な場合のみ、数量を変更してください。内容をご確認の上、必要に応じて調整してください</div></div>
 
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>
   ${['S0142'].map(id => itemCardHTML(id)).join('')}
