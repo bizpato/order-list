@@ -1401,10 +1401,13 @@ function itemCardHTML(id, forceReq) {
     <img class="item-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy" alt="${item.name}">
     <div class="item-body">
       <div class="badge-row"><span class="badge badge-id">${id}</span>${reqBadge}</div>
-      <div class="item-name">${item.name}</div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">
+        <div class="item-name" style="flex:1;min-width:0">${item.name}</div>
+        <div style="flex-shrink:0;text-align:right"><span class="item-price">${fmt(item.price)}</span><span class="item-price-sub"> / ${item.unit}・最小${item.min}${item.unit}</span></div>
+      </div>
       <div class="item-brand">${item.brand}</div>
-      <div><span class="item-price">${fmt(item.price)}</span><span class="item-price-sub"> × 最小${item.min}${item.unit}</span></div>
       ${hostToggle}
+      ${(qty>0&&!isHost)?`<div style="font-size:12px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px">¥${(item.price*qty).toLocaleString()}</div>`:''}
     </div>
     <div class="qty-control">
       <button class="qty-btn" onclick="changeQty('${id}',1)">+</button>
@@ -1450,8 +1453,10 @@ function setCardHTML(key) {
       <img style="width:${imgSize};height:${imgSize};border-radius:${isMain?'8px':'6px'};object-fit:contain;background:#fff;border:1px solid #e8edf2;flex-shrink:0" src="${src}" onerror="this.onerror=null;this.src='${NI}'" referrerpolicy="no-referrer" loading="lazy">
       <div style="flex:1">
         <div style="font-size:9px;font-family:var(--mono);color:#94a3b8">${item.id} <span style="color:var(--text-sub)">${label}</span></div>
-        <div style="font-size:${fontSize};font-weight:${isMain?'700':'600'}">${item.name}</div>
-        <div style="font-size:${priceSize};font-weight:${isMain?'900':'800'};font-family:var(--mono);color:var(--brand)">${fmt(item.price)}</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">
+          <div style="font-size:${fontSize};font-weight:${isMain?'700':'600'};flex:1;min-width:0">${item.name}</div>
+          <div style="flex-shrink:0;font-size:${priceSize};font-weight:${isMain?'900':'800'};font-family:var(--mono);color:var(--brand)">${fmt(item.price)}</div>
+        </div>
         ${toggle}
       </div>
     </div>`;
@@ -1469,7 +1474,7 @@ function setCardHTML(key) {
       ${subHTML}
       ${def.hostNote?`<div class="host-note" style="margin-top:6px">${def.hostNote}</div>`:''}
       <div style="border-top:1px solid #e8edf2;margin-top:8px;padding-top:8px">
-        <span class="set-total">${fmt(totalP)}</span><span class="set-total-sub"> / セット</span>
+        <span class="set-total">${fmt(totalP)}</span>
       </div>
     </div>
     <div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">
@@ -1513,10 +1518,12 @@ function choiceCardHTML(key) {
       <img src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy" style="width:56px;height:56px;flex-shrink:0;object-fit:contain;border-radius:8px;background:#fff">
       <div style="flex:1;min-width:0">
         <div class="choice-opt-badges">${(selOpt.ids||[]).filter(i=>!i.startsWith('MUJI_')).map(i=>`<span class="badge badge-id">${i}</span>`).join('')}</div>
-        <div class="choice-opt-name">${selOpt.label}</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">
+          <div class="choice-opt-name" style="flex:1;min-width:0">${selOpt.label}</div>
+          <div style="flex-shrink:0"><span class="choice-opt-price">${fmt(selOpt.price)}</span><span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / ${unit}</span></div>
+        </div>
         ${selOpt.note?`<div style="font-size:10px;color:var(--amber);margin-top:2px">${selOpt.note}</div>`:''}
         ${selOpt.desc?`<div style="font-size:10px;color:var(--text-sub);margin-top:2px">${selOpt.desc}</div>`:''}
-        <div class="choice-opt-price" style="margin-top:4px">${fmt(selOpt.price)}<span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / ${unit}</span></div>
         <div class="choice-opt-check">✓ 選択中</div>
       </div>
       <div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">
@@ -1528,9 +1535,9 @@ function choiceCardHTML(key) {
     </div>`;
   }
 
-  // 合計価格（枠内下部）
+  // 合計価格（枠内左下・単位なし）
   const totalRow = (selOpt && qty > 0)
-    ? `<div style="text-align:right;font-size:13px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px">合計 ${fmt(selOpt.price * qty)}</div>`
+    ? `<div style="font-size:13px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px">¥${(selOpt.price * qty).toLocaleString()}</div>`
     : '';
 
   let warnRow = '';
@@ -1588,10 +1595,12 @@ function refillCardHTML(key) {
     detailHTML += '<img src="'+(selOpt.img||NI)+'" onerror="this.onerror=null;this.src=\''+NI+'\'" referrerpolicy="no-referrer" loading="lazy" style="width:56px;height:56px;flex-shrink:0;object-fit:contain;border-radius:8px;background:#fff">';
     detailHTML += '<div style="flex:1;min-width:0">';
     detailHTML += '<div class="choice-opt-badges"><span class="badge badge-id">'+def.base.id+'</span>'+(selOpt.extraId?'<span class="badge badge-id">'+selOpt.extraId+'</span>':'')+'</div>';
-    detailHTML += '<div class="choice-opt-name">'+selOpt.label+'</div>';
+    detailHTML += '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">';
+    detailHTML += '<div class="choice-opt-name" style="flex:1;min-width:0">'+selOpt.label+'</div>';
+    detailHTML += '<div style="flex-shrink:0"><span class="choice-opt-price">'+fmt(optTotal)+'</span></div>';
+    detailHTML += '</div>';
     if (selOpt.note) detailHTML += '<div style="font-size:10px;color:var(--amber);margin-top:2px">'+selOpt.note+'</div>';
     if (selOpt.extraId) detailHTML += '<div style="font-size:10px;color:var(--text-sub)">'+fmt(def.base.price)+' + '+fmt(selOpt.extraPrice)+'</div>';
-    detailHTML += '<div class="choice-opt-price" style="margin-top:4px">'+fmt(optTotal)+'<span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / セット</span></div>';
     detailHTML += '<div class="choice-opt-check">✓ 選択中</div>';
     detailHTML += '</div>';
     detailHTML += '<div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">';
@@ -1603,12 +1612,12 @@ function refillCardHTML(key) {
     detailHTML += '</div>';
   }
 
-  // 合計価格（枠内下部）
+  // 合計価格（枠内左下・単位なし）
   let totalRow = '';
   if (selOpt && qty > 0) {
     const optExtra2 = selOpt.extraId ? selOpt.extraPrice : 0;
     const optTotal2 = def.base.price + optExtra2;
-    totalRow = '<div style="text-align:right;font-size:13px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px">合計 '+fmt(optTotal2 * qty)+'</div>';
+    totalRow = '<div style="font-size:13px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px">¥'+(optTotal2 * qty).toLocaleString()+'</div>';
   }
 
   let warnRow = '';
@@ -1688,8 +1697,10 @@ function gradeGroupHTML(g) {
       <img style="width:52px;height:52px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid #e8edf2;flex-shrink:0" src="${src}" onerror="this.onerror=null;this.src='${NI}'" referrerpolicy="no-referrer" loading="lazy">
       <div style="flex:1">
         <div style="font-size:9px;font-family:var(--mono);color:#94a3b8">${item.id} <span style="color:var(--text-sub)">本体</span></div>
-        <div style="font-size:12px;font-weight:700">${item.name}</div>
-        <div style="font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(item.price)}</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">
+          <div style="font-size:12px;font-weight:700;flex:1;min-width:0">${item.name}</div>
+          <div style="flex-shrink:0;font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(item.price)}</div>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -1701,8 +1712,10 @@ function gradeGroupHTML(g) {
         <img style="width:40px;height:40px;border-radius:6px;object-fit:contain;background:#fff;border:1px solid #e8edf2;flex-shrink:0" src="${src}" onerror="this.onerror=null;this.src='${NI}'" referrerpolicy="no-referrer" loading="lazy">
         <div style="flex:1">
           <div style="font-size:9px;font-family:var(--mono);color:#94a3b8">${item.id} <span style="color:var(--text-sub)">詰替</span></div>
-          <div style="font-size:11px;font-weight:600">${item.name}</div>
-          <div style="font-size:12px;font-weight:800;font-family:var(--mono);color:var(--brand)">${fmt(item.price)}</div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">
+            <div style="font-size:11px;font-weight:600;flex:1;min-width:0">${item.name}</div>
+            <div style="flex-shrink:0;font-size:12px;font-weight:800;font-family:var(--mono);color:var(--brand)">${fmt(item.price)}</div>
+          </div>
         </div>
       </div>`;
     }).join('')}
@@ -1718,7 +1731,7 @@ function gradeGroupHTML(g) {
       ${opt.hostNote?`<div class="host-note" style="margin-top:6px">${opt.hostNote}</div>`:''}
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid #e8edf2">
-      <div><span class="grade-price">${fmt(totalP)}</span><span style="font-size:10px;font-weight:400;color:#6b7280;margin-left:4px">/ セット</span></div>
+      <div><span class="grade-price">${fmt(totalP)}</span></div>
       <div class="qty-control">
         <button class="qty-btn" onclick="changeGradeQty('${g.id}',1)">+</button>
         <div class="qty-num">${qty}</div>
