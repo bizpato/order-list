@@ -802,8 +802,8 @@ const REQUIRED_STEPS = [
   {key:'fixed',  label:'初回必須セット①',  fn:function(){return renderStep1();}},
   {key:'select', label:'初回必須セット②',  fn:function(){return renderStep2();}},
 ];
-const RECOMMEND_STEP = {key:'recommend', label:'推奨品目',      fn:function(){return renderRecommend();}};
-const FAMILY_STEP    = {key:'family',    label:'ファミリー必須', fn:function(){return renderFamily();}};
+const RECOMMEND_STEP = {key:'recommend', label:'推奨品目',          fn:function(){return renderRecommend();}};
+const FAMILY_STEP    = {key:'family',    label:'ファミリー物件必須', fn:function(){return renderFamily();}};
 const OPT_CATS = [
   {key:'amenity',   label:'アメニティ',         fn:function(){return renderOptAmenity();}},
   {key:'toilet_laundry', label:'トイレ・洗濯',   fn:function(){return renderOptToiletLaundry();}},
@@ -1488,49 +1488,54 @@ function choiceCardHTML(key) {
   const selOpt = def.opts.find(o=>o.key===sel);
   const qty = state.choiceQty[key] || 0;
   const reqBadge = def.req?'<span class="badge badge-essential" style="margin-bottom:6px;display:inline-block">必須</span>':'<span class="badge" style="background:#f1f5f9;color:#64748b;margin-bottom:6px;display:inline-block">任意</span>';
-
-  // 選択肢ボタン（選択前：名前のみ、選択後：選択中のみ画像・金額表示）
   const unit = selOpt?.unit || '個';
-  const optsHTML = def.opts.map(opt=>{
+
+  // タブ：全選択肢を常時表示、選択中はハイライト
+  const tabsHTML = def.opts.map(opt=>{
     const active = sel===opt.key;
-    if (active) {
-      // 選択中：画像・品番・名前・注記・金額・数量コントロールを右端に表示
-      const src = opt.img || NO_IMG;
-      const totalAmt = opt.price * qty;
-      return `<div class="choice-opt active" onclick="selectChoice('${key}','${opt.key}')" style="display:flex;align-items:flex-start;gap:10px;padding:10px">
-        <img class="choice-opt-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy" style="width:56px;height:56px;flex-shrink:0;object-fit:contain;border-radius:8px;background:var(--bg)">
-        <div style="flex:1;min-width:0">
-          <div class="choice-opt-badges">${(opt.ids||[]).filter(i=>!i.startsWith('MUJI_')).map(i=>`<span class="badge badge-id">${i}</span>`).join('')}</div>
-          <div class="choice-opt-name">${opt.label}</div>
-          ${opt.note?`<div style="font-size:10px;color:var(--amber);margin-top:2px">${opt.note}</div>`:''}
-          ${opt.desc?`<div style="font-size:10px;color:var(--text-sub);margin-top:2px">${opt.desc}</div>`:''}
-          <div class="choice-opt-price" style="margin-top:4px">${fmt(opt.price)}<span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / ${unit}</span></div>
-          ${qty>0?`<div style="font-size:11px;font-weight:700;color:var(--brand);margin-top:2px">合計 ${fmt(totalAmt)}</div>`:''}
-          <div class="choice-opt-check">✓ 選択中</div>
-        </div>
-        <div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">
-          <button class="qty-btn" onclick="changeChoiceQty('${key}',1)">+</button>
-          <div class="qty-num">${qty}</div>
-          <div class="qty-unit">${unit}</div>
-          <button class="qty-btn" onclick="changeChoiceQty('${key}',-1)" ${qty<=0?'disabled':''}>−</button>
-        </div>
-      </div>`;
-    } else {
-      // 未選択：名前のみのコンパクトボタン
-      return `<div class="choice-opt-btn" onclick="selectChoice('${key}','${opt.key}')">${opt.label}</div>`;
-    }
+    return `<div class="choice-opt-btn${active?' active':''}" onclick="selectChoice('${key}','${opt.key}')" style="${active?'border-color:var(--brand);background:var(--brand-base);color:var(--brand);':''}">${opt.label}</div>`;
   }).join('');
+
+  // 選択中の詳細ブロック（タブ下部に表示）
+  let detailHTML = '';
+  if (selOpt) {
+    const src = selOpt.img || NO_IMG;
+    const totalAmt = selOpt.price * qty;
+    detailHTML = `<div style="display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--brand-base);border-radius:12px;margin-top:10px">
+      <img src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy" style="width:56px;height:56px;flex-shrink:0;object-fit:contain;border-radius:8px;background:#fff">
+      <div style="flex:1;min-width:0">
+        <div class="choice-opt-badges">${(selOpt.ids||[]).filter(i=>!i.startsWith('MUJI_')).map(i=>`<span class="badge badge-id">${i}</span>`).join('')}</div>
+        <div class="choice-opt-name">${selOpt.label}</div>
+        ${selOpt.note?`<div style="font-size:10px;color:var(--amber);margin-top:2px">${selOpt.note}</div>`:''}
+        ${selOpt.desc?`<div style="font-size:10px;color:var(--text-sub);margin-top:2px">${selOpt.desc}</div>`:''}
+        <div class="choice-opt-price" style="margin-top:4px">${fmt(selOpt.price)}<span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / ${unit}</span></div>
+        <div class="choice-opt-check">✓ 選択中</div>
+      </div>
+      <div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">
+        <button class="qty-btn" onclick="changeChoiceQty('${key}',1)">+</button>
+        <div class="qty-num">${qty}</div>
+        <div class="qty-unit">${unit}</div>
+        <button class="qty-btn" onclick="changeChoiceQty('${key}',-1)" ${qty<=0?'disabled':''}>−</button>
+      </div>
+    </div>`;
+  }
+
+  // 合計価格（カード枠外・下部）
+  const totalRow = (selOpt && qty > 0)
+    ? `<div style="text-align:right;font-size:13px;font-weight:900;color:var(--brand);font-family:var(--mono);padding:6px 4px 0">合計 ${fmt(selOpt.price * qty)}</div>`
+    : '';
 
   let warnRow = '';
   if (!sel && def.req) {
-    warnRow = `<div class="choice-warn">⚠️ いずれかを選択してください（必須）</div>`;
+    warnRow = `<div class="choice-warn" style="margin-top:10px">⚠️ いずれかを選択してください（必須）</div>`;
   }
   return `<div class="choice-card-wrap ${sel?'has-sel':''}">
     ${reqBadge}
     <div class="choice-title">${def.title}</div>
-    <div class="choice-opts">${optsHTML}</div>
+    <div class="choice-opts" style="margin-bottom:0">${tabsHTML}</div>
+    ${detailHTML}
     ${warnRow}
-  </div>`;
+  </div>${totalRow}`;
 }
 
 
@@ -1558,48 +1563,58 @@ function refillCardHTML(key) {
   baseHTML += '<div style="font-size:12px;font-weight:700;font-family:var(--mono);color:var(--accent)">'+fmt(def.base.price)+'</div>';
   baseHTML += '</div></div>';
 
-  let optsHTML = '';
+  // タブ：全選択肢を常時表示、選択中はハイライト
+  let tabsHTML = '';
   def.opts.forEach(function(opt) {
     const active = sel===opt.key;
-    const optExtra = opt.extraId ? opt.extraPrice : 0;
-    const optTotal = def.base.price + optExtra;
-    const totalAmt = optTotal * qty;
-    if (active) {
-      optsHTML += '<div class="choice-opt active" onclick="selectRefill(\''+key+'\',\''+opt.key+'\')" style="display:flex;align-items:flex-start;gap:10px;padding:10px;flex:1">';
-      optsHTML += '<img class="choice-opt-img" src="'+(opt.img||NI)+'" onerror="this.onerror=null;this.src=\''+NI+'\'" referrerpolicy="no-referrer" loading="lazy" style="width:56px;height:56px;flex-shrink:0;object-fit:contain;border-radius:8px;background:var(--bg)">';
-      optsHTML += '<div style="flex:1;min-width:0">';
-      optsHTML += '<div class="choice-opt-badges"><span class="badge badge-id">'+def.base.id+'</span>'+(opt.extraId?'<span class="badge badge-id">'+opt.extraId+'</span>':'')+'</div>';
-      optsHTML += '<div class="choice-opt-name">'+opt.label+'</div>';
-      if (opt.note) optsHTML += '<div style="font-size:10px;color:var(--amber);margin-top:2px">'+opt.note+'</div>';
-      if (selOpt.extraId) optsHTML += '<div style="font-size:10px;color:var(--text-sub)">'+fmt(def.base.price)+' + '+fmt(selOpt.extraPrice)+'</div>';
-      optsHTML += '<div class="choice-opt-price" style="margin-top:4px">'+fmt(optTotal)+'<span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / セット</span></div>';
-      if (qty>0) optsHTML += '<div style="font-size:11px;font-weight:700;color:var(--brand);margin-top:2px">合計 '+fmt(totalAmt)+'</div>';
-      optsHTML += '<div class="choice-opt-check">\u2713 選択中</div>';
-      optsHTML += '</div>';
-      optsHTML += '<div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">';
-      optsHTML += '<button class="qty-btn" onclick="changeRefillQty(\''+key+'\',1)">+</button>';
-      optsHTML += '<div class="qty-num">'+qty+'</div>';
-      optsHTML += '<div class="qty-unit">セット</div>';
-      optsHTML += '<button class="qty-btn" onclick="changeRefillQty(\''+key+'\',-1)" '+(qty<=0?'disabled':'')+'>&#x2212;</button>';
-      optsHTML += '</div>';
-      optsHTML += '</div>';
-    } else {
-      optsHTML += '<div class="choice-opt-btn" onclick="selectRefill(\''+key+'\',\''+opt.key+'\')" style="flex:1;min-width:120px;text-align:center">'+opt.label+'</div>';
-    }
+    tabsHTML += '<div class="choice-opt-btn'+(active?' active':'')+' " onclick="selectRefill(\''+key+'\',\''+opt.key+'\')" style="'+(active?'border-color:var(--brand);background:var(--brand-base);color:var(--brand);':'')+'">'+opt.label+'</div>';
   });
 
-  let qtyRow = '';
+  // 選択中の詳細ブロック（タブ下部に表示）
+  let detailHTML = '';
+  if (selOpt) {
+    const optExtra = selOpt.extraId ? selOpt.extraPrice : 0;
+    const optTotal = def.base.price + optExtra;
+    detailHTML += '<div style="display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--brand-base);border-radius:12px;margin-top:10px">';
+    detailHTML += '<img src="'+(selOpt.img||NI)+'" onerror="this.onerror=null;this.src=\''+NI+'\'" referrerpolicy="no-referrer" loading="lazy" style="width:56px;height:56px;flex-shrink:0;object-fit:contain;border-radius:8px;background:#fff">';
+    detailHTML += '<div style="flex:1;min-width:0">';
+    detailHTML += '<div class="choice-opt-badges"><span class="badge badge-id">'+def.base.id+'</span>'+(selOpt.extraId?'<span class="badge badge-id">'+selOpt.extraId+'</span>':'')+'</div>';
+    detailHTML += '<div class="choice-opt-name">'+selOpt.label+'</div>';
+    if (selOpt.note) detailHTML += '<div style="font-size:10px;color:var(--amber);margin-top:2px">'+selOpt.note+'</div>';
+    if (selOpt.extraId) detailHTML += '<div style="font-size:10px;color:var(--text-sub)">'+fmt(def.base.price)+' + '+fmt(selOpt.extraPrice)+'</div>';
+    detailHTML += '<div class="choice-opt-price" style="margin-top:4px">'+fmt(optTotal)+'<span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / セット</span></div>';
+    detailHTML += '<div class="choice-opt-check">✓ 選択中</div>';
+    detailHTML += '</div>';
+    detailHTML += '<div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">';
+    detailHTML += '<button class="qty-btn" onclick="changeRefillQty(\''+key+'\',1)">+</button>';
+    detailHTML += '<div class="qty-num">'+qty+'</div>';
+    detailHTML += '<div class="qty-unit">セット</div>';
+    detailHTML += '<button class="qty-btn" onclick="changeRefillQty(\''+key+'\',-1)" '+(qty<=0?'disabled':'')+'>&#x2212;</button>';
+    detailHTML += '</div>';
+    detailHTML += '</div>';
+  }
+
+  // 合計価格（カード枠外・下部）
+  let totalRow = '';
+  if (selOpt && qty > 0) {
+    const optExtra2 = selOpt.extraId ? selOpt.extraPrice : 0;
+    const optTotal2 = def.base.price + optExtra2;
+    totalRow = '<div style="text-align:right;font-size:13px;font-weight:900;color:var(--brand);font-family:var(--mono);padding:6px 4px 0">合計 '+fmt(optTotal2 * qty)+'</div>';
+  }
+
+  let warnRow = '';
   if (!sel) {
-    qtyRow = '<div class="choice-warn" style="margin-top:10px">\u26a0\ufe0f \u3069\u3061\u3089\u304b\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\uff08\u5fc5\u9808\uff09</div>';
+    warnRow = '<div class="choice-warn" style="margin-top:10px">⚠️ どちらか選択してください（必須）</div>';
   }
 
   let html = '<div class="choice-card-wrap '+(sel?'has-sel':'')+'">';
   html += '<div class="badge-row" style="margin-bottom:6px">'+reqBadge+'</div>';
   html += '<div class="choice-title">'+def.title+'</div>';
   html += baseHTML;
-  html += '<div class="choice-opts">'+optsHTML+'</div>';
-  html += qtyRow;
-  html += '</div>';
+  html += '<div class="choice-opts" style="margin-bottom:0">'+tabsHTML+'</div>';
+  html += detailHTML;
+  html += warnRow;
+  html += '</div>'+totalRow;
   return html;
 }
 
@@ -1748,8 +1763,8 @@ function renderDashboard() {
   REQUIRED_STEPS.forEach(s => { html += taskCard(s, true); });
 
   html += '<div class="section-label">推奨・ファミリー</div>';
-  html += taskCard(RECOMMEND_STEP, false);
   html += taskCard(FAMILY_STEP, false);
+  html += taskCard(RECOMMEND_STEP, false);
 
   html += '<div class="section-label">任意追加</div>';
   html += optCard();
@@ -1875,7 +1890,7 @@ function renderStep0() {
 
 function renderStep1() {
   return `<div class="section-head"><div class="section-title">初回必須セット①</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。</div></div>
-  <div class="mandatory-banner" style="background:#eff6ff;border-left:3px solid var(--brand)"><div class="mandatory-banner-title" style="color:var(--brand)">ℹ︎ 各品目の数量はデフォルトで「1」が設定されています</div><div class="mandatory-banner-sub">2個以上必要な場合のみ、数量を変更してください。内容をご確認の上、必要に応じて調整してください</div></div>
+  <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;padding:12px 14px;margin-bottom:16px"><div style="font-size:12px;font-weight:800;color:#b45309;margin-bottom:4px">ℹ︎ 各品目の数量はデフォルトで「1」が設定されています</div><div style="font-size:11px;color:#92400e">2個以上必要な場合のみ、数量を変更してください</div></div>
 
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>
   ${['S0142'].map(id => itemCardHTML(id)).join('')}
@@ -1970,7 +1985,7 @@ function renderStep2() {
 function renderOptAmenity() {
   return `<div class="section-head"><div class="section-title">アメニティ</div><div class="section-sub">バス・洗面用アメニティを選択します</div></div>
   <div class="subsection"><div class="subsection-title">洗面アメニティ</div>${['S0065','S0066','S0067','S0068','S0069','S0070'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">子供用シャンプー</div>${refillCardHTML('kids_shampoo')}</div>`;
+`;
 }
 
 function renderOptToiletLaundry() {
@@ -1980,10 +1995,7 @@ function renderOptToiletLaundry() {
   <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171','S0225'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0040','S0042','S0230','S0231'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">消臭袋</div>${['S0133'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0007','B0087'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">掃き掃除</div>${['B0146','B0147'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">拭き掃除</div>${['S0160'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">除菌消臭（追加）</div>${['S0215','S0216'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0087'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">掃除機</div>${['E0089','E0148','E0162'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">電球・電池</div>${['S0172','S0173','S0174','S0175','S0176','S0177','S0178','S0179','S0180','S0181'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">紙製品</div>${['S0005','S0039','S0139'].map(id => itemCardHTML(id)).join('')}</div>
@@ -1993,13 +2005,11 @@ function renderOptToiletLaundry() {
 function renderOptKitchenTableware() {
   return `<div class="section-head"><div class="section-title">キッチン・食器</div><div class="section-sub">キッチン用品・食器・カトラリーを選択します</div></div>
   <div class="subsection"><div class="subsection-title">紙コップ（どちらか選択）</div>${choiceCardHTML('paper_cup')}</div>
-  <div class="subsection"><div class="subsection-title">キッチン消耗品</div>${['S0048','S0083','S0131','S0136','S0255','S0249'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">キッチン消耗品</div>${['S0136','S0255'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">衛生消耗品</div>${['S0161','B0155'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">食器</div>${['B0102','B0121','B0101','B0103','B0110','B0111'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">子供用食器</div>${['B0113','B0114','B0115','B0116'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">食器</div>${['B0101','B0103','B0110','B0111'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">カトラリー（追加）</div>${['B0097','B0098','B0099','B0100'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">調理器具（追加）</div>${['B0109','B0117','B0120'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderOptAromaOther() {
