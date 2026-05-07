@@ -1186,7 +1186,7 @@ function render(scrollToTop) {
     (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-    setTimeout(function(){const tb=document.getElementById('total-bar');if(tb)tb.classList.remove('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.remove('with-total-bar');},10);
+    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.add('with-total-bar');const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='none';},10);
   } else if (v === 'step') {
     const stepDef = [...REQUIRED_STEPS, RECOMMEND_STEP, FAMILY_STEP].find(s => s.key === state.currentStepKey);
     if (stepDef) {
