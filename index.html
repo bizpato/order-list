@@ -51,7 +51,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .subsection-title{font-size:10px;font-weight:900;color:var(--text-sub);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding-left:2px}
 
 /* ── アイテムカード ── */
-.item-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;transition:border-color .15s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.item-card{background:var(--card);border:1px solid #e8edf2;border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;transition:border-color .15s;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .item-card.has-qty{border-color:var(--brand)}
 
 .item-card.host-mode .qty-control{opacity:.35;pointer-events:none}
@@ -60,8 +60,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .badge-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}
 .badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700}
 .badge-id{background:#f1f5f9;color:#475569;font-family:var(--mono)}
-.badge-essential{background:var(--purple-light);color:var(--purple)}
-.badge-recommend{background:#fef3c7;color:#92400e}
+.badge-essential{background:#dbeafe;color:#1e40af}
+.badge-recommend{background:#fef9c3;color:#854d0e}
 .badge-family{background:#ecfdf5;color:#065f46}
 .badge-host{background:var(--brand-base);color:var(--brand)}
 .item-name{font-size:13px;font-weight:700;line-height:1.4;margin-bottom:2px}
@@ -86,7 +86,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .qty-unit{font-size:10px;color:var(--text-sub)}
 
 /* ── セットカード ── */
-.set-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.set-card{background:var(--card);border:1px solid #e8edf2;border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .set-card.has-qty{border-color:var(--brand)}
 
 .set-title{font-size:13px;font-weight:800;margin-bottom:8px}
@@ -102,7 +102,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .set-total-sub{font-size:10px;color:var(--text-sub)}
 
 /* ── 選択カード（2択・3択） ── */
-.choice-card-wrap{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.choice-card-wrap{background:var(--card);border:1px solid #e8edf2;border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .choice-card-wrap.has-sel{border-color:var(--brand)}
 .choice-label{font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:block}
 .choice-title{font-size:14px;font-weight:800;margin-bottom:12px}
@@ -119,9 +119,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .choice-qty-label{font-size:13px;font-weight:700}
 .choice-qty-ctrl{display:flex;align-items:center;gap:8px}
 .choice-warn{font-size:11px;color:var(--amber);background:var(--amber-light);padding:8px 12px;border-radius:8px;font-weight:600}
+.choice-opt-btn{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;display:inline-flex;align-items:center}
+.choice-opt-btn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-base)}
 
 /* ── グレードカード ── */
-.grade-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.grade-card{background:var(--card);border:1px solid #e8edf2;border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .grade-card.selected{border-color:var(--brand)}
 .grade-label{font-size:10px;font-weight:700;color:var(--purple);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
 .grade-name{font-size:14px;font-weight:800;margin-bottom:10px}
@@ -1400,8 +1402,16 @@ function setCardHTML(key) {
   const totalP = def.items.reduce((s,i)=>s+i.price,0);
   const reqBadge = def.req==='必須'?'<span class="badge badge-essential">必須</span>':
     def.req==='ファミリー必須'?'<span class="badge badge-family">ファミリー必須</span>':'';
-  const itemsHTML = def.items.map(item=>{
-    const src = ITEMS[item.id]?.img || NO_IMG_SM;
+
+  // 本体と詰替を分類
+  const bodyItems   = def.items.filter(i => i.id.startsWith('B') || (i.name||'').includes('本体'));
+  const refillItems = def.items.filter(i => !bodyItems.includes(i));
+  const mainItems   = bodyItems.length > 0 ? bodyItems : def.items;
+  const subItems    = bodyItems.length > 0 ? refillItems : [];
+
+  const NI = NO_IMG_SM;
+  function itemRow(item, isMain) {
+    const src = ITEMS[item.id]?.img || NI;
     const hc = state.hostChoice[item.id];
     const isHost = hc === 'host';
     const hpItem = ITEMS[item.id];
@@ -1412,22 +1422,33 @@ function setCardHTML(key) {
         <div class="host-toggle-btn ${isHost?'active-host':''}" onclick="setHostChoice('${item.id}','host')" style="padding:4px 6px">ホスト様準備</div>
       </div>`;
     }
-    return `<div class="set-item">
-      <img class="set-item-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG_SM}'" referrerpolicy="no-referrer" loading="lazy">
-      <div class="set-item-info">
-        <div class="set-item-id">${item.id}</div>
-        <div class="set-item-name">${item.name}</div>
-        <div class="set-item-price">${fmt(item.price)}</div>
+    const imgSize = isMain ? '52px' : '40px';
+    const fontSize = isMain ? '12px' : '11px';
+    const priceSize = isMain ? '13px' : '12px';
+    const label = isMain ? '本体' : '詰替';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:${isMain?'8px':'6px'};background:var(--bg);border-radius:${isMain?'10px':'8px'};margin-bottom:${isMain?'6px':'4px'}">
+      <img style="width:${imgSize};height:${imgSize};border-radius:${isMain?'8px':'6px'};object-fit:contain;background:#fff;border:1px solid #e8edf2;flex-shrink:0" src="${src}" onerror="this.onerror=null;this.src='${NI}'" referrerpolicy="no-referrer" loading="lazy">
+      <div style="flex:1">
+        <div style="font-size:9px;font-family:var(--mono);color:#94a3b8">${item.id} <span style="color:var(--text-sub)">${label}</span></div>
+        <div style="font-size:${fontSize};font-weight:${isMain?'700':'600'}">${item.name}</div>
+        <div style="font-size:${priceSize};font-weight:${isMain?'900':'800'};font-family:var(--mono);color:var(--brand)">${fmt(item.price)}</div>
         ${toggle}
       </div>
     </div>`;
-  }).join('');
+  }
+
+  const mainHTML   = mainItems.map(i => itemRow(i, true)).join('');
+  const subHTML    = subItems.length > 0
+    ? `<div style="margin-left:16px;border-left:2px solid #e8edf2;padding-left:12px">${subItems.map(i => itemRow(i, false)).join('')}</div>`
+    : '';
+
   return `<div class="set-card ${qty>0?'has-qty':''} ${def.req?'mandatory':''}">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
       ${reqBadge}<div class="set-title" style="margin:0">${def.title}</div>
       <div style="margin-left:auto;font-size:11px;color:var(--text-sub)">合計 <strong style="font-family:var(--mono);color:var(--accent)">${fmt(totalP)}</strong></div>
     </div>
-    <div class="set-items">${itemsHTML}</div>
+    ${mainHTML}
+    ${subHTML}
     <div class="set-footer">
       <div><span class="set-total">${fmt(totalP)}</span><span class="set-total-sub"> / セット</span></div>
       <div class="choice-qty-ctrl">
@@ -1447,18 +1468,28 @@ function choiceCardHTML(key) {
   const selOpt = def.opts.find(o=>o.key===sel);
   const qty = state.choiceQty[key] || 0;
   const reqBadge = def.req?'<span class="badge badge-essential" style="margin-bottom:6px;display:inline-block">必須</span>':'<span class="badge" style="background:#f1f5f9;color:#64748b;margin-bottom:6px;display:inline-block">任意</span>';
+
+  // 選択肢ボタン（選択前：名前のみ、選択後：選択中のみ画像・金額表示）
   const optsHTML = def.opts.map(opt=>{
     const active = sel===opt.key;
-    const src = opt.img || NO_IMG;
-    return `<div class="choice-opt ${active?'active':''}" onclick="selectChoice('${key}','${opt.key}')">
-      <img class="choice-opt-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy">
-      <div class="choice-opt-badges">${opt.ids.filter(i=>!i.startsWith('MUJI_')).map(i=>`<span class="badge badge-id">${i}</span>`).join('')}</div>
-      <div class="choice-opt-name">${opt.label}</div>
-      ${opt.note?`<div style="font-size:10px;color:var(--amber);margin-top:2px">${opt.note}</div>`:''}
-      <div class="choice-opt-price">${fmt(opt.price)}</div>
-      ${active?'<div class="choice-opt-check">✓ 選択中</div>':''}
-    </div>`;
+    if (active) {
+      // 選択中：画像・品番・名前・注記・金額・選択中マーク を表示
+      const src = opt.img || NO_IMG;
+      return `<div class="choice-opt active" onclick="selectChoice('${key}','${opt.key}')">
+        <img class="choice-opt-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy">
+        <div class="choice-opt-badges">${(opt.ids||[]).filter(i=>!i.startsWith('MUJI_')).map(i=>`<span class="badge badge-id">${i}</span>`).join('')}</div>
+        <div class="choice-opt-name">${opt.label}</div>
+        ${opt.note?`<div style="font-size:10px;color:var(--amber);margin-top:2px">${opt.note}</div>`:''}
+        ${opt.desc?`<div style="font-size:10px;color:var(--text-sub);margin-top:2px">${opt.desc}</div>`:''}
+        <div class="choice-opt-price">${fmt(opt.price)}</div>
+        <div class="choice-opt-check">✓ 選択中</div>
+      </div>`;
+    } else {
+      // 未選択：名前のみのコンパクトボタン
+      return `<div class="choice-opt-btn" onclick="selectChoice('${key}','${opt.key}')">${opt.label}</div>`;
+    }
   }).join('');
+
   let qtyRow = '';
   if (sel) {
     const unit = selOpt?.unit || '個';
@@ -1590,18 +1621,58 @@ function gradeGroupHTML(g) {
     <div class="grade-options">${btns}</div>
     <div class="choice-warn">⚠️ グレードを選択してください（必須）</div>
   </div>`;
+
+  // 本体（ボトル/ディスペンサー）と詰替を分類
+  const bodyItems = opt.items.filter(i => {
+    const n = i.name || '';
+    return n.includes('ボトル') || n.includes('ディスペンサー') || i.id.startsWith('B');
+  });
+  const refillItems = opt.items.filter(i => {
+    const n = i.name || '';
+    return n.includes('詰替') || (i.id.startsWith('S') && !bodyItems.includes(i));
+  });
+  // 分類できない場合は全て本体扱い
+  const mainItems = bodyItems.length > 0 ? bodyItems : opt.items;
+  const subItems  = bodyItems.length > 0 ? refillItems : [];
+
+  const NI = NO_IMG_SM;
+  const mainHTML = mainItems.map(item => {
+    const src = ITEMS[item.id]?.img || opt.img || NI;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border-radius:10px;margin-bottom:6px">
+      <img style="width:52px;height:52px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid #e8edf2;flex-shrink:0" src="${src}" onerror="this.onerror=null;this.src='${NI}'" referrerpolicy="no-referrer" loading="lazy">
+      <div style="flex:1">
+        <div style="font-size:9px;font-family:var(--mono);color:#94a3b8">${item.id} <span style="color:var(--text-sub)">本体</span></div>
+        <div style="font-size:12px;font-weight:700">${item.name}</div>
+        <div style="font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(item.price)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const subHTML = subItems.length > 0 ? `<div style="margin-left:16px;border-left:2px solid #e8edf2;padding-left:12px">
+    ${subItems.map(item => {
+      const src = ITEMS[item.id]?.img || NI;
+      return `<div style="display:flex;align-items:center;gap:8px;padding:6px;background:var(--bg);border-radius:8px;margin-bottom:4px">
+        <img style="width:40px;height:40px;border-radius:6px;object-fit:contain;background:#fff;border:1px solid #e8edf2;flex-shrink:0" src="${src}" onerror="this.onerror=null;this.src='${NI}'" referrerpolicy="no-referrer" loading="lazy">
+        <div style="flex:1">
+          <div style="font-size:9px;font-family:var(--mono);color:#94a3b8">${item.id} <span style="color:var(--text-sub)">詰替</span></div>
+          <div style="font-size:11px;font-weight:600">${item.name}</div>
+          <div style="font-size:12px;font-weight:800;font-family:var(--mono);color:var(--brand)">${fmt(item.price)}</div>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>` : '';
+
   return `<div class="grade-card ${qty>0?'selected':''}">
     <div class="grade-label">${g.req} — グレードを選択</div>
     <div class="grade-name">${g.name}</div>
     <div class="grade-options">${btns}</div>
-    <div class="grade-detail">
-      <img class="grade-img" src="${opt.img||NO_IMG_SM}" onerror="this.onerror=null;this.src='${NO_IMG_SM}'" referrerpolicy="no-referrer" loading="lazy">
-      <div class="grade-info">
-        <div class="badge-row">${opt.items.map(i=>`<span class="badge badge-id">${i.id}</span>`).join('')}</div>
-        <div class="item-name" style="font-size:12px">${opt.desc}</div>
-        ${opt.hostNote?`<div class="host-note">${opt.hostNote}</div>`:''}
-        <div class="grade-price">${fmt(totalP)}<span style="font-size:10px;font-weight:400;color:#6b7280;margin-left:4px">/ セット</span></div>
-      </div>
+    <div style="margin-top:10px">
+      ${mainHTML}
+      ${subHTML}
+      ${opt.hostNote?`<div class="host-note" style="margin-top:6px">${opt.hostNote}</div>`:''}
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid #e8edf2">
+      <div><span class="grade-price">${fmt(totalP)}</span><span style="font-size:10px;font-weight:400;color:#6b7280;margin-left:4px">/ セット</span></div>
       <div class="qty-control">
         <button class="qty-btn" onclick="changeGradeQty('${g.id}',1)">+</button>
         <div class="qty-num">${qty}</div>
