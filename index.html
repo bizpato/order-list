@@ -53,7 +53,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 /* ── アイテムカード ── */
 .item-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;transition:border-color .15s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .item-card.has-qty{border-color:var(--brand)}
-.item-card.mandatory{border-left:3px solid var(--purple)}
+
 .item-card.host-mode .qty-control{opacity:.35;pointer-events:none}
 .item-img{width:64px;height:64px;border-radius:10px;object-fit:contain;background:#fff;border:1.5px solid var(--border);flex-shrink:0;padding:4px}
 .item-body{flex:1;min-width:0}
@@ -88,7 +88,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 /* ── セットカード ── */
 .set-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .set-card.has-qty{border-color:var(--brand)}
-.set-card.mandatory{border-left:3px solid var(--purple)}
+
 .set-title{font-size:13px;font-weight:800;margin-bottom:8px}
 .set-items{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .set-item{display:flex;align-items:center;gap:6px;background:var(--bg);border-radius:8px;padding:6px 8px;flex:1;min-width:140px}
@@ -480,15 +480,15 @@ function fmt(n){return '¥'+n.toLocaleString();}
 const GRADE_GROUPS = [
   { id:'shampoo_cond', name:'シャンプー・コンディショナー', req:'必須',
     options:[
-      { grade:'standard', label:'ビオノート',
+      { grade:'standard', label:'ビオノート（詰替 各1L）',
         items:[{id:'S0062',name:'シャンプー詰替 ビオノート',price:1280},{id:'S0063',name:'コンディショナー詰替 ビオノート',price:1280},{id:'B0055',name:'シャンプーディスペンサー',price:500},{id:'B0056',name:'コンディショナーディスペンサー',price:500}],
         img:'https://www.sintoworld.jp/prod/images/prod_img/BIOSHA-18.jpg',
         desc:'ビオノート詰替×2 + ディスペンサー×2'},
-      { grade:'premium', label:'パンテーン',
+      { grade:'premium', label:'パンテーン（各 2L）',
         items:[{id:'S0223',name:'シャンプー パンテーン 2L',price:2580},{id:'S0224',name:'コンディショナー パンテーン 2L',price:2580}],
         img:'https://m.media-amazon.com/images/I/71PMjkim9rL._AC_SL1500_.jpg',
         desc:'パンテーン 2L×2', hostNote:'⚠️ ディスペンサーはホスト様ご準備ください'},
-      { grade:'millennium', label:'ミレニアム',
+      { grade:'millennium', label:'ミレニアム（詰替 各1L）',
         items:[{id:'S0187',name:'シャンプー詰替 ミレニアム',price:1750},{id:'S0188',name:'コンディショナー詰替 ミレニアム',price:1750},{id:'B0191',name:'シャンプーボトル ミレニアム',price:650},{id:'B0192',name:'コンディショナーボトル ミレニアム',price:650}],
         img:'',
         desc:'ミレニアム詰替×2 + ボトル×2'},
@@ -496,11 +496,11 @@ const GRADE_GROUPS = [
   },
   { id:'bodysoap', name:'ボディソープ', req:'必須',
     options:[
-      { grade:'bionote', label:'ビオノート',
+      { grade:'bionote', label:'ビオノート（詰替 1L）',
         items:[{id:'S0064',name:'ボディーソープ詰替 ビオノート',price:1280},{id:'B0057',name:'ボディーソープディスペンサー',price:500}],
         img:'https://www.sintoworld.jp/prod/images/prod_img/BIOBOD-18.jpg',
         desc:'ビオノート詰替 + ディスペンサー'},
-      { grade:'millennium', label:'ミレニアム',
+      { grade:'millennium', label:'ミレニアム（詰替 1L）',
         items:[{id:'S0189',name:'ボディーソープ詰替 ミレニアム',price:1750},{id:'B0193',name:'ボディーソープボトル ミレニアム',price:650}],
         img:'',
         desc:'ミレニアム詰替 + ボトル'},
@@ -508,15 +508,15 @@ const GRADE_GROUPS = [
   },
   { id:'handsoap', name:'ハンドソープ', req:'必須',
     options:[
-      { grade:'standard', label:'メディキュ',
+      { grade:'standard', label:'メディキュ（詰替 1000ml）',
         items:[{id:'S0080',name:'ハンドソープ詰替 メディキュ 1000ml',price:480},{id:'B0183',name:'ハンドソープボトル メディキュ 250ml',price:500}],
         img:'https://www.sintoworld.jp/prod/images/prod_img/RS-HS1000.jpg',
         desc:'メディキュ詰替 + ボトル'},
-      { grade:'bionote', label:'ビオノート',
+      { grade:'bionote', label:'ビオノート（詰替 450ml）',
         items:[{id:'B0058',name:'ハンドソープディスペンサー ビオノート',price:500}],
         img:'https://www.sintoworld.jp/prod/images/prod_img/BIOFOS-450.jpg',
         desc:'ビオノートディスペンサー'},
-      { grade:'millennium', label:'ミレニアム',
+      { grade:'millennium', label:'ミレニアム（詰替 1L）',
         items:[{id:'S0190',name:'ハンドソープ詰替 ミレニアム',price:1750},{id:'B0194',name:'ハンドソープボトル ミレニアム',price:650}],
         img:'',
         desc:'ミレニアム詰替 + ボトル'},
@@ -596,8 +596,8 @@ const CHOICE_DEFS = {
   toothbrush:{
     title:'歯ブラシ', req:true, reqLabel:'必須 — どちらか選択',
     opts:[
-      {key:'standard', label:'マットシリーズ', ids:['S0065'], img:'https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg', price:2300, priceNote:'(¥23×100本)', unit:'セット'},
-      {key:'premium',  label:'リーフシリーズ',  ids:['S0066'], img:'https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg',  price:4300, priceNote:'(¥43×100本)', unit:'セット'},
+      {key:'standard', label:'マットシリーズ 100本', ids:['S0065'], img:'https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg', price:2300, priceNote:'(¥23×100本)', unit:'セット'},
+      {key:'premium',  label:'リーフシリーズ 100本',  ids:['S0066'], img:'https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg',  price:4300, priceNote:'(¥43×100本)', unit:'セット'},
     ]
   },
   gomibag45:{
@@ -1752,10 +1752,6 @@ function renderStep1() {
   ${['S0142'].map(itemCardHTML).join('')}
   </div>
 
-  <div class="subsection"><div class="subsection-title">ゴミ袋</div>
-  ${['S0171','S0231'].map(itemCardHTML).join('')}
-  </div>
-
   <div class="subsection"><div class="subsection-title">キッチン洗浄・衛生</div>
   ${setCardHTML('kitchen_bleach')}
   </div>
@@ -1832,6 +1828,7 @@ function renderStep2() {
   <div class="subsection"><div class="subsection-title">トイレ消臭（置き型）</div>${setCardHTML('toilet_fab')}</div>
   <div class="subsection"><div class="subsection-title">トイレ消臭スプレー</div>${choiceCardHTML('toilet_deodor')}</div>
   <div class="subsection"><div class="subsection-title">トイレ清掃シート</div>${choiceCardHTML('toilet_sheet')}</div>
+  <div class="subsection"><div class="subsection-title">ゴミ袋 45L</div>${choiceCardHTML('gomibag45')}</div>
   <div class="subsection"><div class="subsection-title">サニタリー用ゴミ袋</div>${choiceCardHTML('sanitary_bag')}</div>
   <div class="subsection"><div class="subsection-title">子供用シャンプー</div>${setCardHTML('kids_shampoo')}</div>
   </div>`;
