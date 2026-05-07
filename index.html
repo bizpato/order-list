@@ -484,20 +484,36 @@ function fmt(n){return '¥'+n.toLocaleString();}
 
 // ─── グレードグループ定義 ───
 const GRADE_GROUPS = [
-  { id:'shampoo_cond', name:'シャンプー・コンディショナー', req:'必須',
+  { id:'shampoo', name:'シャンプー', req:'必須',
     options:[
-      { grade:'standard', label:'ビオノート（詰替 各1L）',
-        items:[{id:'S0062',name:'シャンプー詰替 ビオノート',price:1280},{id:'S0063',name:'コンディショナー詰替 ビオノート',price:1280},{id:'B0055',name:'シャンプーディスペンサー',price:500},{id:'B0056',name:'コンディショナーディスペンサー',price:500}],
+      { grade:'standard', label:'ビオノート（詰替 1L）',
+        items:[{id:'B0055',name:'シャンプーディスペンサー ビオノート 450ml',price:500},{id:'S0062',name:'シャンプー詰替 ビオノート 1L',price:1280}],
         img:'https://www.sintoworld.jp/prod/images/prod_img/BIOSHA-18.jpg',
-        desc:'ビオノート詰替×2 + ディスペンサー×2'},
-      { grade:'premium', label:'パンテーン（各 2L）',
-        items:[{id:'S0223',name:'シャンプー パンテーン 2L',price:2580},{id:'S0224',name:'コンディショナー パンテーン 2L',price:2580}],
+        desc:'ビオノート詰替 + ディスペンサー'},
+      { grade:'premium', label:'パンテーン（2L）',
+        items:[{id:'S0223',name:'シャンプー パンテーン 2L',price:2580}],
         img:'https://m.media-amazon.com/images/I/71PMjkim9rL._AC_SL1500_.jpg',
-        desc:'パンテーン 2L×2', hostNote:'⚠️ ディスペンサーはホスト様ご準備ください'},
-      { grade:'millennium', label:'ミレニアム（詰替 各1L）',
-        items:[{id:'S0187',name:'シャンプー詰替 ミレニアム',price:1750},{id:'S0188',name:'コンディショナー詰替 ミレニアム',price:1750},{id:'B0191',name:'シャンプーボトル ミレニアム',price:650},{id:'B0192',name:'コンディショナーボトル ミレニアム',price:650}],
+        desc:'パンテーン 2L', hostNote:'⚠️ ディスペンサーはホスト様ご準備ください'},
+      { grade:'millennium', label:'ミレニアム（詰替 1L）',
+        items:[{id:'B0191',name:'シャンプーボトル ミレニアム',price:650},{id:'S0187',name:'シャンプー詰替 ミレニアム 1L',price:1750}],
         img:'https://img21.shop-pro.jp/PA01463/065/product/158416022.jpg',
-        desc:'ミレニアム詰替×2 + ボトル×2'},
+        desc:'ミレニアム詰替 + ボトル'},
+    ]
+  },
+  { id:'conditioner', name:'コンディショナー', req:'必須',
+    options:[
+      { grade:'standard', label:'ビオノート（詰替 1L）',
+        items:[{id:'B0056',name:'コンディショナーディスペンサー ビオノート 450ml',price:500},{id:'S0063',name:'コンディショナー詰替 ビオノート 1L',price:1280}],
+        img:'https://www.sintoworld.jp/prod/images/prod_img/BIOSHA-18.jpg',
+        desc:'ビオノート詰替 + ディスペンサー'},
+      { grade:'premium', label:'パンテーン（2L）',
+        items:[{id:'S0224',name:'コンディショナー パンテーン 2L',price:2580}],
+        img:'https://m.media-amazon.com/images/I/71PMjkim9rL._AC_SL1500_.jpg',
+        desc:'パンテーン 2L', hostNote:'⚠️ ディスペンサーはホスト様ご準備ください'},
+      { grade:'millennium', label:'ミレニアム（詰替 1L）',
+        items:[{id:'B0192',name:'コンディショナーボトル ミレニアム',price:650},{id:'S0188',name:'コンディショナー詰替 ミレニアム 1L',price:1750}],
+        img:'https://img21.shop-pro.jp/PA01463/065/product/158416022.jpg',
+        desc:'ミレニアム詰替 + ボトル'},
     ]
   },
   { id:'bodysoap', name:'ボディソープ', req:'必須',
@@ -1355,20 +1371,21 @@ function showToast(msg) {
 }
 
 // ─── カードHTML生成 ───
-function itemCardHTML(id) {
+function itemCardHTML(id, forceReq) {
   const item = ITEMS[id];
   if (!item) return '';
   const qty = state.quantities[id] || 0;
   const hc = state.hostChoice[id];
   const isHost = hc === 'host';
-  const reqBadge = item.req==='必須'?'<span class="badge badge-essential">必須</span>':
-    item.req==='推奨'?'<span class="badge badge-recommend">推奨</span>':
-    item.req==='ファミリー必須'?'<span class="badge badge-family">ファミリー必須</span>':'';
-  const hostBadge = item.hostPrep?'<span class="badge badge-host">ホスト様準備可</span>':'';
+  const reqVal = forceReq || item.req;
+  const reqBadge = reqVal==='必須'?'<span class="badge badge-essential">必須</span>':
+    reqVal==='推奨'?'<span class="badge badge-recommend">推奨</span>':
+    reqVal==='ファミリー必須'?'<span class="badge badge-family">ファミリー必須</span>':'';
   const src = item.img || NO_IMG;
+  // 必須項目のみホスト準備トグルを表示
   let hostToggle = '';
-  const noChoice = item.hostPrep && hc === undefined;
-  if (item.hostPrep) {
+  if (item.hostPrep && (reqVal==='必須' || reqVal==='ファミリー必須')) {
+    const noChoice = hc === undefined;
     hostToggle = `<div class="host-toggle-wrap">
       ${noChoice ? '<div class="host-toggle-required">⚠️ 選択してください（必須）</div>' : ''}
       <div class="host-toggle">
@@ -1380,7 +1397,7 @@ function itemCardHTML(id) {
   return `<div class="item-card ${qty>0?'has-qty':''} ${isHost?'host-mode':''}">
     <img class="item-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy" alt="${item.name}">
     <div class="item-body">
-      <div class="badge-row"><span class="badge badge-id">${id}</span>${reqBadge}${hostBadge}</div>
+      <div class="badge-row"><span class="badge badge-id">${id}</span>${reqBadge}</div>
       <div class="item-name">${item.name}</div>
       <div class="item-brand">${item.brand}</div>
       <div><span class="item-price">${fmt(item.price)}</span><span class="item-price-sub"> × 最小${item.min}${item.unit}</span></div>
@@ -1615,8 +1632,11 @@ function gradeGroupHTML(g) {
   const qty = state.gradeQty[g.id] || 0;
   const totalP = opt ? opt.items.reduce((s,i)=>s+i.price,0) : 0;
   const btns = g.options.map(o=>`<button class="grade-opt-btn ${sel===o.grade?'active':''}" onclick="setGrade('${g.id}','${o.grade}')">${o.label}</button>`).join('');
+  const reqBadgeG = g.req==='必須'?'<span class="badge badge-essential">必須</span>':
+    g.req==='ファミリー必須'?'<span class="badge badge-family">ファミリー必須</span>':
+    g.req==='推奨'?'<span class="badge badge-recommend">推奨</span>':'';
   if (!opt) return `<div class="grade-card">
-    <div class="grade-label">${g.req} — グレードを選択</div>
+    <div class="badge-row" style="margin-bottom:6px">${reqBadgeG}</div>
     <div class="grade-name">${g.name}</div>
     <div class="grade-options">${btns}</div>
     <div class="choice-warn">⚠️ グレードを選択してください（必須）</div>
@@ -1663,7 +1683,7 @@ function gradeGroupHTML(g) {
   </div>` : '';
 
   return `<div class="grade-card ${qty>0?'selected':''}">
-    <div class="grade-label">${g.req} — グレードを選択</div>
+    <div class="badge-row" style="margin-bottom:6px">${reqBadgeG}</div>
     <div class="grade-name">${g.name}</div>
     <div class="grade-options">${btns}</div>
     <div style="margin-top:10px">
@@ -1903,9 +1923,10 @@ function renderStep2() {
 
   <div class="subsection"><div class="subsection-title">🛁 グレード選択品目</div>
 
-  <div class="subsection"><div class="subsection-title">シャンプー・コンディショナー</div>${gradeGroupHTML(GRADE_GROUPS[0])}</div>
-  <div class="subsection"><div class="subsection-title">ボディソープ</div>${gradeGroupHTML(GRADE_GROUPS[1])}</div>
-  <div class="subsection"><div class="subsection-title">ハンドソープ</div>${gradeGroupHTML(GRADE_GROUPS[2])}</div>
+  <div class="subsection"><div class="subsection-title">シャンプー</div>${gradeGroupHTML(GRADE_GROUPS[0])}</div>
+  <div class="subsection"><div class="subsection-title">コンディショナー</div>${gradeGroupHTML(GRADE_GROUPS[1])}</div>
+  <div class="subsection"><div class="subsection-title">ボディソープ</div>${gradeGroupHTML(GRADE_GROUPS[2])}</div>
+  <div class="subsection"><div class="subsection-title">ハンドソープ</div>${gradeGroupHTML(GRADE_GROUPS[3])}</div>
   <div class="subsection"><div class="subsection-title">水切りネット</div>${choiceCardHTML('mizukiri')}</div>
   <div class="subsection"><div class="subsection-title">歯ブラシ</div>${choiceCardHTML('toothbrush')}</div>
   <div class="subsection"><div class="subsection-title">食器用洗剤</div>${choiceCardHTML('dishsoap')}</div>
@@ -1917,7 +1938,7 @@ function renderStep2() {
   <div class="subsection"><div class="subsection-title">トイレ清掃シート</div>${choiceCardHTML('toilet_sheet')}</div>
   <div class="subsection"><div class="subsection-title">ゴミ袋 45L</div>${choiceCardHTML('gomibag45')}</div>
   <div class="subsection"><div class="subsection-title">サニタリー用ゴミ袋</div>${choiceCardHTML('sanitary_bag')}</div>
-  <div class="subsection"><div class="subsection-title">子供用シャンプー</div>${setCardHTML('kids_shampoo')}</div>
+  <div class="subsection"><div class="subsection-title">子供用シャンプー</div>${refillCardHTML('kids_shampoo')}</div>
   </div>`;
 }
 
