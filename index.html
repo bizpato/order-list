@@ -205,10 +205,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .reset-dialog-btns .btn-cancel{flex:1;padding:12px;border-radius:12px;border:1.5px solid #e2e8f0;background:#fff;font-size:14px;font-weight:700;cursor:pointer;color:#64748b}
 .reset-dialog-btns .btn-confirm-reset{flex:1;padding:12px;border-radius:12px;border:none;background:#dc2626;font-size:14px;font-weight:700;cursor:pointer;color:#fff}
 
-.btn-add-cart{width:100%;padding:11px 16px;border-radius:12px;border:none;background:var(--brand);color:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;letter-spacing:.03em;margin-top:10px}
-.btn-add-cart:hover{background:var(--brand-light)}
-.btn-add-cart-sm{padding:8px 14px;border-radius:10px;border:none;background:var(--brand);color:#fff;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
-.btn-add-cart-sm:hover{background:var(--brand-light)}
+.btn-add-cart{width:100%;padding:11px 16px;border-radius:12px;border:none;background:#059669;color:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;letter-spacing:.03em;margin-top:10px}
+.btn-add-cart:hover{background:#047857}
+.btn-add-cart-sm{padding:8px 14px;border-radius:10px;border:none;background:#059669;color:#fff;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.btn-add-cart-sm:hover{background:#047857}
 
 .total-bar.visible{display:flex}
 .total-bar-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.8)}
@@ -239,10 +239,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .qty-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .qty-label{font-size:11px;color:var(--text-sub);font-weight:500}
 /* ── カートに追加ボタン ── */
-.btn-add-cart{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:none;background:var(--brand);color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap}
+.btn-add-cart{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:none;background:#059669;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap}
 .btn-add-cart:hover:not(:disabled){opacity:.85;transform:translateY(-1px)}
 .btn-add-cart:disabled{background:#cbd5e1;color:#94a3b8;cursor:not-allowed;transform:none}
-.btn-add-cart.in-cart{background:#10b981}
+.btn-add-cart.in-cart{background:#0284c7}
 .cart-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding-top:8px;border-top:1px solid #e8edf2}
 .cart-row-left{display:flex;align-items:center;gap:8px}
 
@@ -1699,6 +1699,12 @@ function changeGradeQty(gid, delta) {
 function setGrade(gid, grade) {
   state.gradeSelections[gid] = grade;
   if (!(state.gradeQty[gid] > 0)) state.gradeQty[gid] = 1;
+  // 必須グレード品目は選択後にcartAddedを自動セット
+  const g = GRADE_GROUPS.find(g=>g.id===gid);
+  if (g && (g.req === true || g.req === '必須')) {
+    if (!state.cartAdded) state.cartAdded = {};
+    state.cartAdded['grade_'+gid] = true;
+  }
   render();
 }
 function changeSetQty(k, delta) {
@@ -1732,6 +1738,11 @@ function selectChoice(key, optKey) {
         state.quantities[id] = state.choiceQty[key] * (ITEMS[id].min || 1);
       }
     });
+    // 必須品目は選択後にcartAddedを自動セット（ホスト様準備チェック不要）
+    if (isReqItem) {
+      if (!state.cartAdded) state.cartAdded = {};
+      state.cartAdded['choice_'+key] = true;
+    }
   }
   render();
 }
@@ -1753,9 +1764,16 @@ function setHostChoice(id, val) {
   const item = ITEMS[id];
   if (val === 'host') {
     state.quantities[id] = 0;
+    // ホスト様準備はcartAddedを削除
+    if (state.cartAdded) delete state.cartAdded[id];
   } else {
     // 弊社選択 → 最小発注数をセット
     if (item) state.quantities[id] = item.min;
+    // 必須品目は弊社選択後にcartAddedを自動セット
+    if (item && item.req === '必須') {
+      if (!state.cartAdded) state.cartAdded = {};
+      state.cartAdded[id] = true;
+    }
   }
   render();
 }
@@ -1773,8 +1791,8 @@ function calcTotal() {
     if (qty <= 0) continue;
     const item = ITEMS[id];
     if (!item) continue;
-    const isReq = item.req === '必須' || item.req === 'ファミリー必須';
-    // 必須品目は常に合計に含める。必須以外はcartAdded=trueの場合のみ
+    const isReq = item.req === '必須'; // ファミリー必須は手動カートなのでcartAdded必要
+    // 必須品目は常に合計に含める。ファミリー必須・任意はcartAdded=trueの場合のみ
     if (isReq || ca[id]) total += item.price * qty;
   }
   // グレードグループ
@@ -1876,29 +1894,39 @@ function itemCardHTML(id, forceReq) {
       <div class="item-brand">${item.brand}</div>
       ${hostToggle}
       ${(qty>0&&!isHost)?`<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(item.price*qty).toLocaleString()}</div>`:''}
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0" onclick="event.stopPropagation()">
+      <div class="qty-wrap">
+        ${(()=>{
+          const minV = (item.min && item.min > 1) ? item.min : 1;
+          let opts='';
+          if(minV > 1){
+            for(let i=1;i<=20;i++) opts+='<option value="'+(i*minV)+'"'+(qty===i*minV?' selected':'')+'>'+(i*minV)+'</option>';
+          } else {
+            for(let i=1;i<=20;i++) opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
+          }
+          return '<select class="qty-select" onchange="setQtyDirect(\'' + id + '\',this.value)">' + opts + '</select><span class="qty-label">' + item.unit + '</span>';
+        })()}
+      </div>
       ${(()=>{
-        const isReqItem = reqVal==='必須'||reqVal==='ファミリー必須';
+        const hcVal = state.hostChoice[id];
+        const isHost = hcVal === 'host';
+        // ホスト様準備はボタン不要
+        if(isHost) return '';
+        // hostPrep品目で未選択の場合はボタン不要（選択を促すトグルを表示中）
+        if(item.hostPrep && hcVal === undefined) return '';
+        const isReqItem = reqVal==='必須';
         if(isReqItem){
-          // 必須：デフォルト1はカート投入済み。2以上に変更したら「カートに入れる」ボタンが有効
           if(qty<=1){
-            return '<div class="cart-row"><div class="cart-row-left"></div><span style="font-size:11px;color:#10b981;font-weight:700">✓ カート投入済み（1個）</span></div>';
+            return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
           } else {
             const _addedI = (state.cartAdded||{})[id];
-            return '<div class="cart-row"><div class="cart-row-left"></div><button class="btn-add-cart'+(_addedI?' in-cart':'')+'" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(_addedI?'✓ 追加済み（'+qty+'個）':'🛒 カートに入れる（'+qty+'個）')+'</button></div>';
+            return '<button class="btn-add-cart'+(_addedI?' in-cart':'')+' style="padding:6px 10px;font-size:12px;margin-top:0;width:auto" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(_addedI?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
           }
         } else {
-          // 必須以外：「カートに入れる」ボタンを押して初めてカートに入る
           const _addedI2 = (state.cartAdded||{})[id];
-          return '<div class="cart-row"><div class="cart-row-left"></div><button class="btn-add-cart'+(_addedI2?' in-cart':'')+'" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(_addedI2?'✓ 追加済み（'+qty+'個）':'🛒 カートに入れる')+'</button></div>';
+          return '<button class="btn-add-cart'+(_addedI2?' in-cart':'')+' style="padding:6px 10px;font-size:12px;margin-top:0;width:auto" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(_addedI2?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
         }
-      })()}
-    </div>
-    <div class="qty-wrap" onclick="event.stopPropagation()">
-      ${(()=>{
-        let opts='';
-        const max=20;
-        for(let i=1;i<=max;i++) opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
-        return '<select class="qty-select" onchange="setQtyDirect(\'' + id + '\',this.value)">' + opts + '</select><span class="qty-label">' + item.unit + '</span>';
       })()}
     </div>
   </div>`;
@@ -1971,14 +1999,14 @@ function setCardHTML(key) {
         const isReqS = def.req==='必須'||def.req==='ファミリー必須';
         if(isReqS){
           if(qty<=1){
-            return '<span style="font-size:11px;color:#10b981;font-weight:700">✓ カート投入済み（1セット）</span>';
+            return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
           } else {
             const _addedS = (state.cartAdded||{})['set_'+key];
-            return '<button class="btn-add-cart'+(_addedS?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(_addedS?'✓ 追加済み（'+qty+'セット）':'🛒 カートに入れる（'+qty+'セット）')+'</button>';
+            return '<button class="btn-add-cart'+(_addedS?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(_addedS?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
           }
         } else {
           const _addedS2 = (state.cartAdded||{})['set_'+key];
-          return '<button class="btn-add-cart'+(_addedS2?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(_addedS2?'✓ 追加済み（'+qty+'セット）':'🛒 カートに入れる')+'</button>';
+          return '<button class="btn-add-cart'+(_addedS2?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(_addedS2?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
         }
       })()}
     </div>
@@ -2087,7 +2115,7 @@ function choiceCardHTML(key) {
     // 右側：数量ボタン（縦配置）
     detailHTML += `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">`;
     detailHTML += `<div class="qty-wrap">${(()=>{let opts='';for(let i=1;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setChoiceQtyDirect(\''+key+'\',this.value)">'+opts+'</select><span class="qty-label">'+unit+'</span>';})()}</div>`;
-    detailHTML += `${(()=>{const isReqC=def.req===true;if(isReqC){if(qty<=1){return '<span style="font-size:11px;color:#10b981;font-weight:700">✓ カート投入済み（1個）</span>';}else{const _addedC=(state.cartAdded||{})['choice_'+key];return '<button class="btn-add-cart'+(_addedC?' in-cart':'')+' onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(_addedC?'✓ 追加済み（'+qty+'個）':'🛒 カートに入れる（'+qty+'個）')+'</button>';}}else{const _addedC2=(state.cartAdded||{})['choice_'+key];return '<button class="btn-add-cart'+(_addedC2?' in-cart':'')+' onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(_addedC2?'✓ 追加済み（'+qty+'個）':'🛒 カートに入れる')+'</button>';}})()}`;
+    detailHTML += `${(()=>{const isReqC=def.req===true;if(isReqC){if(qty<=1){return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';}else{const _addedC=(state.cartAdded||{})['choice_'+key];return '<button class="btn-add-cart'+(_addedC?' in-cart':'')+'" onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(_addedC?'✓ 追加済み':'🛒 カートに入れる')+'</button>';}}else{const _addedC2=(state.cartAdded||{})['choice_'+key];return '<button class="btn-add-cart'+(_addedC2?' in-cart':'')+'" onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(_addedC2?'✓ 追加済み':'🛒 カートに入れる')+'</button>';}})()}`;
     detailHTML += `</div>`;
     detailHTML += `</div>`;
   }
@@ -2323,14 +2351,14 @@ function gradeGroupHTML(g) {
           const isReqG = g.req===true||g.req==='必須';
           if(isReqG){
             if(qty<=1){
-              return '<span style="font-size:11px;color:#10b981;font-weight:700">✓ カート投入済み（1セット）</span>';
+              return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
             } else {
               const _addedG = (state.cartAdded||{})['grade_'+g.id];
-              return '<button class="btn-add-cart'+(_addedG?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(_addedG?'✓ 追加済み（'+qty+'セット）':'🛒 カートに入れる（'+qty+'セット）')+'</button>';
+              return '<button class="btn-add-cart'+(_addedG?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(_addedG?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
             }
           } else {
             const _addedG2 = (state.cartAdded||{})['grade_'+g.id];
-            return '<button class="btn-add-cart'+(_addedG2?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(_addedG2?'✓ 追加済み（'+qty+'セット）':'🛒 カートに入れる')+'</button>';
+            return '<button class="btn-add-cart'+(_addedG2?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(_addedG2?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
           }
         })()}
       </div>
