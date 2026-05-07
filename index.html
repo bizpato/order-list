@@ -865,8 +865,8 @@ function loadState() {
 
 // ── ナビゲーション定義（関数参照は使用時に解決）──
 const REQUIRED_STEPS = [
-  {key:'fixed',  label:'初回必須セット①',  fn:function(){return renderStep1();}},
-  {key:'select', label:'初回必須セット②',  fn:function(){return renderStep2();}},
+  {key:'fixed',  label:'初回必須品目 — 数量確認',      fn:function(){return renderStep1();}},
+  {key:'select', label:'初回必須品目 — 選択・グレード設定', fn:function(){return renderStep2();}},
 ];
 const RECOMMEND_STEP = {key:'recommend', label:'推奨品目',          fn:function(){return renderRecommend();}};
 const FAMILY_STEP    = {key:'family',    label:'ファミリー物件必須', fn:function(){return renderFamily();}};
@@ -2252,7 +2252,7 @@ function renderStep0() {
 }
 
 function renderStep1() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 1/3</span></div><div class="section-title">初回必須セット①</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。数量を確認したら「次へ」を押してください。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 1/3</span></div><div class="section-title">初回必須品目 — 数量確認</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。数量を確認したら「次へ」を押してください。</div></div>
   <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;padding:12px 14px;margin-bottom:16px"><div style="font-size:12px;font-weight:800;color:#b45309;margin-bottom:4px">ℹ︎ 各品目の数量はデフォルトで「1」が設定されています</div><div style="font-size:11px;color:#92400e">2個以上必要な場合のみ、数量を変更してください</div></div>
 
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>
@@ -2302,10 +2302,10 @@ function renderStep1() {
 }
 
 function renderStep2() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 2/3</span></div><div class="section-title">初回必須セット②</div><div class="section-sub">グレード選択・弊社／ホスト様の備品準備分担の選択が必要な必須品目です。各項目を確認・設定したら「次へ」を押してください。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 2/3</span></div><div class="section-title">初回必須品目 — 選択・グレード設定</div><div class="section-sub">グレード選択・弊社／ホスト様の備品準備分担の選択が必要な必須品目です。各項目を確認・設定したら「次へ」を押してください。</div></div>
   <div class="mandatory-banner"><div class="mandatory-banner-title">⚠ 全項目のグレード・選択設定が必須です</div><div class="mandatory-banner-sub">デフォルトはスタンダード（最下位グレード）に設定されています</div></div>
 
-  <div class="subsection"><div class="subsection-title">🏠 弊社/ホスト構成品目（調理器具・食器・清掃用具等）</div>
+  <div class="subsection"><div class="subsection-title"> 弊社/ホスト構成品目（調理器具・食器・清掃用具等）</div>
   <div style="font-size:12px;color:var(--text-sub);margin-bottom:12px;padding:8px 12px;background:#f0f7ff;border-radius:8px;border-left:3px solid var(--brand)">弊社が自動補充するか、ホスト様がご準備いただくかを選択してください。「弊社が自動補充」を選択すると数量が1になります。</div>
   <div class="subsection"><div class="subsection-title">調理器具</div>
   ${['B0104','B0105','B0106','B0107','B0108','B0118','B0119','B0122','B0123'].map(id => itemCardHTML(id)).join('')}
@@ -2324,7 +2324,7 @@ function renderStep2() {
   </div>
   </div>
 
-  <div class="subsection"><div class="subsection-title">🛁 グレード選択品目</div>
+  <div class="subsection"><div class="subsection-title"> グレード選択品目</div>
 
   <div class="subsection"><div class="subsection-title">シャンプー</div>${gradeGroupHTML(GRADE_GROUPS[0])}</div>
   <div class="subsection"><div class="subsection-title">コンディショナー</div>${gradeGroupHTML(GRADE_GROUPS[1])}</div>
@@ -2348,13 +2348,13 @@ function renderStep2() {
 
 // アメニティ・化粧品（1ページ）
 function renderOptAmenityPage1() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 1/5</span></div><div class="section-title">🪴 アメニティ・化粧品</div><div class="section-sub">バス・洗面用アメニティを選択します。不要な場合は「完了」でスキップできます。</div></div>
-  <div class="subsection"><div class="subsection-title">洗面アメニティ</div>${['S0065','S0066','S0067','S0068','S0069','S0070'].map(id => itemCardHTML(id)).join('')}</div>`;
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 1/5</span></div><div class="section-title">アメニティ・化粧品</div><div class="section-sub">バス・洗面用アメニティを選択します。不要な場合は「完了」でスキップできます。</div></div>
+  <div class="subsection"><div class="subsection-title">洗面アメニティ</div>${['S0067','S0068','S0069','S0070'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 // 清掃・消耗品 ①（トイレ・ゴミ袋・消臭）
 function renderOptCleaningPage1() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 2/5 ①</span></div><div class="section-title">🧹 清掃・消耗品 ①</div><div class="section-sub">トイレ清掃道具・ゴミ袋・消臭関連を選択します。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 2/5 ①</span></div><div class="section-title"> 清掃・消耗品 ①</div><div class="section-sub">トイレ清掃道具・ゴミ袋・消臭関連を選択します。</div></div>
   <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0042','S0230'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">消臭袋</div>${['S0133'].map(id => itemCardHTML(id)).join('')}</div>
@@ -2363,7 +2363,7 @@ function renderOptCleaningPage1() {
 
 // 清掃・消耗品 ②（掃除機・電球・紙製品・害虫）
 function renderOptCleaningPage2() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 2/5 ②</span></div><div class="section-title">🧹 清掃・消耗品 ②</div><div class="section-sub">掃除機・電球・紙製品・害虫対策用品を選択します。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 2/5 ②</span></div><div class="section-title"> 清掃・消耗品 ②</div><div class="section-sub">掃除機・電球・紙製品・害虫対策用品を選択します。</div></div>
   <div class="subsection"><div class="subsection-title">掃除機</div>${['E0089','E0148','E0162'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">電球・電池</div>${['S0172','S0173','S0174','S0175','S0176','S0177','S0178','S0179','S0180','S0181'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">紙製品（キッチンペーパー等）</div>${['S0005'].map(id => itemCardHTML(id)).join('')}</div>
@@ -2372,7 +2372,7 @@ function renderOptCleaningPage2() {
 
 // キッチン・食器・食品 ①（キッチン消耗品・食器・カトラリー）
 function renderOptKitchenPage1() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 3/5 ①</span></div><div class="section-title">🍳 キッチン・食器 ①</div><div class="section-sub">キッチン消耗品・食器・カトラリーを選択します。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 3/5 ①</span></div><div class="section-title"> キッチン・食器 ①</div><div class="section-sub">キッチン消耗品・食器・カトラリーを選択します。</div></div>
   <div class="subsection"><div class="subsection-title">紙コップ（どちらか選択）</div>${choiceCardHTML('paper_cup')}</div>
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>${['S0136','S0255'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">衛生消耗品</div>${['S0161','B0155'].map(id => itemCardHTML(id)).join('')}</div>
@@ -2382,7 +2382,7 @@ function renderOptKitchenPage1() {
 
 // キッチン・食器・食品 ②（調味料・コーヒー・飲料・アルコール）
 function renderOptKitchenPage2() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 3/5 ②</span></div><div class="section-title">🍳 キッチン・食器 ②</div><div class="section-sub">調味料・コーヒー・飲料・アルコールを選択します。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 3/5 ②</span></div><div class="section-title"> キッチン・食器 ②</div><div class="section-sub">調味料・コーヒー・飲料・アルコールを選択します。</div></div>
   <div class="subsection"><div class="subsection-title">調味料</div>${['S0031','S0032','S0045','S0132','S0135','S0213'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">コーヒー・茶類</div>${['S0086','S0197','S0198','S0199','S0200','S0217','S0218','S0219','S0220','S0233','S0244'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">ソフトドリンク</div>${['S0205','S0206','S0214','S0250'].map(id => itemCardHTML(id)).join('')}</div>
@@ -2392,7 +2392,7 @@ function renderOptKitchenPage2() {
 
 // 芳香・インテリア ①（フレグランス・芳香剤・文具・設備）
 function renderOptAromaPage1() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 4/5 ①</span></div><div class="section-title">🌸 芳香・インテリア ①</div><div class="section-sub">フレグランス・芳香剤・文具・設備・収納を選択します。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 4/5 ①</span></div><div class="section-title"> 芳香・インテリア ①</div><div class="section-sub">フレグランス・芳香剤・文具・設備・収納を選択します。</div></div>
   <div class="subsection"><div class="subsection-title">無印良品 インテリアフレグランス</div>${choiceCardHTML('muji_citrus')}${choiceCardHTML('muji_woody')}</div>
   <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0021','B0129'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">文具</div>${['S0019','S0041','B0094','S0127'].map(id => itemCardHTML(id)).join('')}</div>
@@ -2402,7 +2402,7 @@ function renderOptAromaPage1() {
 
 // 芳香・インテリア ②（ペット・ベビー・レジャー・サウナ・医療）
 function renderOptAromaPage2() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 4/5 ②</span></div><div class="section-title">🌸 芳香・インテリア ②</div><div class="section-sub">ペット・ベビー・レジャー・サウナ・医療安全用品を選択します。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 4/5 ②</span></div><div class="section-title"> 芳香・インテリア ②</div><div class="section-sub">ペット・ベビー・レジャー・サウナ・医療安全用品を選択します。</div></div>
   <div class="subsection"><div class="subsection-title">ペット用品</div>${['S0022','S0037','S0038','S0134'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">子供・ベビー衛生</div>${['S0020','S0024','S0025','B0026','S0195','S0029'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">レジャー・玩具</div>${['S0207','S0208'].map(id => itemCardHTML(id)).join('')}</div>
@@ -2412,7 +2412,7 @@ function renderOptAromaPage2() {
 
 // BBQ（1ページ）
 function renderOptBBQ() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 5/5</span></div><div class="section-title">🔥 BBQ用品</div><div class="section-sub">BBQ関連用品を選択します。不要な場合は「完了」でスキップできます。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 5/5</span></div><div class="section-title"> BBQ用品</div><div class="section-sub">BBQ関連用品を選択します。不要な場合は「完了」でスキップできます。</div></div>
   ${['S0012','S0013','B0014','B0015','S0016','B0018','S0047','B0090','B0091','B0092','S0228','S0229','S0235','B0242'].map(id => itemCardHTML(id)).join('')}`;
 }
 
@@ -2428,37 +2428,31 @@ function renderStep3() {
 
 function renderStep4() {
   return `<div class="section-head"><div class="section-title">トイレ用品</div><div class="section-sub">追加のトイレ用品を選択します</div></div>
-  <div class="subsection"><div class="subsection-title">トイレ掃除道具</div>${['B0145','B0152'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">トイレ消臭（追加）</div>${['S0006','S0128'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171','S0225'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0040','S0042','S0230','S0231'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0042','S0230'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">消臭袋</div>${['S0133'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep5() {
   return `<div class="section-head"><div class="section-title">キッチン</div><div class="section-sub">キッチン用品を選択します</div></div>
   <div class="subsection"><div class="subsection-title">紙コップ（どちらか選択）</div>${choiceCardHTML('paper_cup')}</div>
-  <div class="subsection"><div class="subsection-title">キッチン消耗品</div>${['S0048','S0083','S0131','S0136','S0255','S0249'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">キッチン消耗品</div>${['S0136','S0255'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">コーヒー・茶類</div>${['S0086','S0197','S0198','S0199','S0200','S0217','S0218','S0219','S0220','S0233','S0244'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">衛生消耗品</div>${['S0161','B0155'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep6() {
   return `<div class="section-head"><div class="section-title">食器・カトラリー</div><div class="section-sub">追加の食器・カトラリーを選択します</div></div>
-  <div class="subsection"><div class="subsection-title">子供用食器</div>${['B0113','B0114','B0115','B0116'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">カトラリー（追加）</div>${['B0097','B0098','B0099','B0100'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep7() {
   return `<div class="section-head"><div class="section-title">洗濯・掃除</div><div class="section-sub">洗濯・清掃用品を選択します</div></div>
-  <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0007','B0087'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">掃き掃除</div>${['B0146','B0147'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">拭き掃除</div>${['S0160'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">除菌消臭（追加）</div>${['S0215','S0216'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0087'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">掃除機</div>${['E0089','E0148','E0162'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">電球・電池</div>${['S0172','S0173','S0174','S0175','S0176','S0177','S0178','S0179','S0180','S0181'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">紙製品</div>${['S0005','S0039','S0139'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">紙製品</div>${['S0005'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">害虫対策（追加）</div>${['S0035','S0036','S0046','S0053','S0254'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
