@@ -1597,7 +1597,7 @@ function itemCardHTML(id, forceReq) {
       </div>
       <div class="item-brand">${item.brand}</div>
       ${hostToggle}
-      ${(qty>0&&!isHost)?`<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:11px;font-weight:600;margin-right:4px">合計</span>¥${(item.price*qty).toLocaleString()}</div>`:''}
+      ${(qty>0&&!isHost)?`<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(item.price*qty).toLocaleString()}</div>`:''}
     </div>
     <div class="qty-control">
       <button class="qty-btn" onclick="changeQty('${id}',1)">+</button>
@@ -1664,7 +1664,7 @@ function setCardHTML(key) {
       ${subHTML}
       ${def.hostNote?`<div class="host-note" style="margin-top:6px">${def.hostNote}</div>`:''}
       <div style="border-top:1px solid #e8edf2;margin-top:8px;padding-top:8px">
-        <span style="font-size:11px;font-weight:600;margin-right:4px">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span>
+        <span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span>
       </div>
     </div>
     <div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">
@@ -1787,7 +1787,7 @@ function choiceCardHTML(key) {
 
   // 合計価格（枠内左下・単位なし）
   const totalRow = (selOpt && qty > 0)
-    ? `<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px">合計</span>¥${(selOpt.price * qty).toLocaleString()}</div>`
+    ? `<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(selOpt.price * qty).toLocaleString()}</div>`
     : '';
 
   let warnRow = '';
@@ -1888,7 +1888,7 @@ function refillCardHTML(key) {
   if (selOpt && qty > 0) {
     const optExtra2 = selOpt.extraId ? selOpt.extraPrice : 0;
     const optTotal2 = def.base.price + optExtra2;
-    totalRow = '<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px">合計</span>¥'+(optTotal2 * qty).toLocaleString()+'</div>';
+    totalRow = '<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥'+(optTotal2 * qty).toLocaleString()+'</div>';
   }
 
   let warnRow = '';
@@ -2000,7 +2000,7 @@ function gradeGroupHTML(g) {
         ${mainHTML}
         ${subHTML}
         ${opt.hostNote?`<div class="host-note" style="margin-top:6px">${opt.hostNote}</div>`:''}
-        <div style="padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span></div>
+        <div style="padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span></div>
       </div>
       <div class="qty-control" style="flex-shrink:0">
         <button class="qty-btn" onclick="changeGradeQty('${g.id}',1)">+</button>
@@ -2303,8 +2303,7 @@ function renderStep1() {
 }
 
 function renderStep2() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 2/3</span></div><div class="section-title">初回必須品目 — メーカー・担当選択</div><div class="section-sub">メーカー・グレードの選択と、弊社／ホスト様の備品準備分担の選択が必要な必須品目です。各項目を確認・設定したら「次へ」を押してください。</div></div>
-  <div class="mandatory-banner"><div class="mandatory-banner-title">⚠ 全項目のグレード・選択設定が必須です</div><div class="mandatory-banner-sub">デフォルトはスタンダード（最下位グレード）に設定されています</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 2/3</span></div><div class="section-title">初回必須品目 — メーカー・担当選択</div><div class="section-sub">このページでは、<strong>全ての項目に対して選択が必要</strong>です。デフォルトでは最もシンプルなメーカーが選ばれています。変更したい場合はタブをタップしてください。また「弊社が自動補充」は弊社が購入・補充を担当する選択肢、「ホスト様準備」はホスト様が自分で用意する選択肢です（弊社の発注対象外）。</div></div>
 
   <div class="subsection"><div class="subsection-title"> 弊社/ホスト構成品目（調理器具・食器・清掃用具等）</div>
   <div style="font-size:12px;color:var(--text-sub);margin-bottom:12px;padding:8px 12px;background:#f0f7ff;border-radius:8px;border-left:3px solid var(--brand)">弊社が自動補充するか、ホスト様がご準備いただくかを選択してください。「弊社が自動補充」を選択すると数量が1になります。</div>
@@ -2611,7 +2610,7 @@ function renderStep12() {
       + (tabsHTML ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${tabsHTML}</div>` : '')
       + bodyHTML
       + `<div style="border-top:1px solid #e8edf2;margin-top:8px;padding-top:8px;display:flex;align-items:center;gap:8px">`
-      + `<span style="font-size:11px;font-weight:600;color:#64748b;flex-shrink:0">合計</span>`
+      + `<span style="font-size:11px;font-weight:600;color:var(--brand);flex-shrink:0">合計</span>`
       + `<span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand);flex:1">${fmt(totalAmt)}</span>`
       + qtyHTML
       + del
