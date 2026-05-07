@@ -138,7 +138,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 /* ── フッター ── */
 .footer{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-top:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100}
-.footer-inner{max-width:720px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.footer-inner{max-width:720px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:flex-end;gap:12px}
 .total-wrap .total-label{font-size:10px;color:var(--text-sub);font-weight:700}
 .total-wrap .total-amount{font-size:18px;font-weight:900;font-family:var(--mono);color:var(--brand)}
 .nav-btns{display:flex;gap:8px}
@@ -187,7 +187,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 /* スティッキー発注バー */
 .sticky-submit{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-top:1px solid #e2e8f0;padding:16px;transform:translateY(100%);transition:transform .4s cubic-bezier(0.65,0,0.35,1);box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
 .sticky-submit.visible{transform:translateY(0)}
-.sticky-submit-inner{max-width:896px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.sticky-submit-inner{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:8px}
 .sticky-submit-msg{font-size:13px;font-weight:700;color:#10b981}
 .sticky-submit-msg span{font-size:11px;color:#64748b;font-weight:500;display:block;margin-top:2px}
 
@@ -829,6 +829,40 @@ const state = {
   optCatSubPage: 0,  // カテゴリ内サブページ番号（0始まり）
 };
 
+// ── localStorage 永続化 ──
+const LS_KEY = 'bizpato_order_state_v1';
+const LS_PERSIST_KEYS = ['quantities','gradeSelections','gradeQty','choiceSelections','choiceQty','setQty','hostChoice','refillChoices','refillQty','completedSteps','property','hostInfo','laundryType'];
+
+function saveState() {
+  try {
+    const data = {};
+    LS_PERSIST_KEYS.forEach(function(k){ data[k] = state[k]; });
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    if (new URLSearchParams(location.search).get('reset') === '1') {
+      localStorage.removeItem(LS_KEY);
+      history.replaceState(null,'',location.pathname);
+      return;
+    }
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    LS_PERSIST_KEYS.forEach(function(k){
+      if (data[k] !== undefined) {
+        if (typeof state[k] === 'object' && state[k] !== null && !Array.isArray(state[k])) {
+          Object.assign(state[k], data[k]);
+        } else {
+          state[k] = data[k];
+        }
+      }
+    });
+  } catch(e) {}
+}
+
 // ── ナビゲーション定義（関数参照は使用時に解決）──
 const REQUIRED_STEPS = [
   {key:'fixed',  label:'初回必須セット①',  fn:function(){return renderStep1();}},
@@ -840,7 +874,6 @@ const OPT_CATS = [
   {
     key: 'amenity',
     label: 'アメニティ・化粧品',
-    icon: '🪴',
     pages: [
       { title: 'アメニティ・化粧品', fn: function(){ return renderOptAmenityPage1(); } },
     ]
@@ -848,7 +881,6 @@ const OPT_CATS = [
   {
     key: 'cleaning',
     label: '清掃・消耗品',
-    icon: '🧹',
     pages: [
       { title: '清掃・消耗品 ① トイレ・ゴミ襲・消臭', fn: function(){ return renderOptCleaningPage1(); } },
       { title: '清掃・消耗品 ② 掃除機・電球・紙製品・害虫', fn: function(){ return renderOptCleaningPage2(); } },
@@ -857,7 +889,6 @@ const OPT_CATS = [
   {
     key: 'kitchen',
     label: 'キッチン・食器・食品',
-    icon: '🍳',
     pages: [
       { title: 'キッチン・食器 ① キッチン消耗品・食器・カトラリー', fn: function(){ return renderOptKitchenPage1(); } },
       { title: 'キッチン・食器 ② 調味料・コーヒー・飲料・アルコール', fn: function(){ return renderOptKitchenPage2(); } },
@@ -866,7 +897,6 @@ const OPT_CATS = [
   {
     key: 'aroma',
     label: '芳香・インテリア・特殊オプション',
-    icon: '🌸',
     pages: [
       { title: '芳香・インテリア ① フレグランス・芳香剤・文具・設備', fn: function(){ return renderOptAromaPage1(); } },
       { title: '芳香・インテリア ② ペット・ベビー・レジャー・サウナ・医療', fn: function(){ return renderOptAromaPage2(); } },
@@ -875,7 +905,6 @@ const OPT_CATS = [
   {
     key: 'bbq',
     label: 'BBQ',
-    icon: '🔥',
     pages: [
       { title: 'BBQ用品', fn: function(){ return renderOptBBQ(); } },
     ]
@@ -975,7 +1004,7 @@ function renderStep12() {
   return '<div class="section-head"><div class="section-title">確認・送信</div><div class="section-sub">内容をご確認の上、発注を送信してください</div></div>'
     + '<div class="summary-total"><div class="total-label">合計金額（目安）</div><div class="total-amount">'+fmt(total)+'</div></div>'
     + '<div class="summary-card"><div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:8px">発注品目</div>'+rows+'</div>'
-    + '<button onclick="openHostInfoModal()" class="btn-submit" style="width:100%;margin-top:16px">📦 この内容で発注する</button>';
+    + '<div style="text-align:center;margin-top:20px"><button onclick="openHostInfoModal()" class="btn-submit" style="width:100%;max-width:480px;margin:0 auto;padding:18px 28px;font-size:16px;display:block">📦 この内容で発注する</button></div>';
 }
 
 
@@ -1020,6 +1049,7 @@ const STEP_RENDERERS = [function(){return renderDashboard();}];
 
 // ─── render / navigation ───
 function render(scrollToTop) {
+  saveState();
   const mc = document.getElementById('main-content');
   const v = state.view;
   let html = '';
@@ -2114,7 +2144,7 @@ function renderOptionalList() {
     const pagesBadge = cat.pages.length > 1
       ? '<span style="font-size:10px;background:#e0f2fe;color:#0369a1;border-radius:99px;padding:1px 7px;margin-left:6px;font-weight:700;">' + cat.pages.length + 'ページ</span>'
       : '';
-    const iconHtml = cat.icon ? '<span style="font-size:20px;margin-right:8px;flex-shrink:0">' + cat.icon + '</span>' : '';
+    const iconHtml = '';
     html += '<div onclick="openOptCat(\''+cat.key+'\')" class="task-card'+(done?' done':'')+'">'
       + checkbox
       + '<div class="task-card-body" style="display:flex;align-items:center;gap:0">'
@@ -2325,10 +2355,8 @@ function renderOptAmenityPage1() {
 // 清掃・消耗品 ①（トイレ・ゴミ袋・消臭）
 function renderOptCleaningPage1() {
   return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 2/5 ①</span></div><div class="section-title">🧹 清掃・消耗品 ①</div><div class="section-sub">トイレ清掃道具・ゴミ袋・消臭関連を選択します。</div></div>
-  <div class="subsection"><div class="subsection-title">トイレ清掃道具</div>${['B0145','B0152'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">トイレ消臭（追加）</div>${['S0006','S0128'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171','S0225'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0040','S0042','S0230','S0231'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0042','S0230'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">消臭袋</div>${['S0133'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0087'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
@@ -2338,7 +2366,7 @@ function renderOptCleaningPage2() {
   return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 2/5 ②</span></div><div class="section-title">🧹 清掃・消耗品 ②</div><div class="section-sub">掃除機・電球・紙製品・害虫対策用品を選択します。</div></div>
   <div class="subsection"><div class="subsection-title">掃除機</div>${['E0089','E0148','E0162'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">電球・電池</div>${['S0172','S0173','S0174','S0175','S0176','S0177','S0178','S0179','S0180','S0181'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">紙製品（キッチンペーパー等）</div>${['S0005','S0039','S0139'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">紙製品（キッチンペーパー等）</div>${['S0005'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">害虫対策（追加）</div>${['S0035','S0036','S0046','S0053','S0254'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
@@ -2348,11 +2376,8 @@ function renderOptKitchenPage1() {
   <div class="subsection"><div class="subsection-title">紙コップ（どちらか選択）</div>${choiceCardHTML('paper_cup')}</div>
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>${['S0136','S0255'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">衛生消耗品</div>${['S0161','B0155'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">食器</div>${['B0102','B0121','B0101','B0103','B0110','B0111'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">子供用食器</div>${['B0113','B0114','B0115','B0116'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">カトラリー（追加）</div>${['B0097','B0098','B0099','B0100'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">調理器具（追加）</div>${['B0109','B0117','B0120'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 // キッチン・食器・食品 ②（調味料・コーヒー・飲料・アルコール）
@@ -2420,11 +2445,9 @@ function renderStep5() {
 
 function renderStep6() {
   return `<div class="section-head"><div class="section-title">食器・カトラリー</div><div class="section-sub">追加の食器・カトラリーを選択します</div></div>
-  <div class="subsection"><div class="subsection-title">食器</div>${['B0102','B0121','B0101','B0103','B0110','B0111'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">子供用食器</div>${['B0113','B0114','B0115','B0116'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">カトラリー（追加）</div>${['B0097','B0098','B0099','B0100'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">調理器具（追加）</div>${['B0109','B0117','B0120'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep7() {
@@ -2765,6 +2788,7 @@ function sendOrderEmailFromModal() {
 }
 
 // ─── 初期化 ───
+loadState();
 initDefaults();
 state.view = 'dashboard';
 render();
@@ -2819,8 +2843,8 @@ render();
 
 <div class="sticky-submit" id="sticky-submit">
   <div class="sticky-submit-inner">
-    <div class="sticky-submit-msg">✅ 必須項目が完了しました<span>発注内容を確認してください</span></div>
-    <button onclick="openStep('confirm')" class="btn-submit" style="width:auto;margin:0;padding:14px 28px">📦 発注内容を確認する</button>
+    <div class="sticky-submit-msg" style="text-align:center">✅ 必須項目が完了しました<span>発注内容を確認してください</span></div>
+    <button onclick="openStep('confirm')" class="btn-submit" style="width:100%;max-width:480px;margin:0;padding:16px 28px;font-size:16px">📦 発注内容を確認する</button>
   </div>
 </div>
 </body></html>
