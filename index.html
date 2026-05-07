@@ -164,16 +164,32 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 @media(max-width:480px){.form-row{grid-template-columns:1fr}}
 
 /* ── ダッシュボード タスクカード ── */
-.task-card{display:flex;align-items:center;gap:14px;padding:16px 20px;background:#fff;border:1px solid var(--border);border-radius:28px;margin-bottom:10px;cursor:pointer;transition:all .2s;box-shadow:rgba(0,0,0,0.04) 0px 1px 6px}
-.task-card:hover{border-color:var(--brand);box-shadow:rgba(33,83,135,0.08) 0px 4px 16px;transform:translateY(-2px)}
-.task-card.done{border-color:var(--brand);background:var(--brand-base)}
+.task-card{display:flex;align-items:center;gap:14px;padding:20px 24px;background:#fff;border:1px solid #e2e8f0;border-radius:28px;margin-bottom:12px;cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .2s;box-shadow:0 1px 4px rgba(0,0,0,0.03);user-select:none;-webkit-tap-highlight-color:transparent}
+.task-card:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 16px rgba(33,83,135,0.08)}
+.task-card.done{background:#f0f9ff;border-color:#bfdbfe;opacity:0.65}
+.task-card.done:hover{transform:none;box-shadow:0 1px 4px rgba(0,0,0,0.03)}
+.task-card.required-card{background:#fffcf0;border-color:#fde68a}
+.task-card.required-card.done{background:#f0f9ff;border-color:#bfdbfe}
+.task-card-checkbox{flex-shrink:0;margin-top:2px}
+.checkbox-empty{width:32px;height:32px;border-radius:12px;border:2px solid #e2e8f0;background:#f8fafc;transition:border-color .2s}
+.task-card:hover .checkbox-empty{border-color:var(--brand)}
+.checkbox-done{width:32px;height:32px;border-radius:12px;background:#10b981;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(16,185,129,0.3)}
+.checkbox-done svg{width:16px;height:16px;color:white;display:block}
 .task-card-icon{width:40px;height:40px;border-radius:12px;background:var(--brand-accent);display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;flex-shrink:0}
-.task-card-body{flex:1}
-.task-card-title{font-size:14px;font-weight:700}
-.task-card-sub{font-size:11px;color:var(--text-sub);margin-top:2px}
+.task-card-body{flex:1;min-width:0}
+.task-card-title{font-size:15px;font-weight:800;color:#1e293b}
+.task-card.done .task-card-title{color:#94a3b8;text-decoration:line-through}
+.task-card-sub{font-size:12px;color:var(--text-sub);margin-top:3px;font-weight:500}
+.task-card.done .task-card-sub{color:#cbd5e1}
 .task-card-sub.done-text{color:var(--brand);font-weight:600}
-.task-card-arrow{font-size:18px;color:var(--text-sub);flex-shrink:0}
-.section-label{display:block;font-size:10px;font-weight:900;color:var(--brand);background:var(--brand-accent);text-transform:uppercase;letter-spacing:.2em;margin:20px 0 10px;padding:4px 12px;border-radius:99px;width:fit-content}
+.task-card-arrow{font-size:20px;color:#cbd5e1;flex-shrink:0}
+.section-label{display:block;font-size:10px;font-weight:900;color:var(--brand);background:var(--brand-accent);text-transform:uppercase;letter-spacing:.2em;margin:24px 0 12px;padding:6px 14px;border-radius:99px;width:fit-content;border:1px solid #bfdbfe}
+/* スティッキー発注バー */
+.sticky-submit{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-top:1px solid #e2e8f0;padding:16px;transform:translateY(100%);transition:transform .4s cubic-bezier(0.65,0,0.35,1);box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
+.sticky-submit.visible{transform:translateY(0)}
+.sticky-submit-inner{max-width:896px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.sticky-submit-msg{font-size:13px;font-weight:700;color:#10b981}
+.sticky-submit-msg span{font-size:11px;color:#64748b;font-weight:500;display:block;margin-top:2px}
 
 /* ── サマリー ── */
 .summary-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
@@ -1000,9 +1016,25 @@ function render(scrollToTop) {
     if (state.view === 'dashboard') {
       btnArea.innerHTML = '';
     } else if (state.view === 'step') {
-      const needsValidate = state.currentStepKey === 'select';
-      const doneCall = "completeStep('" + state.currentStepKey + "'," + (needsValidate?'true':'false') + ")";
-      btnArea.innerHTML = BACK_DASH + '<button class="btn-next" onclick="' + doneCall + '">完了 ✓</button>';
+      // STEP1ウィザード：初回必須セット①→②→ファミリー必須の順次進行
+      const k = state.currentStepKey;
+      if (k === 'fixed') {
+        // 初回必須セット① → 「次へ」で初回必須セット②へ
+        btnArea.innerHTML = BACK_DASH + '<button class="btn-next" onclick="nextWizardStep(\'fixed\')">次へ →</button>';
+      } else if (k === 'select') {
+        // 初回必須セット② → 「次へ」でファミリー必須へ
+        btnArea.innerHTML = '<button class="btn-back" onclick="openStep(\'fixed\')">← 戻る</button>' + '<button class="btn-next" onclick="nextWizardStep(\'select\')">次へ →</button>';
+      } else if (k === 'family') {
+        // ファミリー必須 → 「完了」でダッシュボードへ
+        btnArea.innerHTML = '<button class="btn-back" onclick="openStep(\'select\')">← 戻る</button>' + '<button class="btn-next" onclick="completeStep(\'family\',false)">完了 ✓</button>';
+      } else if (k === 'recommend') {
+        // STEP2: 推奨品目 → 「完了」でダッシュボードへ
+        btnArea.innerHTML = BACK_DASH + '<button class="btn-next" onclick="completeStep(\'recommend\',false)">完了 ✓</button>';
+      } else {
+        const needsValidate = false;
+        const doneCall = "completeStep('" + k + "',false)";
+        btnArea.innerHTML = BACK_DASH + '<button class="btn-next" onclick="' + doneCall + '">完了 ✓</button>';
+      }
     } else if (state.view === 'optList') {
       btnArea.innerHTML = '';
     } else if (state.view === 'optCat') {
@@ -1067,6 +1099,25 @@ function completeOptCat(catKey) {
   state.completedSteps[catKey] = true;
   state.view = 'optList';
   render(true);
+}
+
+// STEP1ウィザード：次のサブステップへ進む
+function nextWizardStep(key) {
+  if (key === 'fixed') {
+    // 初回必須セット①完了 → 初回必須セット②へ
+    state.completedSteps['fixed'] = true;
+    state.currentStepKey = 'select';
+    state.view = 'step';
+    render(true);
+  } else if (key === 'select') {
+    // 初回必須セット②完了 → バリデーション後、ファミリー必須へ
+    const errs = validateStep2();
+    if (errs.length > 0) { showToast('⚠ ' + errs[0]); return; }
+    state.completedSteps['select'] = true;
+    state.currentStepKey = 'family';
+    state.view = 'step';
+    render(true);
+  }
 }
 
 
@@ -1749,53 +1800,114 @@ function gradeGroupHTML(g) {
 // ══════════════════════════════════════════════
 function renderDashboard() {
   const allRequired = REQUIRED_STEPS.every(s => state.completedSteps[s.key]);
+  // 必須：初回必須セット①②の完了で発注可能（ファミリー必須は任意なので不要）
   const canSubmit = state.completedSteps['fixed'] && state.completedSteps['select'];
+
+  const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 
   function taskCard(step, isRequired) {
     const done = state.completedSteps[step.key];
-    const iconStyle = done
-      ? 'background:rgb(16,185,129);border-radius:12px;'
-      : (isRequired ? 'background:var(--brand-accent);border-radius:12px;' : 'background:#f1f5f9;border-radius:12px;');
-    const iconText = done ? '✓' : (isRequired ? '!' : '○');
-    const iconColor = done ? 'color:#fff;font-weight:900;font-size:16px;' : (isRequired ? 'color:var(--brand);font-weight:900;font-size:14px;' : 'color:#94a3b8;font-size:16px;');
-    return '<div onclick="openStep(\''+step.key+'\')" class="task-card'+(done?' done':'')+'">'
-      + '<div class="task-card-icon" style="'+iconStyle+iconColor+'">'+iconText+'</div>'
+    const checkbox = done
+      ? '<div class="task-card-checkbox"><div class="checkbox-done">' + CHECK_SVG + '</div></div>'
+      : '<div class="task-card-checkbox"><div class="checkbox-empty"></div></div>';
+    const cardClass = 'task-card' + (done ? ' done' : '') + (isRequired && !done ? ' required-card' : '');
+    const subText = done
+      ? '<div class="task-card-sub">完了しました</div>'
+      : '<div class="task-card-sub">' + (isRequired ? '必須 — ' : '') + 'タップして入力</div>';
+    return '<div onclick="openStep(\''+step.key+'\')" class="' + cardClass + '">'
+      + checkbox
       + '<div class="task-card-body"><div class="task-card-title">'+step.label+'</div>'
-      + (done ? '<div class="task-card-sub done-text">✓ 完了</div>' : '<div class="task-card-sub">'+(isRequired?'必須 — ':'')+'タップして入力</div>')
+      + subText
       + '</div>'
-      + '<div class="task-card-arrow" style="color:#cbd5e1;font-size:20px;">›</div>'
+      + '<div class="task-card-arrow">›</div>'
       + '</div>';
   }
 
   function optCard() {
     const anyDone = OPT_CATS.some(s => state.completedSteps[s.key]);
     const doneCnt = OPT_CATS.filter(s => state.completedSteps[s.key]).length;
-    const iconStyle = anyDone ? 'background:rgb(16,185,129);border-radius:12px;color:#fff;font-weight:900;font-size:16px;' : 'background:#f1f5f9;border-radius:12px;color:#94a3b8;font-size:16px;';
+    const checkbox = anyDone
+      ? '<div class="task-card-checkbox"><div class="checkbox-done">' + CHECK_SVG + '</div></div>'
+      : '<div class="task-card-checkbox"><div class="checkbox-empty"></div></div>';
     return '<div onclick="openStep(\'optList\')" class="task-card'+(anyDone?' done':'')+'">'
-      + '<div class="task-card-icon" style="'+iconStyle+'">'+(anyDone?'✓':'＋')+'</div>'
+      + checkbox
       + '<div class="task-card-body"><div class="task-card-title">任意追加品目</div>'
       + '<div class="task-card-sub">'+(doneCnt > 0 ? doneCnt+'カテゴリ選択済み' : '6カテゴリから選択')+'</div>'
       + '</div>'
-      + '<div class="task-card-arrow" style="color:#cbd5e1;font-size:20px;">›</div>'
+      + '<div class="task-card-arrow">›</div>'
       + '</div>';
   }
 
-  let html = '<div class="section-head" style="margin-bottom:24px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="width:4px;height:28px;background:linear-gradient(180deg,var(--brand),var(--brand-light));border-radius:2px"></div><div class="section-title">初回セット・補充備品発注フォーム</div></div><div class="section-sub">各項目を入力して発注を送信してください</div></div>';
+  // STEP完了状態の判定
+  const step1Done = state.completedSteps['fixed'] && state.completedSteps['select'] && state.completedSteps['family'];
+  const step1Partial = state.completedSteps['fixed'] || state.completedSteps['select'];
+  const step2Done = state.completedSteps['recommend'];
+  const step3Done = OPT_CATS.some(s => state.completedSteps[s.key]);
+  const step3Count = OPT_CATS.filter(s => state.completedSteps[s.key]).length;
 
-  html += '<div class="section-label">必須項目</div>';
-  REQUIRED_STEPS.forEach(s => { html += taskCard(s, true); });
+  // STEPバッジ生成関数
+  function stepBadge(num, done, partial) {
+    const bg = done ? '#f0fdf4' : (partial ? '#fef9c3' : '#eef8ff');
+    const border = done ? '#bbf7d0' : (partial ? '#fde68a' : '#bfdbfe');
+    const color = done ? '#16a34a' : (partial ? '#92400e' : '#1e40af');
+    const icon = done ? '✓ ' : '';
+    return '<div style="display:inline-flex;align-items:center;gap:6px;background:'+bg+';border:1.5px solid '+border+';border-radius:99px;padding:5px 14px;margin-bottom:12px">'
+      + '<span style="font-size:11px;font-weight:900;color:'+color+';letter-spacing:.12em">'+icon+'STEP '+num+'</span>'
+      + '</div>';
+  }
 
-  html += '<div class="section-label">推奨・ファミリー</div>';
-  html += taskCard(FAMILY_STEP, false);
-  html += taskCard(RECOMMEND_STEP, false);
+  // STEPブロックのラッパー
+  function stepBlock(num, done, partial, title, desc, cardsHtml) {
+    const borderColor = done ? '#bbf7d0' : (partial ? '#fde68a' : '#e2e8f0');
+    const bg = done ? '#f8fffe' : '#fff';
+    return '<div style="background:'+bg+';border:1.5px solid '+borderColor+';border-radius:24px;padding:20px;margin-bottom:16px">'
+      + stepBadge(num, done, partial)
+      + '<div style="font-size:16px;font-weight:800;color:#1e293b;margin-bottom:4px">'+title+'</div>'
+      + '<div style="font-size:12px;color:#64748b;margin-bottom:16px;line-height:1.6">'+desc+'</div>'
+      + cardsHtml
+      + '</div>';
+  }
 
-  html += '<div class="section-label">任意追加</div>';
-  html += optCard();
+  // STEP1カード生成
+  let step1Cards = '';
+  REQUIRED_STEPS.forEach(s => { step1Cards += taskCard(s, true); });
+  step1Cards += taskCard(FAMILY_STEP, false);
 
-  // 送信ボタン
-  html += '<button class="btn-submit'+(canSubmit?'':' disabled')+'" '+(canSubmit?'onclick="openStep(\'confirm\')'+'"':'disabled')+'>📦 発注内容を確認する</button>';
+  // STEP1のフロー説明
+  const step1Desc = step1Done
+    ? '必須項目の入力が完了しました。'
+    : '初回必須セット①→②の順に入力し、最後にファミリー物件必須品目を確認してください。初回必須セット①②は必須、ファミリー物件必須品目は任意です。';
+
+  let html = '<div style="margin-bottom:24px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="width:4px;height:28px;background:linear-gradient(180deg,var(--brand),var(--brand-light));border-radius:2px"></div><div class="section-title">初回セット・補充備品発注フォーム</div></div><div class="section-sub">下記の3ステップを順に進めてください</div></div>';
+
+  html += stepBlock(1, step1Done, step1Partial, '必須項目の入力', step1Desc, step1Cards);
+
+  const step2Desc = step2Done
+    ? '推奨品目の確認が完了しました。'
+    : '弊社がお勧めする品目をまとめています。追加希望のものを選んでください。不要な場合はスキップできます。';
+  html += stepBlock(2, step2Done, false, '推奨品目の確認', step2Desc, taskCard(RECOMMEND_STEP, false));
+
+  const step3Desc = step3Done
+    ? step3Count + 'カテゴリ選択済みです。'
+    : 'アメニティ・キッチン・BBQなどの任意品目を選べます。不要な場合はスキップできます。';
+  html += stepBlock(3, step3Done, false, 'その他任意追加品目', step3Desc, optCard());
+
+  // スティッキーバー制御
+  setTimeout(function() {
+    const stickyEl = document.getElementById('sticky-submit');
+    if (stickyEl) {
+      if (canSubmit) stickyEl.classList.add('visible');
+      else stickyEl.classList.remove('visible');
+    }
+  }, 50);
+
   if (!canSubmit) {
-    html += '<div style="text-align:center;font-size:11px;color:var(--text-sub);margin-top:8px">必須項目をすべて完了すると送信できます</div>';
+    html += '<div style="background:#eef8ff;border:1px solid #bfdbfe;border-radius:16px;padding:14px 16px;margin-top:4px;display:flex;align-items:center;gap:10px">'
+      + '<div style="font-size:20px;flex-shrink:0">📦</div>'
+      + '<div><div style="font-size:12px;font-weight:700;color:#1e40af;margin-bottom:2px">STEP 1の必須項目を入力すると発注できます</div>'
+      + '<div style="font-size:11px;color:#3b82f6">初回必須セット①≡②の入力完了後、画面下部に発注ボタンが表示されます</div>'
+      + '</div>'
+      + '</div>';
   }
   return html;
 }
@@ -1804,15 +1916,18 @@ function renderDashboard() {
 // 任意カテゴリ一覧
 // ══════════════════════════════════════════════
 function renderOptionalList() {
-  let html = '<div class="section-head"><div class="section-title">任意追加品目</div><div class="section-sub">必要なカテゴリを選んで追加してください</div></div>';
+  let html = '<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3</span></div><div class="section-title">任意追加品目</div><div class="section-sub">必要なカテゴリを選んで追加してください。不要な場合はスキップできます。</div></div>';
+  const OPT_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
   OPT_CATS.forEach(cat => {
     const done = state.completedSteps[cat.key];
-    const iconStyle = done ? 'background:rgb(16,185,129);border-radius:12px;color:#fff;font-weight:900;font-size:16px;' : 'background:#f1f5f9;border-radius:12px;color:#94a3b8;font-size:16px;';
+    const checkbox = done
+      ? '<div class="task-card-checkbox"><div class="checkbox-done">' + OPT_CHECK_SVG + '</div></div>'
+      : '<div class="task-card-checkbox"><div class="checkbox-empty"></div></div>';
     html += '<div onclick="openOptCat(\''+cat.key+'\')" class="task-card'+(done?' done':'')+'">'
-      + '<div class="task-card-icon" style="'+iconStyle+'">'+(done?'✓':'○')+'</div>'
+      + checkbox
       + '<div class="task-card-body"><div class="task-card-title">'+cat.label+'</div>'
-      + '<div class="task-card-sub'+(done?' done-text':'')+'">'+( done?'✓ 確認済み':'タップして確認')+'</div></div>'
-      + '<div class="task-card-arrow" style="color:#cbd5e1;font-size:20px;">›</div>'
+      + '<div class="task-card-sub">'+(done ? '確認済み' : 'タップして確認')+'</div></div>'
+      + '<div class="task-card-arrow">›</div>'
       + '</div>';
   });
   html += '<button onclick="openStep(\'dashboard\')" class="btn-back" style="width:100%;margin-top:12px">← ダッシュボードに戻る</button>';
@@ -1823,7 +1938,7 @@ function renderOptionalList() {
 // 推奨品目ページ
 // ══════════════════════════════════════════════
 function renderRecommend() {
-  return '<div class="section-head"><div class="section-title">推奨品目</div><div class="section-sub">必須ではありませんが、設置をお勧めする品目です。</div></div>'
+  return '<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#fef9c3;border:1px solid #fde68a;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#92400e;letter-spacing:.15em">STEP 2</span></div><div class="section-title">推奨品目</div><div class="section-sub">弊社がお勧めする品目です。追加希望のものを選んでください。不要な場合はスキップできます。</div></div>'
     + '<div class="subsection"><div class="subsection-title">キッチン消耗品</div>'
     + ['S0048','S0083','S0131','S0249'].map(id => itemCardHTML(id)).join('')
     + '</div>'
@@ -1850,7 +1965,7 @@ function renderRecommend() {
 // ファミリー必須ページ
 // ══════════════════════════════════════════════
 function renderFamily() {
-  return '<div class="section-head"><div class="section-title">ファミリー必須</div><div class="section-sub">お子様連れのゲスト向け品目です。ファミリー物件の場合は設置をお勧めします。</div></div>'
+  return '<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 3/3</span></div><div class="section-title">ファミリー物件必須品目</div><div class="section-sub">お子様連れのゲスト向け品目です。ファミリー物件の場合は追加してください。不要な場合は「完了」を押してスキップできます。</div></div>'
     + '<div class="subsection"><div class="subsection-title">子供用シャンプー</div>'
     + refillCardHTML('kids_shampoo')
     + '</div>'
@@ -1912,7 +2027,7 @@ function renderStep0() {
 }
 
 function renderStep1() {
-  return `<div class="section-head"><div class="section-title">初回必須セット①</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 1/3</span></div><div class="section-title">初回必須セット①</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。数量を確認したら「次へ」を押してください。</div></div>
   <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;padding:12px 14px;margin-bottom:16px"><div style="font-size:12px;font-weight:800;color:#b45309;margin-bottom:4px">ℹ︎ 各品目の数量はデフォルトで「1」が設定されています</div><div style="font-size:11px;color:#92400e">2個以上必要な場合のみ、数量を変更してください</div></div>
 
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>
@@ -1962,7 +2077,7 @@ function renderStep1() {
 }
 
 function renderStep2() {
-  return `<div class="section-head"><div class="section-title">初回必須セット②</div><div class="section-sub">グレード選択・弊社／ホスト様の備品準備分担の選択が必要な必須品目です。各項目を確認・設定してください。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 2/3</span></div><div class="section-title">初回必須セット②</div><div class="section-sub">グレード選択・弊社／ホスト様の備品準備分担の選択が必要な必須品目です。各項目を確認・設定したら「次へ」を押してください。</div></div>
   <div class="mandatory-banner"><div class="mandatory-banner-title">⚠ 全項目のグレード・選択設定が必須です</div><div class="mandatory-banner-sub">デフォルトはスタンダード（最下位グレード）に設定されています</div></div>
 
   <div class="subsection"><div class="subsection-title">🏠 弊社/ホスト構成品目（調理器具・食器・清掃用具等）</div>
@@ -2176,4 +2291,11 @@ initDefaults();
 state.view = 'dashboard';
 render();
 
-</script></body></html>
+</script>
+<div class="sticky-submit" id="sticky-submit">
+  <div class="sticky-submit-inner">
+    <div class="sticky-submit-msg">✅ 必須項目が完了しました<span>発注内容を確認してください</span></div>
+    <button onclick="openStep('confirm')" class="btn-submit" style="width:auto;margin:0;padding:14px 28px">📦 発注内容を確認する</button>
+  </div>
+</div>
+</body></html>
