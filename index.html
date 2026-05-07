@@ -2238,8 +2238,92 @@ function renderStep11() {
   <div class="subsection"><div class="subsection-title">医療・安全</div>${['S0075','S0126'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
+// ── 確認画面：数量変更・削除ボタン付き ──
+function confirmQtyChange(type, key, delta) {
+  if (type === 'grade') {
+    const g = GRADE_GROUPS.find(x=>x.id===key);
+    const isMandatory = g && g.req === '必須';
+    const cur = state.gradeQty[key] || 0;
+    const next = cur + delta;
+    if (isMandatory && next < 1) { showToast('必須項目は1セット以上必要です'); return; }
+    if (next < 0) return;
+    state.gradeQty[key] = next;
+  } else if (type === 'set') {
+    const def = SET_DEFS[key];
+    const isMandatory = def && def.req === '必須';
+    const cur = state.setQty[key] || 0;
+    const next = cur + delta;
+    if (isMandatory && next < 1) { showToast('必須項目は1セット以上必要です'); return; }
+    if (next < 0) return;
+    state.setQty[key] = next;
+  } else if (type === 'choice') {
+    const def = CHOICE_DEFS[key];
+    const isMandatory = def && def.req === true;
+    const cur = state.choiceQty[key] || 0;
+    const next = cur + delta;
+    if (isMandatory && next < 1) { showToast('必須項目は1以上必要です'); return; }
+    if (next < 0) return;
+    state.choiceQty[key] = next;
+  } else if (type === 'refill') {
+    const def = REFILL_CHOICE_DEFS[key];
+    const isMandatory = def && (def.req === '必須');
+    const cur = state.refillQty[key] || 0;
+    const next = cur + delta;
+    if (isMandatory && next < 1) { showToast('必須項目は1以上必要です'); return; }
+    if (next < 0) return;
+    state.refillQty[key] = next;
+  } else if (type === 'item') {
+    const item = ITEMS[key];
+    const isMandatory = item && item.req === '必須';
+    const cur = state.quantities[key] || 0;
+    const next = cur + delta;
+    if (isMandatory && next < 1) { showToast('必須項目は1以上必要です'); return; }
+    if (next < 0) return;
+    state.quantities[key] = next;
+  } else if (type === 'virtual') {
+    // MUJI_citrus / MUJI_woody など仮想ID
+    const cur = state.quantities[key] || 0;
+    const next = cur + delta;
+    if (next < 0) return;
+    state.quantities[key] = next;
+  }
+  render(true);
+}
+function confirmDelete(type, key) {
+  if (type === 'grade') { state.gradeQty[key] = 0; state.gradeSelections[key] = null; }
+  else if (type === 'set') { state.setQty[key] = 0; }
+  else if (type === 'choice') { state.choiceQty[key] = 0; state.choiceSelections[key] = null; }
+  else if (type === 'refill') { state.refillQty[key] = 0; state.refillChoices[key] = null; }
+  else if (type === 'item') { state.quantities[key] = 0; }
+  else if (type === 'virtual') { state.quantities[key] = 0; }
+  render(true);
+}
+
 function renderStep12() {
   const total = calcTotal();
+  const TRASH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path></svg>';
+
+  // 行生成ヘルパー
+  function makeRow(name, qty, unitLabel, price, isMandatory, type, key) {
+    const qtyCtrl = `<div style="display:flex;align-items:center;gap:4px;flex-shrink:0">`
+      + `<button onclick="confirmQtyChange('${type}','${key}',-1)" style="width:26px;height:26px;border-radius:50%;border:1.5px solid #e2e8f0;background:#f8fafc;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b">−</button>`
+      + `<span style="font-size:13px;font-weight:700;font-family:var(--mono);min-width:28px;text-align:center">${qty}</span>`
+      + `<button onclick="confirmQtyChange('${type}','${key}',1)" style="width:26px;height:26px;border-radius:50%;border:1.5px solid #e2e8f0;background:#f8fafc;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#215387">＋</button>`
+      + `</div>`;
+    const deleteBtn = !isMandatory
+      ? `<button onclick="confirmDelete('${type}','${key}')" title="削除" style="width:28px;height:28px;border-radius:50%;border:1.5px solid #fecaca;background:#fff5f5;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ef4444;flex-shrink:0">${TRASH_SVG}</button>`
+      : `<div style="width:28px"></div>`;
+    const mandatoryBadge = isMandatory ? `<span style="font-size:9px;font-weight:800;color:#ea4d3c;background:#fff0ee;border:1px solid #fecaca;border-radius:4px;padding:1px 5px;margin-left:4px;flex-shrink:0">必須</span>` : '';
+    return `<div class="summary-row" style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)">`
+      + `<div style="flex:1;min-width:0">`
+      + `<div style="font-size:12px;font-weight:600;color:#1e293b;display:flex;align-items:center;flex-wrap:wrap;gap:4px">${name}${mandatoryBadge}</div>`
+      + `<div style="font-size:11px;color:#64748b;margin-top:2px">${unitLabel} &nbsp;→&nbsp; <span style="font-weight:700;color:#215387">${fmt(price)}</span></div>`
+      + `</div>`
+      + qtyCtrl
+      + deleteBtn
+      + `</div>`;
+  }
+
   let rows = '';
   // グレードグループ
   for (const g of GRADE_GROUPS) {
@@ -2249,7 +2333,7 @@ function renderStep12() {
       const opt = g.options.find(o=>o.grade===sel);
       if (opt) {
         const p = opt.items.reduce((s,i)=>s+i.price,0);
-        rows += `<div class="summary-row"><div class="summary-name">${g.name}（${opt.label}）</div><div class="summary-qty">${qty} セット</div><div class="summary-price">${fmt(p*qty)}</div></div>`;
+        rows += makeRow(`${g.name}（${opt.label}）`, qty, `${p.toLocaleString()}円/セット`, p*qty, g.req==='必須', 'grade', g.id);
       }
     }
   }
@@ -2258,30 +2342,43 @@ function renderStep12() {
     const qty = state.setQty[k] || 0;
     if (qty > 0) {
       const p = def.items.reduce((s,i)=>s+i.price,0);
-      rows += `<div class="summary-row"><div class="summary-name">${def.title}</div><div class="summary-qty">${qty} セット</div><div class="summary-price">${fmt(p*qty)}</div></div>`;
+      rows += makeRow(def.title, qty, `${p.toLocaleString()}円/セット`, p*qty, def.req==='必須', 'set', k);
     }
   }
-  // 選択カード
+  // 詰替選択カード（REFILL_CHOICE_DEFS）
+  for (const [k, def] of Object.entries(REFILL_CHOICE_DEFS)) {
+    const sel = state.refillChoices[k];
+    const qty = state.refillQty[k] || 0;
+    if (sel && qty > 0) {
+      const opt = def.opts.find(o=>o.key===sel);
+      const baseP = def.base ? def.base.price : 0;
+      const extraP = opt && opt.extraPrice ? opt.extraPrice : (opt && opt.price ? opt.price : 0);
+      const totalP = (baseP + extraP) * qty;
+      const isMandatory = def.req === '必須';
+      rows += makeRow(`${def.title}（${opt ? opt.label : sel}）`, qty, `${(baseP+extraP).toLocaleString()}円/セット`, totalP, isMandatory, 'refill', k);
+    }
+  }
+  // 選択カード（CHOICE_DEFS）
   for (const [k, def] of Object.entries(CHOICE_DEFS)) {
     const sel = state.choiceSelections[k];
     const qty = state.choiceQty[k] || 0;
     if (sel && qty > 0) {
       const opt = def.opts.find(o=>o.key===sel);
-      if (opt) rows += `<div class="summary-row"><div class="summary-name">${def.title}（${opt.label}）</div><div class="summary-qty">${qty} ${opt.unit||'個'}</div><div class="summary-price">${fmt(opt.price*qty)}</div></div>`;
+      if (opt) rows += makeRow(`${def.title}（${opt.label}）`, qty, `${opt.price.toLocaleString()}円/${opt.unit||'個'}`, opt.price*qty, def.req===true, 'choice', k);
     }
   }
   // 通常品目
   for (const [id, qty] of Object.entries(state.quantities)) {
     if (qty <= 0) continue;
-    if (id === 'MUJI_citrus') { rows += `<div class="summary-row"><div class="summary-name">無印良品フレグランス（シトラス）</div><div class="summary-qty">${qty}</div><div class="summary-price">${fmt(5620*qty)}</div></div>`; continue; }
-    if (id === 'MUJI_woody')  { rows += `<div class="summary-row"><div class="summary-name">無印良品フレグランス（ウッディ）</div><div class="summary-qty">${qty}</div><div class="summary-price">${fmt(5500*qty)}</div></div>`; continue; }
+    if (id === 'MUJI_citrus') { rows += makeRow('無印良品フレグランス（シトラス）', qty, '5,620円/個', 5620*qty, false, 'virtual', id); continue; }
+    if (id === 'MUJI_woody')  { rows += makeRow('無印良品フレグランス（ウッディ）',  qty, '5,500円/個', 5500*qty, false, 'virtual', id); continue; }
     const item = ITEMS[id];
-    if (item) rows += `<div class="summary-row"><div class="summary-name"><span style="font-family:var(--mono);font-size:10px;color:#94a3b8">${id}</span> ${item.name}</div><div class="summary-qty">${qty} ${item.unit}</div><div class="summary-price">${fmt(item.price*qty)}</div></div>`;
+    if (item) rows += makeRow(`${item.name}`, qty, `${item.price.toLocaleString()}円/${item.unit}`, item.price*qty, item.req==='必須', 'item', id);
   }
   if (!rows) rows = '<div style="text-align:center;padding:20px;color:var(--text-sub)">選択された品目がありません</div>';
-  return `<div class="section-head"><div class="section-title">確認・送信</div><div class="section-sub">内容をご確認の上、発注を送信してください</div></div>
+  return `<div class="section-head"><div class="section-title">確認・送信</div><div class="section-sub">数量の変更や不要な品目の削除ができます。確認後に発注してください。</div></div>
   <div class="summary-total"><div class="total-label">合計金額（目安）</div><div class="total-amount">${fmt(total)}</div></div>
-  <div class="summary-card"><div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:8px">発注品目</div>${rows}</div>
+  <div class="summary-card"><div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:4px;display:flex;justify-content:space-between"><span>発注品目</span><span style="font-size:10px;color:#94a3b8">必須以外はゴミ箱で削除できます</span></div>${rows}</div>
   <button onclick="openStep('hostInfo')" class="btn-submit" style="width:100%;margin-top:16px">📦 この内容で発注する</button>`;
 }
 
