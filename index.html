@@ -205,10 +205,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .reset-dialog-btns .btn-cancel{flex:1;padding:12px;border-radius:12px;border:1.5px solid #e2e8f0;background:#fff;font-size:14px;font-weight:700;cursor:pointer;color:#64748b}
 .reset-dialog-btns .btn-confirm-reset{flex:1;padding:12px;border-radius:12px;border:none;background:#dc2626;font-size:14px;font-weight:700;cursor:pointer;color:#fff}
 
-.btn-add-cart{width:100%;padding:11px 16px;border-radius:12px;border:none;background:#059669;color:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;letter-spacing:.03em;margin-top:10px}
-.btn-add-cart:hover{background:#047857}
-.btn-add-cart-sm{padding:8px 14px;border-radius:10px;border:none;background:#059669;color:#fff;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
-.btn-add-cart-sm:hover{background:#047857}
+.btn-add-cart{width:100%;padding:11px 16px;border-radius:12px;border:none;background:#f97316;color:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;letter-spacing:.03em;margin-top:10px}
+.btn-add-cart:hover{background:#ea6c0a}
+.btn-add-cart-sm{padding:8px 14px;border-radius:10px;border:none;background:#f97316;color:#fff;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.btn-add-cart-sm:hover{background:#ea6c0a}
 
 .total-bar.visible{display:flex}
 .total-bar-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.8)}
@@ -239,7 +239,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .qty-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .qty-label{font-size:11px;color:var(--text-sub);font-weight:500}
 /* ── カートに追加ボタン ── */
-.btn-add-cart{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:none;background:#059669;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap}
+.btn-add-cart{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:none;background:#f97316;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap}
 .btn-add-cart:hover:not(:disabled){opacity:.85;transform:translateY(-1px)}
 .btn-add-cart:disabled{background:#cbd5e1;color:#94a3b8;cursor:not-allowed;transform:none}
 .btn-add-cart.in-cart{background:#0284c7}
@@ -927,7 +927,9 @@ function doStepReset(stepKey) {
   if (stepKey === 'step1') {
     const step1Ids = ['S0142','S0034','S0052','B0166','B0185','S0043'];
     step1Ids.forEach(function(id){ state.quantities[id] = 1; });
-    const step1Sets = ['kitchen_bleach','corocoro','quickle','bath_magic','kabikiller','toilet_magic','toilet_fab'];
+    const step1Sets = ['kitchen_bleach','corocoro','bath_magic','kabikiller','toilet_fab'];
+    const step1ChoiceKeys = ['quickle','toilet_magic','softener'];
+    step1ChoiceKeys.forEach(function(k){ state.choiceQty[k] = 1; delete state.choiceSelections[k]; if(!state.cartAdded)state.cartAdded={}; state.cartAdded['choice_'+k]=false; });
     step1Sets.forEach(function(k){ state.setQty[k] = 1; });
     delete state.completedSteps['step1'];
   } else if (stepKey === 'step2') {
@@ -1271,14 +1273,14 @@ function render(scrollToTop) {
         btnArea.innerHTML = '<button class="btn-back" onclick="openStep(\'fixed\')">← 戻る</button>' + '<button class="btn-next" onclick="nextWizardStep(\'select\')">次へ →</button>';
       } else if (k === 'family') {
         // ファミリー必須 → 「完了」でダッシュボードへ
-        btnArea.innerHTML = '<button class="btn-back" onclick="openStep(\'select\')">← 戻る</button>' + '<button class="btn-next" onclick="completeStep(\'family\',false)">完了 ✓</button>';
+        btnArea.innerHTML = '<button class="btn-back" onclick="openStep(\'select\')">← 戻る</button>' + '<button class="btn-next" onclick="completeStep(\'family\',false)">確定 ✓</button>';
       } else if (k === 'recommend') {
         // STEP2: 推奨品目 → 「完了」でダッシュボードへ
-        btnArea.innerHTML = BACK_DASH + '<button class="btn-next" onclick="completeStep(\'recommend\',false)">完了 ✓</button>';
+        btnArea.innerHTML = BACK_DASH + '<button class="btn-next" onclick="completeStep(\'recommend\',false)">確定 ✓</button>';
       } else {
         const needsValidate = false;
         const doneCall = "completeStep('" + k + "',false)";
-        btnArea.innerHTML = BACK_DASH + '<button class="btn-next" onclick="' + doneCall + '">完了 ✓</button>';
+        btnArea.innerHTML = BACK_DASH + '<button class="btn-next" onclick="' + doneCall + '">確定 ✓</button>';
       }
     } else if (state.view === 'optList') {
       btnArea.innerHTML = '';
@@ -1290,7 +1292,7 @@ function render(scrollToTop) {
         ? '<button class="btn-back" onclick="prevOptCatPage()">← 戻る</button>'
         : BACK_OPT;
       const fwdBtn = isLastPage
-        ? '<button class="btn-next" onclick="completeOptCat(\'' + state.currentOptCat + '\')">完了 ✓</button>'
+        ? '<button class="btn-next" onclick="completeOptCat(\'' + state.currentOptCat + '\')">確定 ✓</button>'
         : '<button class="btn-next" onclick="nextOptCatPage()">次へ →</button>';
       btnArea.innerHTML = backBtn + fwdBtn;
     } else if (state.view === 'confirm') {
@@ -1816,19 +1818,44 @@ function calcTotal() {
       if (isReqS || ca['set_'+k]) total += def.items.reduce((s,i)=>s+i.price,0) * qty;
     }
   }
-  // choiceQty（必須以外）
+  // choiceQty（必須・必須以外共通）
   for (const [key, qty] of Object.entries(state.choiceQty || {})) {
     if (qty <= 0) continue;
     const def = CHOICE_DEFS[key];
     if (!def) continue;
-    const isReqC = def.req === true;
-    if (!isReqC && !ca['choice_'+key]) continue;
-    // 必須choiceはquantitiesで既に計算済みなのでスキップ
-    if (isReqC) continue;
-    // 必須以外でcartAdded=trueの場合、selOptの価格で計算
+    const isReqC = def.req === true || def.req === '必須';
+    const caKey = 'choice_'+key;
+    if (!isReqC && !ca[caKey]) continue;
+    if (isReqC && !ca[caKey]) continue; // 必須choiceもcartAddedが必要
     const sel = state.choiceSelections[key];
-    const selOpt = def.opts?.find(o=>o.key===sel);
-    if (selOpt) total += selOpt.price * qty;
+    const opt = def.opts?.find(o=>o.key===sel);
+    if (!opt) {
+      if (def.base) total += def.base.price * qty;
+    } else {
+      const basePrice = def.base ? def.base.price : 0;
+      const extraPrice = opt.extraPrice || 0;
+      const optPrice = opt.price || 0;
+      total += (optPrice > 0 ? optPrice : basePrice + extraPrice) * qty;
+    }
+  }
+  // refillQty（必須・必須以外共通）
+  for (const [key, qty] of Object.entries(state.refillQty || {})) {
+    if (qty <= 0) continue;
+    const def = REFILL_CHOICE_DEFS[key];
+    if (!def) continue;
+    const isReqR = def.req === '必須' || def.req === true;
+    const caKey = 'refill_'+key;
+    if (!isReqR && !ca[caKey]) continue;
+    if (isReqR && !ca[caKey]) continue; // 必須refillもcartAddedが必要
+    const sel = state.refillChoices[key];
+    const opt = def.opts?.find(o=>o.key===sel);
+    if (opt) {
+      const basePrice = def.base ? def.base.price : 0;
+      const extraPrice = opt.extraPrice || 0;
+      total += (basePrice + extraPrice) * qty;
+    } else if (def.base) {
+      total += def.base.price * qty;
+    }
   }
   return total;
 }
@@ -1885,14 +1912,14 @@ function itemCardHTML(id, forceReq) {
   return `<div class="item-card ${(qty>0||forceShow)?'has-qty':''} ${isHost?'host-mode':''}">
     <img class="item-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy" alt="${item.name}">
     <div class="item-body">
-      <div class="badge-row"><span class="badge badge-id">${id}</span>${reqBadge}</div>
+      <div class="badge-row">${reqBadge}<span class="badge badge-id">${id}</span></div>
       <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">
         <div class="item-name" style="flex:1;min-width:0">${item.name}</div>
         <div style="flex-shrink:0;text-align:right"><span class="item-price">${fmt(item.price)}</span><span class="item-price-sub"> / ${item.unit}・最小${item.min}${item.unit}</span></div>
       </div>
       <div class="item-brand">${item.brand}</div>
       ${hostToggle}
-      ${(qty>0&&!isHost)?`<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(item.price*qty).toLocaleString()}</div>`:''}
+      ${!isHost?`<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(item.price*(qty>0?qty:item.min)).toLocaleString()}</div>`:''}
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0" onclick="event.stopPropagation()">
       <div class="qty-wrap">
@@ -1919,11 +1946,11 @@ function itemCardHTML(id, forceReq) {
             return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
           } else {
             const _addedI = (state.cartAdded||{})[id];
-            return '<button class="btn-add-cart'+(_addedI?' in-cart':'')+' style="padding:6px 10px;font-size:12px;margin-top:0;width:auto" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(_addedI?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
+            return '<button class="btn-add-cart'+(_addedI?' in-cart':'')+' style="padding:6px 10px;font-size:12px;margin-top:0;width:auto" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(_addedI?'✓ 追加済み':'カートに入れる')+'</button>';
           }
         } else {
           const _addedI2 = (state.cartAdded||{})[id];
-          return '<button class="btn-add-cart'+(_addedI2?' in-cart':'')+' style="padding:6px 10px;font-size:12px;margin-top:0;width:auto" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(_addedI2?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
+          return '<button class="btn-add-cart'+(_addedI2?' in-cart':'')+' style="padding:6px 10px;font-size:12px;margin-top:0;width:auto" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(_addedI2?'✓ 追加済み':'カートに入れる')+'</button>';
         }
       })()}
     </div>
@@ -1986,7 +2013,7 @@ function setCardHTML(key) {
       ${subHTML}
       ${def.hostNote?`<div class="host-note" style="margin-top:6px">${def.hostNote}</div>`:''}
       <div style="border-top:1px solid #e8edf2;margin-top:8px;padding-top:8px">
-        <span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span>
+        <span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * (qty > 0 ? qty : 1))}</span>
       </div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
@@ -2000,18 +2027,18 @@ function setCardHTML(key) {
             return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
           } else {
             const _addedS = (state.cartAdded||{})['set_'+key];
-            return '<button class="btn-add-cart'+(_addedS?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(_addedS?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
+            return '<button class="btn-add-cart'+(_addedS?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(_addedS?'✓ 追加済み':'カートに入れる')+'</button>';
           }
         } else {
           const _addedS2 = (state.cartAdded||{})['set_'+key];
-          return '<button class="btn-add-cart'+(_addedS2?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(_addedS2?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
+          return '<button class="btn-add-cart'+(_addedS2?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(_addedS2?'✓ 追加済み':'カートに入れる')+'</button>';
         }
       })()}
     </div>
   </div>`;
   return `<div class="set-card ${qty>0?'has-qty':''} ${def.req?'mandatory':''}">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-      ${reqBadge}<div class="set-title" style="margin:0">${def.title}</div>
+      <div style="margin-bottom:6px">${reqBadge}</div><div class="set-title" style="margin:0">${def.title}</div>
     </div>
     ${setDetailHTML}
   </div>`;
@@ -2113,14 +2140,14 @@ function choiceCardHTML(key) {
     // 右側：数量ボタン（縦配置）
     detailHTML += `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">`;
     detailHTML += `<div class="qty-wrap">${(()=>{let opts='';for(let i=1;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setChoiceQtyDirect(\''+key+'\',this.value)">'+opts+'</select><span class="qty-label">'+unit+'</span>';})()}</div>`;
-    detailHTML += `${(()=>{const isReqC=def.req===true;if(isReqC){if(qty<=1){return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';}else{const _addedC=(state.cartAdded||{})['choice_'+key];return '<button class="btn-add-cart'+(_addedC?' in-cart':'')+'" onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(_addedC?'✓ 追加済み':'🛒 カートに入れる')+'</button>';}}else{const _addedC2=(state.cartAdded||{})['choice_'+key];return '<button class="btn-add-cart'+(_addedC2?' in-cart':'')+'" onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(_addedC2?'✓ 追加済み':'🛒 カートに入れる')+'</button>';}})()}`;
+    detailHTML += `${(()=>{const isReqC=def.req===true;if(isReqC){if(qty<=1){return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';}else{const _addedC=(state.cartAdded||{})['choice_'+key];return '<button class="btn-add-cart'+(_addedC?' in-cart':'')+'" onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(_addedC?'✓ 追加済み':'カートに入れる')+'</button>';}}else{const _addedC2=(state.cartAdded||{})['choice_'+key];return '<button class="btn-add-cart'+(_addedC2?' in-cart':'')+'" onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(_addedC2?'✓ 追加済み':'カートに入れる')+'</button>';}})()}`;
     detailHTML += `</div>`;
     detailHTML += `</div>`;
   }
 
   // 合計価格（枠内左下・単位なし）
-  const totalRow = (selOpt && qty > 0)
-    ? `<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(selOpt.price * qty).toLocaleString()}</div>`
+  const totalRow = selOpt
+    ? `<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(selOpt.price * (qty > 0 ? qty : 1)).toLocaleString()}</div>`
     : '';
 
   let warnRow = '';
@@ -2352,11 +2379,11 @@ function gradeGroupHTML(g) {
               return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
             } else {
               const _addedG = (state.cartAdded||{})['grade_'+g.id];
-              return '<button class="btn-add-cart'+(_addedG?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(_addedG?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
+              return '<button class="btn-add-cart'+(_addedG?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(_addedG?'✓ 追加済み':'カートに入れる')+'</button>';
             }
           } else {
             const _addedG2 = (state.cartAdded||{})['grade_'+g.id];
-            return '<button class="btn-add-cart'+(_addedG2?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(_addedG2?'✓ 追加済み':'🛒 カートに入れる')+'</button>';
+            return '<button class="btn-add-cart'+(_addedG2?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(_addedG2?'✓ 追加済み':'カートに入れる')+'</button>';
           }
         })()}
       </div>
@@ -2591,12 +2618,28 @@ function initDefaults() {
       }
     }
   });
+  // Step1必須refill品目のデフォルト数量・選択肢・cartAdded設定
+  const step1ReqRefillDefaults = {
+    quickle: 'with_body',
+    toilet_magic: 'strong',
+    softener: 'with_bottle',
+    kabikiller: 'refill'
+  };
+  Object.keys(step1ReqRefillDefaults).forEach(function(k) {
+    if (!state.refillQty) state.refillQty = {};
+    if (!state.refillChoices) state.refillChoices = {};
+    if (!state.refillQty[k]) state.refillQty[k] = 1;
+    if (!state.refillChoices[k]) state.refillChoices[k] = step1ReqRefillDefaults[k];
+    if (!state.cartAdded) state.cartAdded = {};
+    if (state.cartAdded['refill_'+k] === undefined) state.cartAdded['refill_'+k] = true;
+  });
   // セットデフォルト数量
   Object.keys(SET_DEFS).forEach(function(k) {
     if (!state.setQty[k]) state.setQty[k] = 1;
   });
   // 詰替選択（未選択でスタート）
   Object.keys(REFILL_CHOICE_DEFS).forEach(function(k) {
+    if (!state.refillQty) state.refillQty = {};
     if (!state.refillQty[k]) state.refillQty[k] = 0;
   });
 }
@@ -2637,12 +2680,12 @@ function renderStep1() {
   </div>
 
   <div class="subsection"><div class="subsection-title">床掃除</div>
-  ${setCardHTML('quickle')}
+  ${refillCardHTML('quickle')}
   </div>
 
   <div class="subsection"><div class="subsection-title">浴室洗剤</div>
   ${setCardHTML('bath_magic')}
-  ${setCardHTML('kabikiller')}
+  ${refillCardHTML('kabikiller')}
   </div>
 
   <div class="subsection"><div class="subsection-title">トイレ用消耗品</div>
@@ -2650,7 +2693,7 @@ function renderStep1() {
   </div>
 
   <div class="subsection"><div class="subsection-title">トイレ洗剤</div>
-  ${setCardHTML('toilet_magic')}
+  ${refillCardHTML('toilet_magic')}
   </div>
 
   <div class="subsection"><div class="subsection-title">害虫対策</div>
@@ -2711,7 +2754,7 @@ function renderStep2() {
   <div class="subsection"><div class="subsection-title">歯ブラシ</div>${choiceCardHTML('toothbrush')}</div>
   <div class="subsection"><div class="subsection-title">食器用洗剤</div>${choiceCardHTML('dishsoap')}</div>
   <div class="subsection"><div class="subsection-title">洗濯洗剤</div>${choiceCardHTML('laundry')}</div>
-  <div class="subsection"><div class="subsection-title">柔軟剤</div>${choiceCardHTML('softener')}</div>
+  <div class="subsection"><div class="subsection-title">柔軟剤</div>${refillCardHTML('softener')}</div>
   <div class="subsection"><div class="subsection-title">ティッシュペーパー</div>${choiceCardHTML('tissue')}</div>
   <div class="subsection"><div class="subsection-title">室内消臭スプレー</div>${choiceCardHTML('room_deodor')}</div>
   <div class="subsection"><div class="subsection-title">トイレ消臭スプレー</div>${choiceCardHTML('toilet_deodor')}</div>
