@@ -1394,7 +1394,8 @@ function itemCardHTML(id, forceReq) {
       </div>
     </div>`;
   }
-  return `<div class="item-card ${qty>0?'has-qty':''} ${isHost?'host-mode':''}">
+  const forceShow = item.hostPrep && (reqVal==='必須' || reqVal==='ファミリー必須');
+  return `<div class="item-card ${(qty>0||forceShow)?'has-qty':''} ${isHost?'host-mode':''}">
     <img class="item-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy" alt="${item.name}">
     <div class="item-body">
       <div class="badge-row"><span class="badge badge-id">${id}</span>${reqBadge}</div>
@@ -1407,7 +1408,7 @@ function itemCardHTML(id, forceReq) {
       <button class="qty-btn" onclick="changeQty('${id}',1)">+</button>
       <div class="qty-num">${qty}</div>
       <div class="qty-unit">${item.unit}</div>
-      <button class="qty-btn" onclick="changeQty('${id}',-1)" ${qty<=0?'disabled':''}>−</button>
+      <button class="qty-btn" onclick="changeQty('${id}',-1)" ${qty<=0?'disabled':''}>-</button>
     </div>
   </div>`;
 }
@@ -1824,11 +1825,12 @@ function initDefaults() {
       else if (item && item.hostPrep) state.quantities[id] = 0; // 未選択
     }
   });
-  // hostPrepアイテムは全て初期値0（選択待ち）
+  // hostPrepアイテム：必須品目はitem.min、それ以外は0（選択待ち）
   Object.keys(ITEMS).forEach(function(id) {
     const item = ITEMS[id];
     if (item && item.hostPrep && (state.quantities[id] === undefined || state.quantities[id] === null)) {
-      state.quantities[id] = 0;
+      const isMandatory = item.req === '必須' || item.req === 'ファミリー必須';
+      state.quantities[id] = isMandatory ? item.min : 0;
     }
   });
   // セットデフォルト数量
