@@ -26,7 +26,7 @@
   --accent:var(--brand);
   --accent-light:var(--brand-base);
 }
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:120px}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:160px}
 
 /* ── ヘッダー ── */
 .header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
@@ -185,7 +185,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .task-card-arrow{font-size:20px;color:#cbd5e1;flex-shrink:0}
 .section-label{display:block;font-size:10px;font-weight:900;color:var(--brand);background:var(--brand-accent);text-transform:uppercase;letter-spacing:.2em;margin:24px 0 12px;padding:6px 14px;border-radius:99px;width:fit-content;border:1px solid #bfdbfe}
 /* スティッキー発注バー */
-.sticky-submit{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-top:1px solid #e2e8f0;padding:16px;transform:translateY(100%);transition:transform .4s cubic-bezier(0.65,0,0.35,1);box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
+.sticky-submit{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-top:1px solid #e2e8f0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .4s cubic-bezier(0.65,0,0.35,1);box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
 .sticky-submit.visible{transform:translateY(0)}
 .sticky-submit-inner{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:8px}
 .sticky-submit-msg{font-size:13px;font-weight:700;color:#10b981}
@@ -193,6 +193,23 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 /* 商品選択画面の総額固定バー */
 .total-bar{position:fixed;bottom:0;left:0;right:0;z-index:49;background:rgba(33,83,135,0.96);backdrop-filter:blur(8px);padding:10px 16px;display:none;align-items:center;justify-content:space-between;box-shadow:0 -4px 16px rgba(33,83,135,0.18)}
 .footer.with-total-bar{bottom:48px}
+.btn-reset{padding:8px 16px;border-radius:12px;border:1.5px solid #fca5a5;background:#fff5f5;font-size:12px;font-weight:700;cursor:pointer;color:#dc2626;transition:all .15s;white-space:nowrap}
+.btn-reset:hover{background:#fee2e2;border-color:#ef4444}
+.btn-step-reset{display:inline-block;padding:10px 20px;border-radius:12px;border:1.5px solid #fca5a5;background:#fff5f5;font-size:12px;font-weight:700;cursor:pointer;color:#dc2626;transition:all .15s;white-space:nowrap}
+.btn-step-reset:hover{background:#fee2e2;border-color:#ef4444}
+.reset-dialog-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center}
+.reset-dialog{background:#fff;border-radius:20px;padding:28px 24px;max-width:320px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.18);text-align:center}
+.reset-dialog-title{font-size:17px;font-weight:900;color:#1e293b;margin-bottom:8px}
+.reset-dialog-msg{font-size:13px;color:#64748b;line-height:1.6;margin-bottom:20px}
+.reset-dialog-btns{display:flex;gap:10px}
+.reset-dialog-btns .btn-cancel{flex:1;padding:12px;border-radius:12px;border:1.5px solid #e2e8f0;background:#fff;font-size:14px;font-weight:700;cursor:pointer;color:#64748b}
+.reset-dialog-btns .btn-confirm-reset{flex:1;padding:12px;border-radius:12px;border:none;background:#dc2626;font-size:14px;font-weight:700;cursor:pointer;color:#fff}
+
+.btn-add-cart{width:100%;padding:11px 16px;border-radius:12px;border:none;background:var(--brand);color:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;letter-spacing:.03em;margin-top:10px}
+.btn-add-cart:hover{background:var(--brand-light)}
+.btn-add-cart-sm{padding:8px 14px;border-radius:10px;border:none;background:var(--brand);color:#fff;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.btn-add-cart-sm:hover{background:var(--brand-light)}
+
 .total-bar.visible{display:flex}
 .total-bar-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.8)}
 .total-bar-amount{font-size:20px;font-weight:900;font-family:var(--mono);color:#fff}
@@ -215,6 +232,20 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 @media(max-width:480px){.choice-opts{flex-direction:column}.main{padding:12px}}
+
+/* ── 数量プルダウン ── */
+.qty-select{height:34px;padding:0 22px 0 8px;border:1.5px solid var(--border);border-radius:8px;background:#fff;font-size:14px;font-weight:700;font-family:var(--mono);color:var(--text);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;min-width:60px}
+.qty-select:focus{outline:none;border-color:var(--brand)}
+.qty-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.qty-label{font-size:11px;color:var(--text-sub);font-weight:500}
+/* ── カートに追加ボタン ── */
+.btn-add-cart{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:none;background:var(--brand);color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap}
+.btn-add-cart:hover:not(:disabled){opacity:.85;transform:translateY(-1px)}
+.btn-add-cart:disabled{background:#cbd5e1;color:#94a3b8;cursor:not-allowed;transform:none}
+.btn-add-cart.in-cart{background:#10b981}
+.cart-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding-top:8px;border-top:1px solid #e8edf2}
+.cart-row-left{display:flex;align-items:center;gap:8px}
+
 </style>
 </head>
 <body>
@@ -243,6 +274,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <div class="footer-inner">
     <div class="nav-btns" id="nav-btns-area">
       <button class="btn-back" id="btn-back" onclick="prevStep()">← 戻る</button>
+      <button class="btn-reset" id="btn-reset-footer" onclick="showResetDialog()" style="display:none">リセット</button>
       <button class="btn-next" id="btn-next" onclick="nextStep()">次へ →</button>
     </div>
   </div>
@@ -841,6 +873,90 @@ const state = {
 const LS_KEY = 'bizpato_order_state_v1';
 const LS_PERSIST_KEYS = ['quantities','gradeSelections','gradeQty','choiceSelections','choiceQty','setQty','hostChoice','refillChoices','refillQty','completedSteps','property','hostInfo','laundryType'];
 
+
+function showResetDialog() {
+  const overlay = document.createElement('div');
+  overlay.className = 'reset-dialog-overlay';
+  overlay.innerHTML = '<div class="reset-dialog">'
+    + '<div class="reset-dialog-title">⚠️ 入力内容をリセット</div>'
+    + '<div class="reset-dialog-msg">これまでの入力内容がすべて削除されます。<br>本当にリセットしますか？</div>'
+    + '<div class="reset-dialog-btns">'
+    + '<button class="btn-cancel" onclick="this.closest(&quot;.reset-dialog-overlay&quot;).remove()">キャンセル</button>'
+    + '<button class="btn-confirm-reset" onclick="doReset()">リセットする</button>'
+    + '</div></div>';
+  document.body.appendChild(overlay);
+}
+function doReset() {
+  document.querySelectorAll('.reset-dialog-overlay').forEach(el=>el.remove());
+  // stateを初期化
+  Object.keys(state.quantities).forEach(k=>delete state.quantities[k]);
+  Object.keys(state.completedSteps).forEach(k=>delete state.completedSteps[k]);
+  Object.keys(state.hostChoice).forEach(k=>delete state.hostChoice[k]);
+  Object.keys(state.gradeSelections).forEach(k=>delete state.gradeSelections[k]);
+  Object.keys(state.gradeQty).forEach(k=>delete state.gradeQty[k]);
+  Object.keys(state.choiceSelections).forEach(k=>delete state.choiceSelections[k]);
+  Object.keys(state.choiceQty).forEach(k=>delete state.choiceQty[k]);
+  Object.keys(state.refillChoices).forEach(k=>delete state.refillChoices[k]);
+  Object.keys(state.refillQty).forEach(k=>delete state.refillQty[k]);
+  Object.keys(state.setQty).forEach(k=>delete state.setQty[k]);
+  state.view = 'dashboard';
+  state.stepIndex = 0;
+  state.propertyInfo = {};
+  state.senderInfo = {};
+  saveState();
+  render();
+  showToast('入力内容をリセットしました');
+}
+function showStepResetDialog(stepKey, stepLabel) {
+  const overlay = document.createElement('div');
+  overlay.className = 'reset-dialog-overlay';
+  overlay.innerHTML = '<div class="reset-dialog">'
+    + '<div class="reset-dialog-title">⚠️ このステップをリセット</div>'
+    + '<div class="reset-dialog-msg">「' + stepLabel + '」の入力内容をリセットします。<br>本当によろしいですか？</div>'
+    + '<div class="reset-dialog-btns">'
+    + '<button class="btn-cancel" onclick="this.closest(\'.reset-dialog-overlay\').remove()">キャンセル</button>'
+    + '<button class="btn-confirm-reset" onclick="doStepReset(\'' + stepKey + '\')">リセットする</button>'
+    + '</div></div>';
+  document.body.appendChild(overlay);
+}
+function doStepReset(stepKey) {
+  document.querySelectorAll('.reset-dialog-overlay').forEach(el=>el.remove());
+  if (stepKey === 'step1') {
+    const step1Ids = ['S0142','S0034','S0052','B0166','B0185','S0043'];
+    step1Ids.forEach(function(id){ state.quantities[id] = 1; });
+    const step1Sets = ['kitchen_bleach','corocoro','quickle','bath_magic','kabikiller','toilet_magic','toilet_fab'];
+    step1Sets.forEach(function(k){ state.setQty[k] = 1; });
+    delete state.completedSteps['step1'];
+  } else if (stepKey === 'step2') {
+    const step2Ids = ['B0104','B0105','B0106','B0107','B0108','B0118','B0119','B0122','B0123','B0101','B0103','B0110','B0111','B0095','B0096','B0112','B0145','B0152','B0124'];
+    step2Ids.forEach(function(id){ delete state.hostChoice[id]; state.quantities[id] = 0; });
+    const step2GradeIds = ['shampoo','conditioner','bodysoap','handsoap'];
+    step2GradeIds.forEach(function(k){ delete state.gradeSelections[k]; state.gradeQty[k] = 0; });
+    const step2ChoiceIds = ['mizukiri','toothbrush','dishsoap','laundry','softener','tissue','room_deodor','toilet_deodor','toilet_sheet','gomibag45','sanitary_bag'];
+    step2ChoiceIds.forEach(function(k){ delete state.choiceSelections[k]; state.choiceQty[k] = 0; });
+    delete state.completedSteps['step2'];
+  } else if (stepKey === 'opt_amenity') {
+    ['S0067','S0068','S0069','S0070'].forEach(function(id){ state.quantities[id] = 0; });
+  } else if (stepKey === 'opt_cleaning1') {
+    ['B0171','S0042','S0230','S0133','B0087'].forEach(function(id){ state.quantities[id] = 0; });
+  } else if (stepKey === 'opt_cleaning2') {
+    ['S0035','S0036','S0046','S0053','S0254'].forEach(function(id){ state.quantities[id] = 0; });
+  } else if (stepKey === 'opt_kitchen1') {
+    ['S0027','S0028','S0029','S0030','S0031','S0032','S0033','B0093','S0236','S0237'].forEach(function(id){ state.quantities[id] = 0; });
+  } else if (stepKey === 'opt_kitchen2') {
+    ['S0031','S0032','S0045','S0132','S0135','S0213','S0086','S0197','S0198','S0199','S0200','S0217','S0218','S0219','S0220','S0233','S0244','S0205','S0206','S0214','S0250','S0202','S0203','S0204','S0212','S0243','S0201','S0209','S0210','S0211','S0238'].forEach(function(id){ state.quantities[id] = 0; });
+  } else if (stepKey === 'opt_aroma1') {
+    ['B0021','B0129','S0019','S0041','B0094','S0127','B0182','B0241','S0196','B0023'].forEach(function(id){ state.quantities[id] = 0; });
+    ['muji_citrus','muji_woody'].forEach(function(k){ delete state.choiceSelections[k]; state.choiceQty[k] = 0; });
+  } else if (stepKey === 'opt_aroma2') {
+    ['S0022','S0037','S0038','S0134','S0020','S0024','S0025','B0026','S0195','S0029','S0207','S0208','S0245','S0246','S0247','S0248','S0075','S0126'].forEach(function(id){ state.quantities[id] = 0; });
+  } else if (stepKey === 'opt_bbq') {
+    ['S0012','S0013','B0014','B0015','S0016','B0018','S0047','B0090','B0091','B0092','S0228','S0229','S0235','B0242'].forEach(function(id){ state.quantities[id] = 0; });
+  }
+  saveState();
+  render();
+  showToast('ステップの入力内容をリセットしました');
+}
 function saveState() {
   try {
     const data = {};
@@ -1078,14 +1194,14 @@ function render(scrollToTop) {
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.add('with-total-bar');},10);
+    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.add('with-total-bar');const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
   } else if (v === 'optList') {
     html = renderOptionalList();
     (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='任意追加品目';})();
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.add('with-total-bar');},10);
+    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.add('with-total-bar');const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
   } else if (v === 'optCat') {
     const cat = OPT_CATS.find(c => c.key === state.currentOptCat);
     if (cat) {
@@ -1098,7 +1214,7 @@ function render(scrollToTop) {
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.add('with-total-bar');},10);
+    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.add('with-total-bar');const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
   } else if (v === 'confirm') {
     html = renderStep12();
     (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='確認・送信';})();
@@ -1106,7 +1222,7 @@ function render(scrollToTop) {
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
     // 確認画面ではstickybar・totalbarを非表示
-    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.remove('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.remove('with-total-bar');},10);
+    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');const tb=document.getElementById('total-bar');if(tb)tb.classList.remove('visible');const ft=document.querySelector('.footer');if(ft)ft.classList.remove('with-total-bar');const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='none';},10);
   } else if (v === 'info') {
     html = renderPropertyInfo();
     (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='物件情報';})();
@@ -1448,6 +1564,98 @@ async function submitOrder() {
 
 
 // ─── イベントハンドラ ───
+
+// ── 数量プルダウン変更ハンドラ ──
+function setQtyDirect(id, val) {
+  state.quantities[id] = parseInt(val, 10) || 0;
+  render();
+}
+function setGradeQtyDirect(gid, val) {
+  state.gradeQty[gid] = parseInt(val, 10) || 0;
+  render();
+}
+function setSetQtyDirect(k, val) {
+  state.setQty[k] = parseInt(val, 10) || 0;
+  render();
+}
+function setChoiceQtyDirect(key, val) {
+  const q = parseInt(val, 10) || 0;
+  state.choiceQty[key] = q;
+  const opt = CHOICE_DEFS[key]?.opts.find(o=>o.key===state.choiceSelections[key]);
+  if (opt) opt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = q * (ITEMS[id].min||1); });
+  render();
+}
+function setRefillQtyDirect(key, val) {
+  const q = parseInt(val, 10) || 0;
+  state.refillQty[key] = q;
+  const def = REFILL_CHOICE_DEFS[key];
+  if (def) {
+    if (def.base?.id) state.quantities[def.base.id] = q;
+    const sel = state.refillChoices[key];
+    const opt = def.opts?.find(o=>o.key===sel);
+    if (opt?.extraId) state.quantities[opt.extraId] = q;
+  }
+  render();
+}
+// ── カートに追加（必須以外） ──
+function addToCart(type, key, qty) {
+  const q = parseInt(qty, 10) || 1;
+  if (type === 'item') {
+    state.quantities[key] = q;
+  } else if (type === 'grade') {
+    state.gradeQty[key] = q;
+  } else if (type === 'set') {
+    state.setQty[key] = q;
+  } else if (type === 'choice') {
+    state.choiceQty[key] = q;
+    const opt = CHOICE_DEFS[key]?.opts.find(o=>o.key===state.choiceSelections[key]);
+    if (opt) opt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = q * (ITEMS[id].min||1); });
+  } else if (type === 'refill') {
+    state.refillQty[key] = q;
+    const def = REFILL_CHOICE_DEFS[key];
+    if (def) {
+      if (def.base?.id) state.quantities[def.base.id] = q;
+      const sel = state.refillChoices[key];
+      const opt = def.opts?.find(o=>o.key===sel);
+      if (opt?.extraId) state.quantities[opt.extraId] = q;
+    }
+  }
+  render();
+}
+// ── カートから削除 ──
+function removeFromCart(type, key) {
+  if (type === 'item') {
+    state.quantities[key] = 0;
+  } else if (type === 'grade') {
+    state.gradeQty[key] = 0;
+  } else if (type === 'set') {
+    state.setQty[key] = 0;
+  } else if (type === 'choice') {
+    state.choiceQty[key] = 0;
+    const opt = CHOICE_DEFS[key]?.opts.find(o=>o.key===state.choiceSelections[key]);
+    if (opt) opt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = 0; });
+  } else if (type === 'refill') {
+    state.refillQty[key] = 0;
+    const def = REFILL_CHOICE_DEFS[key];
+    if (def) {
+      if (def.base?.id) state.quantities[def.base.id] = 0;
+      const sel = state.refillChoices[key];
+      const opt = def.opts?.find(o=>o.key===sel);
+      if (opt?.extraId) state.quantities[opt.extraId] = 0;
+    }
+  }
+  render();
+}
+// ── 数量プルダウンHTML生成ヘルパー ──
+function qtySelectHTML(type, key, qty, unit, max) {
+  max = max || 20;
+  let opts = '';
+  for (let i = 0; i <= max; i++) {
+    opts += '<option value="' + i + '"' + (qty === i ? ' selected' : '') + '>' + i + '</option>';
+  }
+  return '<select class="qty-select" onchange="setQtyDirect(\'' + key + '\', this.value)" onclick="event.stopPropagation()">' + opts + '</select><span class="qty-label">' + unit + '</span>';
+}
+
 function changeQty(id, delta) {
   const item = ITEMS[id];
   const step = item ? item.min : 1;
@@ -1616,12 +1824,25 @@ function itemCardHTML(id, forceReq) {
       <div class="item-brand">${item.brand}</div>
       ${hostToggle}
       ${(qty>0&&!isHost)?`<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(item.price*qty).toLocaleString()}</div>`:''}
+      ${(()=>{
+        const isReqItem = reqVal==='必須'||reqVal==='ファミリー必須';
+        if(isReqItem){
+          // 必須：数量2以上でカート追加有効
+          const disabled = qty<=1;
+          return '<div class="cart-row"><div class="cart-row-left"></div><button class="btn-add-cart'+(qty>1?' in-cart':'')+'" '+(disabled?'disabled':'')+' onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(qty>1?'✓ カートに追加済み':'🛒 カートに追加（2個以上）')+'</button></div>';
+        } else {
+          // 必須以外：常に有効
+          return '<div class="cart-row"><div class="cart-row-left"></div><button class="btn-add-cart'+(qty>0?' in-cart':'')+'" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(qty>0?'✓ カートに追加済み':'🛒 カートに追加')+'</button></div>';
+        }
+      })()}
     </div>
-    <div class="qty-control">
-      <button class="qty-btn" onclick="changeQty('${id}',1)">+</button>
-      <div class="qty-num">${qty}</div>
-      <div class="qty-unit">${item.unit}</div>
-      <button class="qty-btn" onclick="changeQty('${id}',-1)" ${qty<=0?'disabled':''}>-</button>
+    <div class="qty-wrap" onclick="event.stopPropagation()">
+      ${(()=>{
+        let opts='';
+        const max=20;
+        for(let i=0;i<=max;i++) opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
+        return '<select class="qty-select" onchange="setQtyDirect(\'' + id + '\',this.value)">' + opts + '</select><span class="qty-label">' + item.unit + '</span>';
+      })()}
     </div>
   </div>`;
 }
@@ -1685,11 +1906,19 @@ function setCardHTML(key) {
         <span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span>
       </div>
     </div>
-    <div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">
-      <button class="qty-btn" onclick="changeSetQty('${key}',1)">+</button>
-      <div class="qty-num">${qty}</div>
-      <div class="qty-unit">セット</div>
-      <button class="qty-btn" onclick="changeSetQty('${key}',-1)" ${qty<=0?'disabled':''}>−</button>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
+      <div class="qty-wrap">
+        ${(()=>{let opts='';for(let i=0;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setSetQtyDirect(\''+key+'\',this.value)">'+opts+'</select><span class="qty-label">セット</span>';})()}
+      </div>
+      ${(()=>{
+        const isReqS = def.req==='必須'||def.req==='ファミリー必須';
+        if(isReqS){
+          const disabled = qty<=1;
+          return '<button class="btn-add-cart'+(qty>1?' in-cart':'')+'" '+(disabled?'disabled':'')+' onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(qty>1?'✓ 追加済み':'🛒 追加（2以上）')+'</button>';
+        } else {
+          return '<button class="btn-add-cart'+(qty>0?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(qty>0?'✓ 追加済み':'🛒 カートに追加')+'</button>';
+        }
+      })()}
     </div>
   </div>`;
   return `<div class="set-card ${qty>0?'has-qty':''} ${def.req?'mandatory':''}">
@@ -1794,11 +2023,9 @@ function choiceCardHTML(key) {
     }
     detailHTML += `</div>`;
     // 右側：数量ボタン（縦配置）
-    detailHTML += `<div class="qty-control" onclick="event.stopPropagation()" style="flex-shrink:0">`;
-    detailHTML += `<button class="qty-btn" onclick="changeChoiceQty('${key}',1)">+</button>`;
-    detailHTML += `<div class="qty-num">${qty}</div>`;
-    detailHTML += `<div class="qty-unit">${unit}</div>`;
-    detailHTML += `<button class="qty-btn" onclick="changeChoiceQty('${key}',-1)" ${qty<=0?'disabled':''}>&#x2212;</button>`;
+    detailHTML += `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">`;
+    detailHTML += `<div class="qty-wrap">${(()=>{let opts='';for(let i=0;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setChoiceQtyDirect(\''+key+'\',this.value)">'+opts+'</select><span class="qty-label">'+unit+'</span>';})()}</div>`;
+    detailHTML += `${(()=>{const isReqC=def.req===true;if(isReqC){const disabled=qty<=1;return '<button class="btn-add-cart'+(qty>1?' in-cart':'')+'" '+(disabled?'disabled':'')+' onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(qty>1?'✓ 追加済み':'🛒 追加（2以上）')+'</button>';}else{return '<button class="btn-add-cart'+(qty>0?' in-cart':'')+'" onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(qty>0?'✓ 追加済み':'🛒 カートに追加')+'</button>';}})()}`;
     detailHTML += `</div>`;
     detailHTML += `</div>`;
   }
@@ -2026,11 +2253,19 @@ function gradeGroupHTML(g) {
         ${opt.hostNote?`<div class="host-note" style="margin-top:6px">${opt.hostNote}</div>`:''}
         <div style="padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span></div>
       </div>
-      <div class="qty-control" style="flex-shrink:0">
-        <button class="qty-btn" onclick="changeGradeQty('${g.id}',1)">+</button>
-        <div class="qty-num">${qty}</div>
-        <div class="qty-unit">セット</div>
-        <button class="qty-btn" onclick="changeGradeQty('${g.id}',-1)" ${qty<=0?'disabled':''}>−</button>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
+        <div class="qty-wrap">
+          ${(()=>{let opts='';for(let i=0;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setGradeQtyDirect(\''+g.id+'\',this.value)">'+opts+'</select><span class="qty-label">セット</span>';})()}
+        </div>
+        ${(()=>{
+          const isReqG = g.req===true||g.req==='必須';
+          if(isReqG){
+            const disabled = qty<=1;
+            return '<button class="btn-add-cart'+(qty>1?' in-cart':'')+'" '+(disabled?'disabled':'')+' onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(qty>1?'✓ 追加済み':'🛒 追加（2以上）')+'</button>';
+          } else {
+            return '<button class="btn-add-cart'+(qty>0?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(qty>0?'✓ 追加済み':'🛒 カートに追加')+'</button>';
+          }
+        })()}
       </div>
     </div>
   </div>`;
@@ -2121,7 +2356,7 @@ function renderDashboard() {
     ? '必須項目の入力が完了しました。'
     : '初回必須セット①→②の順に入力し、最後にファミリー物件必須品目を確認してください。初回必須セット①②は必須、ファミリー物件必須品目は任意です。';
 
-  let html = '<div style="margin-bottom:24px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="width:4px;height:28px;background:linear-gradient(180deg,var(--brand),var(--brand-light));border-radius:2px"></div><div class="section-title">初回セット・補充備品発注フォーム</div></div><div class="section-sub">下記の3ステップを順に進めてください</div></div>';
+  let html = '<div style="margin-bottom:24px"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><div style="width:4px;height:28px;background:linear-gradient(180deg,var(--brand),var(--brand-light));border-radius:2px"></div><div class="section-title">初回セット・補充備品発注フォーム</div></div><button class="btn-reset" onclick="showResetDialog()">リセット</button></div><div class="section-sub">下記の3ステップを順に進めてください</div></div>';
 
   html += stepBlock(1, step1Done, step1Partial, '必須項目の入力', step1Desc, step1Cards);
 
@@ -2152,6 +2387,11 @@ function renderDashboard() {
       + '</div>'
       + '</div>';
   }
+  html += '<div style="margin-top:32px;padding-top:20px;border-top:1px solid #f1f5f9;text-align:center">'
+    + '<button class="btn-step-reset" onclick="showResetDialog()" style="color:#dc2626;border-color:#fca5a5;background:#fff5f5">'
+    + '🗑️ すべてリセット（入力内容を全て削除）'
+    + '</button>'
+    + '</div>';
   return html;
 }
 
@@ -2323,6 +2563,9 @@ function renderStep1() {
 
   <div class="subsection"><div class="subsection-title">トイレ消臭（置き型）</div>
   ${setCardHTML('toilet_fab')}
+  </div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center">
+    <button class="btn-step-reset" onclick="showStepResetDialog('step1','初回必須品目 — 数量確認')">このステップをリセット</button>
   </div>`;
 }
 
@@ -2365,6 +2608,9 @@ function renderStep2() {
   <div class="subsection"><div class="subsection-title">トイレ清掃シート</div>${choiceCardHTML('toilet_sheet')}</div>
   <div class="subsection"><div class="subsection-title">ゴミ袋 45L</div>${choiceCardHTML('gomibag45')}</div>
   <div class="subsection"><div class="subsection-title">サニタリー用ゴミ袋</div>${choiceCardHTML('sanitary_bag')}</div>
+  </div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center">
+    <button class="btn-step-reset" onclick="showStepResetDialog('step2','初回必須品目 — メーカー・担当選択')">このステップをリセット</button>
   </div>`;
 }
 
@@ -2373,7 +2619,8 @@ function renderStep2() {
 // アメニティ・化粧品（1ページ）
 function renderOptAmenityPage1() {
   return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 1/5</span></div><div class="section-title">アメニティ・化粧品</div><div class="section-sub">バス・洗面用アメニティを選択します。不要な場合は「完了」でスキップできます。</div></div>
-  <div class="subsection"><div class="subsection-title">洗面アメニティ</div>${['S0067','S0068','S0069','S0070'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">洗面アメニティ</div>${['S0067','S0068','S0069','S0070'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_amenity','アメニティ・化粧品')">このステップをリセット</button></div>`;
 }
 
 // 清掃・消耗品 ①（トイレ・ゴミ袋・消臭）
@@ -2382,7 +2629,8 @@ function renderOptCleaningPage1() {
   <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0042','S0230'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">消臭袋</div>${['S0133'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0087'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0087'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_cleaning1','清掃・消耗品 ①')">このステップをリセット</button></div>`;
 }
 
 // 清掃・消耗品 ②（掃除機・電球・紙製品・害虫）
@@ -2437,7 +2685,8 @@ function renderOptAromaPage2() {
 // BBQ（1ページ）
 function renderOptBBQ() {
   return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 5/5</span></div><div class="section-title"> BBQ用品</div><div class="section-sub">BBQ関連用品を選択します。不要な場合は「完了」でスキップできます。</div></div>
-  ${['S0012','S0013','B0014','B0015','S0016','B0018','S0047','B0090','B0091','B0092','S0228','S0229','S0235','B0242'].map(id => itemCardHTML(id)).join('')}`;
+  ${['S0012','S0013','B0014','B0015','S0016','B0018','S0047','B0090','B0091','B0092','S0228','S0229','S0235','B0242'].map(id => itemCardHTML(id)).join('')}
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_bbq','BBQ用品')">このステップをリセット</button></div>`;
 }
 
 // 後方互換用エイリアス（古い参照が残っている場合のフォールバック）
@@ -2468,7 +2717,8 @@ function renderStep5() {
 function renderStep6() {
   return `<div class="section-head"><div class="section-title">食器・カトラリー</div><div class="section-sub">追加の食器・カトラリーを選択します</div></div>
   <div class="subsection"><div class="subsection-title">カトラリー（追加）</div>${['B0097','B0098','B0099','B0100'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_kitchen1','キッチン・食器 ①')">このステップをリセット</button></div>`;
 }
 
 function renderStep7() {
@@ -2477,7 +2727,8 @@ function renderStep7() {
   <div class="subsection"><div class="subsection-title">掃除機</div>${['E0089','E0148','E0162'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">電球・電池</div>${['S0172','S0173','S0174','S0175','S0176','S0177','S0178','S0179','S0180','S0181'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">紙製品</div>${['S0005'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">害虫対策（追加）</div>${['S0035','S0036','S0046','S0053','S0254'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">害虫対策（追加）</div>${['S0035','S0036','S0046','S0053','S0254'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_cleaning2','清掃・消耗品 ②')">このステップをリセット</button></div>`;
 }
 
 function renderStep8() {
@@ -2486,7 +2737,8 @@ function renderStep8() {
   <div class="subsection"><div class="subsection-title">コーヒー・茶類</div>${['S0086','S0197','S0198','S0199','S0200','S0217','S0218','S0219','S0220','S0233','S0244'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">ソフトドリンク</div>${['S0205','S0206','S0214','S0250'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">アルコール</div>${['S0202','S0203','S0204','S0212','S0243'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">食品・軽食</div>${['S0201','S0209','S0210','S0211','S0238'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">食品・軽食</div>${['S0201','S0209','S0210','S0211','S0238'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_kitchen2','キッチン・食器 ②')">このステップをリセット</button></div>`;
 }
 
 function renderStep9() {
@@ -2495,7 +2747,8 @@ function renderStep9() {
   <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0021','B0129'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">文具</div>${['S0019','S0041','B0094','S0127'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">その他設備</div>${['B0182','B0241','S0196'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">収納</div>${['B0023'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">収納</div>${['B0023'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_aroma1','芳香・インテリア ①')">このステップをリセット</button></div>`;
 }
 
 function renderStep10() {
@@ -2509,7 +2762,8 @@ function renderStep11() {
   <div class="subsection"><div class="subsection-title">子供・ベビー衛生</div>${['S0020','S0024','S0025','B0026','S0195','S0029'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">レジャー・玩具</div>${['S0207','S0208'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">サウナ用アロマオイル</div>${['S0245','S0246','S0247','S0248'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">医療・安全</div>${['S0075','S0126'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">医療・安全</div>${['S0075','S0126'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_aroma2','芳香・インテリア ②')">このステップをリセット</button></div>`;
 }
 
 // ── 確認画面：数量変更・削除ボタン付き ──
