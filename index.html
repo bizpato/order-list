@@ -500,15 +500,15 @@ function fmt(n){return '¥'+n.toLocaleString();}
 const GRADE_GROUPS = [
   { id:'shampoo', name:'シャンプー', req:'必須',
     options:[
-      { grade:'standard', label:'ビオノート（詰替 1L）',
+      { grade:'standard', label:'ビオノート',
         items:[{id:'B0055',name:'シャンプーディスペンサー ビオノート 450ml',price:500},{id:'S0062',name:'シャンプー詰替 ビオノート 1L',price:1280}],
         img:'https://www.sintoworld.jp/prod/images/prod_img/BIOSHA-18.jpg',
         desc:'ビオノート詰替 + ディスペンサー'},
-      { grade:'premium', label:'パンテーン（2L）',
+      { grade:'premium', label:'パンテーン',
         items:[{id:'S0223',name:'シャンプー パンテーン 2L',price:2580}],
         img:'https://m.media-amazon.com/images/I/71PMjkim9rL._AC_SL1500_.jpg',
         desc:'パンテーン 2L', hostNote:'⚠️ ディスペンサーはホスト様ご準備ください'},
-      { grade:'millennium', label:'ミレニアム（詰替 1L）',
+      { grade:'millennium', label:'ミレニアム',
         items:[{id:'B0191',name:'シャンプーボトル ミレニアム',price:650},{id:'S0187',name:'シャンプー詰替 ミレニアム 1L',price:1750}],
         img:'https://img21.shop-pro.jp/PA01463/065/product/158416022.jpg',
         desc:'ミレニアム詰替 + ボトル'},
@@ -516,15 +516,15 @@ const GRADE_GROUPS = [
   },
   { id:'conditioner', name:'コンディショナー', req:'必須',
     options:[
-      { grade:'standard', label:'ビオノート（詰替 1L）',
+      { grade:'standard', label:'ビオノート',
         items:[{id:'B0056',name:'コンディショナーディスペンサー ビオノート 450ml',price:500},{id:'S0063',name:'コンディショナー詰替 ビオノート 1L',price:1280}],
         img:'https://www.sintoworld.jp/prod/images/prod_img/BIOSHA-18.jpg',
         desc:'ビオノート詰替 + ディスペンサー'},
-      { grade:'premium', label:'パンテーン（2L）',
+      { grade:'premium', label:'パンテーン',
         items:[{id:'S0224',name:'コンディショナー パンテーン 2L',price:2580}],
         img:'https://m.media-amazon.com/images/I/71PMjkim9rL._AC_SL1500_.jpg',
         desc:'パンテーン 2L', hostNote:'⚠️ ディスペンサーはホスト様ご準備ください'},
-      { grade:'millennium', label:'ミレニアム（詰替 1L）',
+      { grade:'millennium', label:'ミレニアム',
         items:[{id:'B0192',name:'コンディショナーボトル ミレニアム',price:650},{id:'S0188',name:'コンディショナー詰替 ミレニアム 1L',price:1750}],
         img:'https://img21.shop-pro.jp/PA01463/065/product/158416022.jpg',
         desc:'ミレニアム詰替 + ボトル'},
@@ -532,11 +532,11 @@ const GRADE_GROUPS = [
   },
   { id:'bodysoap', name:'ボディソープ', req:'必須',
     options:[
-      { grade:'bionote', label:'ビオノート（詰替 1L）',
+      { grade:'bionote', label:'ビオノート',
         items:[{id:'S0064',name:'ボディーソープ詰替 ビオノート',price:1280},{id:'B0057',name:'ボディーソープディスペンサー',price:500}],
         img:'https://www.sintoworld.jp/prod/images/prod_img/BIOBOD-18.jpg',
         desc:'ビオノート詰替 + ディスペンサー'},
-      { grade:'millennium', label:'ミレニアム（詰替 1L）',
+      { grade:'millennium', label:'ミレニアム',
         items:[{id:'S0189',name:'ボディーソープ詰替 ミレニアム',price:1750},{id:'B0193',name:'ボディーソープボトル ミレニアム',price:650}],
         img:'https://img21.shop-pro.jp/PA01463/065/product/158416390.jpg',
         desc:'ミレニアム詰替 + ボトル'},
@@ -544,15 +544,15 @@ const GRADE_GROUPS = [
   },
   { id:'handsoap', name:'ハンドソープ', req:'必須',
     options:[
-      { grade:'standard', label:'メディキュ（詰替 1000ml）',
+      { grade:'standard', label:'メディキュ',
         items:[{id:'S0080',name:'ハンドソープ詰替 メディキュ 1000ml',price:480},{id:'B0183',name:'ハンドソープボトル メディキュ 250ml',price:500}],
         img:'https://www.sintoworld.jp/prod/images/prod_img/RS-HS1000.jpg',
         desc:'メディキュ詰替 + ボトル'},
-      { grade:'bionote', label:'ビオノート（詰替 450ml）',
+      { grade:'bionote', label:'ビオノート',
         items:[{id:'B0058',name:'ハンドソープディスペンサー ビオノート',price:500}],
         img:'https://www.sintoworld.jp/prod/images/prod_img/BIOFOS-450.jpg',
         desc:'ビオノートディスペンサー'},
-      { grade:'millennium', label:'ミレニアム（詰替 1L）',
+      { grade:'millennium', label:'ミレニアム',
         items:[{id:'S0190',name:'ハンドソープ詰替 ミレニアム',price:1750},{id:'B0194',name:'ハンドソープボトル ミレニアム',price:650}],
         img:'https://img21.shop-pro.jp/PA01463/065/product/156775622.jpg',
         desc:'ミレニアム詰替 + ボトル'},
@@ -866,7 +866,7 @@ function loadState() {
 // ── ナビゲーション定義（関数参照は使用時に解決）──
 const REQUIRED_STEPS = [
   {key:'fixed',  label:'初回必須品目 — 数量確認',      fn:function(){return renderStep1();}},
-  {key:'select', label:'初回必須品目 — 選択・グレード設定', fn:function(){return renderStep2();}},
+  {key:'select', label:'初回必須品目 — メーカー・担当選択', fn:function(){return renderStep2();}},
 ];
 const RECOMMEND_STEP = {key:'recommend', label:'推奨品目',          fn:function(){return renderRecommend();}};
 const FAMILY_STEP    = {key:'family',    label:'ファミリー物件必須', fn:function(){return renderFamily();}};
@@ -1093,6 +1093,8 @@ function render(scrollToTop) {
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
+    // 確認画面ではstickybarを非表示
+    setTimeout(function(){const s=document.getElementById('sticky-submit');if(s)s.classList.remove('visible');},10);
   } else if (v === 'info') {
     html = renderPropertyInfo();
     (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='物件情報';})();
@@ -1989,19 +1991,18 @@ function gradeGroupHTML(g) {
       </div>`;
     }).join('')}
   </div>` : '';
-
   return `<div class="grade-card ${qty>0?'selected':''}">
     <div class="badge-row" style="margin-bottom:6px">${reqBadgeG}</div>
     <div class="grade-name">${g.name}</div>
     <div class="grade-options">${btns}</div>
-    <div style="margin-top:10px">
-      ${mainHTML}
-      ${subHTML}
-      ${opt.hostNote?`<div class="host-note" style="margin-top:6px">${opt.hostNote}</div>`:''}
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid #e8edf2">
-      <div><span style="font-size:11px;font-weight:600;margin-right:4px">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span></div>
-      <div class="qty-control">
+    <div style="display:flex;align-items:flex-start;gap:8px;margin-top:10px">
+      <div style="flex:1;min-width:0">
+        ${mainHTML}
+        ${subHTML}
+        ${opt.hostNote?`<div class="host-note" style="margin-top:6px">${opt.hostNote}</div>`:''}
+        <div style="padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP * qty)}</span></div>
+      </div>
+      <div class="qty-control" style="flex-shrink:0">
         <button class="qty-btn" onclick="changeGradeQty('${g.id}',1)">+</button>
         <div class="qty-num">${qty}</div>
         <div class="qty-unit">セット</div>
@@ -2110,11 +2111,11 @@ function renderDashboard() {
     : 'アメニティ・キッチン・BBQなどの任意品目を選べます。不要な場合はスキップできます。';
   html += stepBlock(3, step3Done, false, 'その他任意追加品目', step3Desc, optCard());
 
-  // スティッキーバー制御
+  // スティッキーバー制御（ダッシュボード表示時のみ）
   setTimeout(function() {
     const stickyEl = document.getElementById('sticky-submit');
     if (stickyEl) {
-      if (canSubmit) stickyEl.classList.add('visible');
+      if (canSubmit && state.view === 'dashboard') stickyEl.classList.add('visible');
       else stickyEl.classList.remove('visible');
     }
   }, 50);
@@ -2302,7 +2303,7 @@ function renderStep1() {
 }
 
 function renderStep2() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 2/3</span></div><div class="section-title">初回必須品目 — 選択・グレード設定</div><div class="section-sub">グレード選択・弊社／ホスト様の備品準備分担の選択が必要な必須品目です。各項目を確認・設定したら「次へ」を押してください。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 2/3</span></div><div class="section-title">初回必須品目 — メーカー・担当選択</div><div class="section-sub">メーカー・グレードの選択と、弊社／ホスト様の備品準備分担の選択が必要な必須品目です。各項目を確認・設定したら「次へ」を押してください。</div></div>
   <div class="mandatory-banner"><div class="mandatory-banner-title">⚠ 全項目のグレード・選択設定が必須です</div><div class="mandatory-banner-sub">デフォルトはスタンダード（最下位グレード）に設定されています</div></div>
 
   <div class="subsection"><div class="subsection-title"> 弊社/ホスト構成品目（調理器具・食器・清掃用具等）</div>
@@ -2837,7 +2838,7 @@ render();
 
 <div class="sticky-submit" id="sticky-submit">
   <div class="sticky-submit-inner">
-    <div class="sticky-submit-msg" style="text-align:center">✅ 必須項目が完了しました<span>発注内容を確認してください</span></div>
+    <div class="sticky-submit-msg" style="text-align:center">✅ 必須項目の入力が完了しました<span>推奨品目・任意追加品目も確認してから発注してください</span></div>
     <button onclick="openStep('confirm')" class="btn-submit" style="width:100%;max-width:480px;margin:0;padding:16px 28px;font-size:16px">📦 発注内容を確認する</button>
   </div>
 </div>
