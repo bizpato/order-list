@@ -862,6 +862,7 @@ const state = {
   webhookUrl: '',
   refillChoices: {},
   refillQty: {},
+  cartAdded: {},       // key→true（必須以外でカートに入れるボタンを押した品目）
   laundryType: '',
   completedSteps: {},
   view: 'dashboard',
@@ -871,7 +872,7 @@ const state = {
 
 // ── localStorage 永続化 ──
 const LS_KEY = 'bizpato_order_state_v1';
-const LS_PERSIST_KEYS = ['quantities','gradeSelections','gradeQty','choiceSelections','choiceQty','setQty','hostChoice','refillChoices','refillQty','completedSteps','property','hostInfo','laundryType'];
+const LS_PERSIST_KEYS = ['quantities','gradeSelections','gradeQty','choiceSelections','choiceQty','setQty','hostChoice','refillChoices','refillQty','completedSteps','cartAdded','property','hostInfo','laundryType'];
 
 
 function showResetDialog() {
@@ -891,6 +892,7 @@ function doReset() {
   // stateを初期化
   Object.keys(state.quantities).forEach(k=>delete state.quantities[k]);
   Object.keys(state.completedSteps).forEach(k=>delete state.completedSteps[k]);
+  Object.keys(state.cartAdded||{}).forEach(k=>delete state.cartAdded[k]);
   Object.keys(state.hostChoice).forEach(k=>delete state.hostChoice[k]);
   Object.keys(state.gradeSelections).forEach(k=>delete state.gradeSelections[k]);
   Object.keys(state.gradeQty).forEach(k=>delete state.gradeQty[k]);
@@ -1567,22 +1569,37 @@ async function submitOrder() {
 
 // ── 数量プルダウン変更ハンドラ ──
 function setQtyDirect(id, val) {
-  state.quantities[id] = parseInt(val, 10) || 0;
+  const q = parseInt(val, 10) || 1;
+  state.quantities[id] = q;
+  const item = ITEMS[id];
+  const isReq = item && (item.req === '必須' || item.req === 'ファミリー必須');
+  if (!isReq && state.cartAdded) delete state.cartAdded[id];
   render();
 }
 function setGradeQtyDirect(gid, val) {
-  state.gradeQty[gid] = parseInt(val, 10) || 0;
+  const q = parseInt(val, 10) || 1;
+  state.gradeQty[gid] = q;
+  const g = GRADE_GROUPS.find(x=>x.id===gid);
+  const isReq = g && (g.req === true || g.req === '必須');
+  if (!isReq && state.cartAdded) delete state.cartAdded['grade_'+gid];
   render();
 }
 function setSetQtyDirect(k, val) {
-  state.setQty[k] = parseInt(val, 10) || 0;
+  const q = parseInt(val, 10) || 1;
+  state.setQty[k] = q;
+  const def = SET_DEFS[k];
+  const isReq = def && (def.req === '必須' || def.req === 'ファミリー必須');
+  if (!isReq && state.cartAdded) delete state.cartAdded['set_'+k];
   render();
 }
 function setChoiceQtyDirect(key, val) {
-  const q = parseInt(val, 10) || 0;
+  const q = parseInt(val, 10) || 1;
   state.choiceQty[key] = q;
   const opt = CHOICE_DEFS[key]?.opts.find(o=>o.key===state.choiceSelections[key]);
   if (opt) opt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = q * (ITEMS[id].min||1); });
+  const def = CHOICE_DEFS[key];
+  const isReq = def && def.req === true;
+  if (!isReq && state.cartAdded) delete state.cartAdded['choice_'+key];
   render();
 }
 function setRefillQtyDirect(key, val) {
@@ -1597,19 +1614,24 @@ function setRefillQtyDirect(key, val) {
   }
   render();
 }
-// ── カートに追加（必須以外） ──
+// ── カートに追加（手動ボタン） ──
 function addToCart(type, key, qty) {
   const q = parseInt(qty, 10) || 1;
+  if (!state.cartAdded) state.cartAdded = {};
   if (type === 'item') {
     state.quantities[key] = q;
+    state.cartAdded[key] = true;
   } else if (type === 'grade') {
     state.gradeQty[key] = q;
+    state.cartAdded['grade_'+key] = true;
   } else if (type === 'set') {
     state.setQty[key] = q;
+    state.cartAdded['set_'+key] = true;
   } else if (type === 'choice') {
     state.choiceQty[key] = q;
     const opt = CHOICE_DEFS[key]?.opts.find(o=>o.key===state.choiceSelections[key]);
     if (opt) opt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = q * (ITEMS[id].min||1); });
+    state.cartAdded['choice_'+key] = true;
   } else if (type === 'refill') {
     state.refillQty[key] = q;
     const def = REFILL_CHOICE_DEFS[key];
@@ -1619,30 +1641,37 @@ function addToCart(type, key, qty) {
       const opt = def.opts?.find(o=>o.key===sel);
       if (opt?.extraId) state.quantities[opt.extraId] = q;
     }
+    state.cartAdded['refill_'+key] = true;
   }
   render();
 }
 // ── カートから削除 ──
 function removeFromCart(type, key) {
+  if (!state.cartAdded) state.cartAdded = {};
   if (type === 'item') {
-    state.quantities[key] = 0;
+    state.quantities[key] = 1;
+    delete state.cartAdded[key];
   } else if (type === 'grade') {
-    state.gradeQty[key] = 0;
+    state.gradeQty[key] = 1;
+    delete state.cartAdded['grade_'+key];
   } else if (type === 'set') {
-    state.setQty[key] = 0;
+    state.setQty[key] = 1;
+    delete state.cartAdded['set_'+key];
   } else if (type === 'choice') {
-    state.choiceQty[key] = 0;
+    state.choiceQty[key] = 1;
     const opt = CHOICE_DEFS[key]?.opts.find(o=>o.key===state.choiceSelections[key]);
-    if (opt) opt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = 0; });
+    if (opt) opt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = ITEMS[id].min||1; });
+    delete state.cartAdded['choice_'+key];
   } else if (type === 'refill') {
-    state.refillQty[key] = 0;
+    state.refillQty[key] = 1;
     const def = REFILL_CHOICE_DEFS[key];
     if (def) {
-      if (def.base?.id) state.quantities[def.base.id] = 0;
+      if (def.base?.id) state.quantities[def.base.id] = 1;
       const sel = state.refillChoices[key];
       const opt = def.opts?.find(o=>o.key===sel);
-      if (opt?.extraId) state.quantities[opt.extraId] = 0;
+      if (opt?.extraId) state.quantities[opt.extraId] = 1;
     }
+    delete state.cartAdded['refill_'+key];
   }
   render();
 }
@@ -1650,7 +1679,7 @@ function removeFromCart(type, key) {
 function qtySelectHTML(type, key, qty, unit, max) {
   max = max || 20;
   let opts = '';
-  for (let i = 0; i <= max; i++) {
+  for (let i = 1; i <= max; i++) {
     opts += '<option value="' + i + '"' + (qty === i ? ' selected' : '') + '>' + i + '</option>';
   }
   return '<select class="qty-select" onchange="setQtyDirect(\'' + key + '\', this.value)" onclick="event.stopPropagation()">' + opts + '</select><span class="qty-label">' + unit + '</span>';
@@ -1689,8 +1718,8 @@ function selectChoice(key, optKey) {
   // デフォルト数量をセット（必須以外は0）
   if (opt) {
     if (!isReqItem) {
-      // 必須以外（推奨・任意）は選択しても数量0のまま
-      if (!(state.choiceQty[key] > 0)) state.choiceQty[key] = 0;
+      // 必須以外（推奨・任意）は選択後デフォルト1表示（カート未投入）
+      if (!(state.choiceQty[key] > 0)) state.choiceQty[key] = 1;
     } else if (opt.min) {
       // 歯ブラシなど最小発注数あり
       if (!(state.choiceQty[key] > 0)) state.choiceQty[key] = opt.min;
@@ -1738,26 +1767,49 @@ function setSetHostChoice(setKey, itemId, val) {
 // ─── 合計計算 ───
 function calcTotal() {
   let total = 0;
+  const ca = state.cartAdded || {};
   // 通常品目
   for (const [id, qty] of Object.entries(state.quantities)) {
     if (qty <= 0) continue;
-    // MUJI_citrus/MUJI_woodyは廃止（実品目IDで計算される）
     const item = ITEMS[id];
-    if (item) total += item.price * qty;
+    if (!item) continue;
+    const isReq = item.req === '必須' || item.req === 'ファミリー必須';
+    // 必須品目は常に合計に含める。必須以外はcartAdded=trueの場合のみ
+    if (isReq || ca[id]) total += item.price * qty;
   }
   // グレードグループ
   for (const g of GRADE_GROUPS) {
     const sel = state.gradeSelections[g.id];
     const qty = state.gradeQty[g.id] || 0;
     if (sel && qty > 0) {
-      const opt = g.options.find(o=>o.grade===sel);
-      if (opt) total += opt.items.reduce((s,i)=>s+i.price,0) * qty;
+      const isReqG = g.req === true || g.req === '必須';
+      if (isReqG || ca['grade_'+g.id]) {
+        const opt = g.options.find(o=>o.grade===sel);
+        if (opt) total += opt.items.reduce((s,i)=>s+i.price,0) * qty;
+      }
     }
   }
   // セット
   for (const [k, def] of Object.entries(SET_DEFS)) {
     const qty = state.setQty[k] || 0;
-    if (qty > 0) total += def.items.reduce((s,i)=>s+i.price,0) * qty;
+    if (qty > 0) {
+      const isReqS = def.req === '必須' || def.req === 'ファミリー必須';
+      if (isReqS || ca['set_'+k]) total += def.items.reduce((s,i)=>s+i.price,0) * qty;
+    }
+  }
+  // choiceQty（必須以外）
+  for (const [key, qty] of Object.entries(state.choiceQty || {})) {
+    if (qty <= 0) continue;
+    const def = CHOICE_DEFS[key];
+    if (!def) continue;
+    const isReqC = def.req === true;
+    if (!isReqC && !ca['choice_'+key]) continue;
+    // 必須choiceはquantitiesで既に計算済みなのでスキップ
+    if (isReqC) continue;
+    // 必須以外でcartAdded=trueの場合、selOptの価格で計算
+    const sel = state.choiceSelections[key];
+    const selOpt = def.opts?.find(o=>o.key===sel);
+    if (selOpt) total += selOpt.price * qty;
   }
   return total;
 }
@@ -1827,12 +1879,17 @@ function itemCardHTML(id, forceReq) {
       ${(()=>{
         const isReqItem = reqVal==='必須'||reqVal==='ファミリー必須';
         if(isReqItem){
-          // 必須：数量2以上でカート追加有効
-          const disabled = qty<=1;
-          return '<div class="cart-row"><div class="cart-row-left"></div><button class="btn-add-cart'+(qty>1?' in-cart':'')+'" '+(disabled?'disabled':'')+' onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(qty>1?'✓ カートに追加済み':'🛒 カートに追加（2個以上）')+'</button></div>';
+          // 必須：デフォルト1はカート投入済み。2以上に変更したら「カートに入れる」ボタンが有効
+          if(qty<=1){
+            return '<div class="cart-row"><div class="cart-row-left"></div><span style="font-size:11px;color:#10b981;font-weight:700">✓ カート投入済み（1個）</span></div>';
+          } else {
+            const _addedI = (state.cartAdded||{})[id];
+            return '<div class="cart-row"><div class="cart-row-left"></div><button class="btn-add-cart'+(_addedI?' in-cart':'')+'" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(_addedI?'✓ 追加済み（'+qty+'個）':'🛒 カートに入れる（'+qty+'個）')+'</button></div>';
+          }
         } else {
-          // 必須以外：常に有効
-          return '<div class="cart-row"><div class="cart-row-left"></div><button class="btn-add-cart'+(qty>0?' in-cart':'')+'" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(qty>0?'✓ カートに追加済み':'🛒 カートに追加')+'</button></div>';
+          // 必須以外：「カートに入れる」ボタンを押して初めてカートに入る
+          const _addedI2 = (state.cartAdded||{})[id];
+          return '<div class="cart-row"><div class="cart-row-left"></div><button class="btn-add-cart'+(_addedI2?' in-cart':'')+'" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">'+(_addedI2?'✓ 追加済み（'+qty+'個）':'🛒 カートに入れる')+'</button></div>';
         }
       })()}
     </div>
@@ -1840,7 +1897,7 @@ function itemCardHTML(id, forceReq) {
       ${(()=>{
         let opts='';
         const max=20;
-        for(let i=0;i<=max;i++) opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
+        for(let i=1;i<=max;i++) opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
         return '<select class="qty-select" onchange="setQtyDirect(\'' + id + '\',this.value)">' + opts + '</select><span class="qty-label">' + item.unit + '</span>';
       })()}
     </div>
@@ -1908,15 +1965,20 @@ function setCardHTML(key) {
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
       <div class="qty-wrap">
-        ${(()=>{let opts='';for(let i=0;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setSetQtyDirect(\''+key+'\',this.value)">'+opts+'</select><span class="qty-label">セット</span>';})()}
+        ${(()=>{let opts='';for(let i=1;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setSetQtyDirect(\''+key+'\',this.value)">'+opts+'</select><span class="qty-label">セット</span>';})()}
       </div>
       ${(()=>{
         const isReqS = def.req==='必須'||def.req==='ファミリー必須';
         if(isReqS){
-          const disabled = qty<=1;
-          return '<button class="btn-add-cart'+(qty>1?' in-cart':'')+'" '+(disabled?'disabled':'')+' onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(qty>1?'✓ 追加済み':'🛒 追加（2以上）')+'</button>';
+          if(qty<=1){
+            return '<span style="font-size:11px;color:#10b981;font-weight:700">✓ カート投入済み（1セット）</span>';
+          } else {
+            const _addedS = (state.cartAdded||{})['set_'+key];
+            return '<button class="btn-add-cart'+(_addedS?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(_addedS?'✓ 追加済み（'+qty+'セット）':'🛒 カートに入れる（'+qty+'セット）')+'</button>';
+          }
         } else {
-          return '<button class="btn-add-cart'+(qty>0?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(qty>0?'✓ 追加済み':'🛒 カートに追加')+'</button>';
+          const _addedS2 = (state.cartAdded||{})['set_'+key];
+          return '<button class="btn-add-cart'+(_addedS2?' in-cart':'')+'" onclick="addToCart(\'set\',\''+key+'\','+qty+')">'+(_addedS2?'✓ 追加済み（'+qty+'セット）':'🛒 カートに入れる')+'</button>';
         }
       })()}
     </div>
@@ -2024,8 +2086,8 @@ function choiceCardHTML(key) {
     detailHTML += `</div>`;
     // 右側：数量ボタン（縦配置）
     detailHTML += `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">`;
-    detailHTML += `<div class="qty-wrap">${(()=>{let opts='';for(let i=0;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setChoiceQtyDirect(\''+key+'\',this.value)">'+opts+'</select><span class="qty-label">'+unit+'</span>';})()}</div>`;
-    detailHTML += `${(()=>{const isReqC=def.req===true;if(isReqC){const disabled=qty<=1;return '<button class="btn-add-cart'+(qty>1?' in-cart':'')+'" '+(disabled?'disabled':'')+' onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(qty>1?'✓ 追加済み':'🛒 追加（2以上）')+'</button>';}else{return '<button class="btn-add-cart'+(qty>0?' in-cart':'')+'" onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(qty>0?'✓ 追加済み':'🛒 カートに追加')+'</button>';}})()}`;
+    detailHTML += `<div class="qty-wrap">${(()=>{let opts='';for(let i=1;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setChoiceQtyDirect(\''+key+'\',this.value)">'+opts+'</select><span class="qty-label">'+unit+'</span>';})()}</div>`;
+    detailHTML += `${(()=>{const isReqC=def.req===true;if(isReqC){if(qty<=1){return '<span style="font-size:11px;color:#10b981;font-weight:700">✓ カート投入済み（1個）</span>';}else{const _addedC=(state.cartAdded||{})['choice_'+key];return '<button class="btn-add-cart'+(_addedC?' in-cart':'')+' onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(_addedC?'✓ 追加済み（'+qty+'個）':'🛒 カートに入れる（'+qty+'個）')+'</button>';}}else{const _addedC2=(state.cartAdded||{})['choice_'+key];return '<button class="btn-add-cart'+(_addedC2?' in-cart':'')+' onclick="addToCart(\'choice\',\''+key+'\','+qty+')">'+(_addedC2?'✓ 追加済み（'+qty+'個）':'🛒 カートに入れる')+'</button>';}})()}`;
     detailHTML += `</div>`;
     detailHTML += `</div>`;
   }
@@ -2255,15 +2317,20 @@ function gradeGroupHTML(g) {
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
         <div class="qty-wrap">
-          ${(()=>{let opts='';for(let i=0;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setGradeQtyDirect(\''+g.id+'\',this.value)">'+opts+'</select><span class="qty-label">セット</span>';})()}
+          ${(()=>{let opts='';for(let i=1;i<=20;i++)opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setGradeQtyDirect(\''+g.id+'\',this.value)">'+opts+'</select><span class="qty-label">セット</span>';})()}
         </div>
         ${(()=>{
           const isReqG = g.req===true||g.req==='必須';
           if(isReqG){
-            const disabled = qty<=1;
-            return '<button class="btn-add-cart'+(qty>1?' in-cart':'')+'" '+(disabled?'disabled':'')+' onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(qty>1?'✓ 追加済み':'🛒 追加（2以上）')+'</button>';
+            if(qty<=1){
+              return '<span style="font-size:11px;color:#10b981;font-weight:700">✓ カート投入済み（1セット）</span>';
+            } else {
+              const _addedG = (state.cartAdded||{})['grade_'+g.id];
+              return '<button class="btn-add-cart'+(_addedG?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(_addedG?'✓ 追加済み（'+qty+'セット）':'🛒 カートに入れる（'+qty+'セット）')+'</button>';
+            }
           } else {
-            return '<button class="btn-add-cart'+(qty>0?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(qty>0?'✓ 追加済み':'🛒 カートに追加')+'</button>';
+            const _addedG2 = (state.cartAdded||{})['grade_'+g.id];
+            return '<button class="btn-add-cart'+(_addedG2?' in-cart':'')+'" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">'+(_addedG2?'✓ 追加済み（'+qty+'セット）':'🛒 カートに入れる')+'</button>';
           }
         })()}
       </div>
@@ -2518,7 +2585,7 @@ function renderStep0() {
 
 function renderStep1() {
   return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#eef8ff;border:1px solid #bfdbfe;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#1e40af;letter-spacing:.15em">STEP 1 — 1/3</span></div><div class="section-title">初回必須品目 — 数量確認</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。数量を確認したら「次へ」を押してください。</div></div>
-  <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;padding:12px 14px;margin-bottom:16px"><div style="font-size:12px;font-weight:800;color:#b45309;margin-bottom:4px">ℹ︎ 各品目の数量はデフォルトで「1」が設定されています</div><div style="font-size:11px;color:#92400e">2個以上必要な場合のみ、数量を変更してください</div></div>
+  <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;padding:12px 14px;margin-bottom:16px"><div style="font-size:12px;font-weight:800;color:#b45309;margin-bottom:4px">ℹ︎ 全品目デフォルト数量「1」でカートに投入済みです</div><div style="font-size:11px;color:#92400e">2個以上必要な場合は数量を変更し「カートに入れる」ボタンを押してください</div></div>
 
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>
   ${['S0142'].map(id => itemCardHTML(id)).join('')}
