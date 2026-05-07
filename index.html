@@ -2050,7 +2050,7 @@ function choiceCardHTML(key) {
   const sel = state.choiceSelections[key];
   const selOpt = def.opts.find(o=>o.key===sel);
   const qty = state.choiceQty[key] || 0;
-  const reqBadge = def.req==='必須'?'<span class="badge badge-essential" style="margin-bottom:6px;display:inline-block">必須</span>':
+  const reqBadge = (def.req===true||def.req==='必須')?'<span class="badge badge-essential" style="margin-bottom:6px;display:inline-block">必須</span>':
     def.req==='ファミリー必須'?'<span class="badge badge-family" style="margin-bottom:6px;display:inline-block">ファミリー必須</span>':
     def.req==='推奨'?'<span class="badge badge-recommend" style="margin-bottom:6px;display:inline-block">推奨</span>':'';
   const unit = selOpt?.unit || '個';
@@ -2476,7 +2476,7 @@ function renderDashboard() {
     ? '必須項目の入力が完了しました。'
     : '初回必須セット①→②の順に入力し、最後にファミリー物件必須品目を確認してください。初回必須セット①②は必須、ファミリー物件必須品目は任意です。';
 
-  let html = '';
+  let html = '<div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px"><button class="btn-reset" onclick="showResetDialog()">🗑️ すべてリセット</button></div>';
 
   html += stepBlock(1, step1Done, step1Partial, '初回必須品目の選択・数量確認', step1Desc, step1Cards);
 
@@ -2618,8 +2618,7 @@ function initDefaults() {
   const step1ReqRefillDefaults = {
     quickle: 'with_body',
     toilet_magic: 'strong',
-    softener: 'with_bottle',
-    kabikiller: 'refill'
+    kabikiller: 'bulk'
   };
   Object.keys(step1ReqRefillDefaults).forEach(function(k) {
     if (!state.refillQty) state.refillQty = {};
