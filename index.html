@@ -647,11 +647,30 @@ const CHOICE_DEFS = {
       {key:'shaka', label:'シャカシャカタイプ 200枚', ids:['S0231'], img:'', price:2180},
     ]
   },
-  muji_fragrance:{
-    title:'無印良品 インテリアフレグランスオイル（任意）', req:false, reqLabel:'任意 — どちらか選択',
+  muji_citrus:{
+    title:'無印良品 インテリアフレグランス（シトラス）', req:false, reqLabel:'任意 — どちらか選択',
     opts:[
-      {key:'citrus', label:'シトラスの香り', ids:['MUJI_citrus'], img:'https://www.muji.com/public/media/img/item/4550583992316_org.jpg?im=Resize,width=1260', price:5620, desc:'本体 + 詰替シトラス + ラタンスティック'},
-      {key:'woody',  label:'ウッディの香り', ids:['MUJI_woody'],  img:'https://www.muji.com/public/media/img/item/4550583992217_org.jpg?im=Resize%2Ctype%3Ddownsize%2Cwidth%3D1080', price:5500, desc:'本体 + 詰替ウッディ + ラタンスティック'},
+      {key:'with_refill', label:'本体＋詰替＋ラタンスティック',
+        ids:['B0138','S0140','S0141'],
+        img:'https://www.muji.com/public/media/img/item/4550583992316_org.jpg?im=Resize,width=1260',
+        price:5620, desc:'本体（B0138）＋ 詰替シトラス（S0140）＋ ラタンスティック（S0141）'},
+      {key:'no_refill', label:'本体＋ラタンスティック（詰替なし）',
+        ids:['B0138','S0141'],
+        img:'https://www.muji.com/public/media/img/item/4550583992316_org.jpg?im=Resize,width=1260',
+        price:3120, desc:'本体（B0138）＋ ラタンスティック（S0141）'},
+    ]
+  },
+  muji_woody:{
+    title:'無印良品 インテリアフレグランス（ウッディ）', req:false, reqLabel:'任意 — どちらか選択',
+    opts:[
+      {key:'with_refill', label:'本体＋詰替＋ラタンスティック',
+        ids:['B0138','S0221','S0141'],
+        img:'https://www.muji.com/public/media/img/item/4550583992217_org.jpg?im=Resize%2Ctype%3Ddownsize%2Cwidth%3D1080',
+        price:5500, desc:'本体（B0138）＋ 詰替ウッディ（S0221）＋ ラタンスティック（S0141）'},
+      {key:'no_refill', label:'本体＋ラタンスティック（詰替なし）',
+        ids:['B0138','S0141'],
+        img:'https://www.muji.com/public/media/img/item/4550583992217_org.jpg?im=Resize%2Ctype%3Ddownsize%2Cwidth%3D1080',
+        price:3120, desc:'本体（B0138）＋ ラタンスティック（S0141）'},
     ]
   },
 };
@@ -1315,7 +1334,7 @@ function selectChoice(key, optKey) {
   // 前の選択の数量を消す
   if (prev) {
     const prevOpt = CHOICE_DEFS[key].opts.find(o=>o.key===prev);
-    if (prevOpt) prevOpt.ids.forEach(id => { if (!id.startsWith('MUJI_')) state.quantities[id] = 0; else state.quantities[id] = 0; });
+    if (prevOpt) prevOpt.ids.forEach(id => { state.quantities[id] = 0; });
   }
   state.choiceSelections[key] = optKey;
   const opt = CHOICE_DEFS[key].opts.find(o=>o.key===optKey);
@@ -1329,9 +1348,7 @@ function selectChoice(key, optKey) {
     }
     // 紐付くIDの数量を同期
     opt.ids.forEach(id => {
-      if (id === 'MUJI_citrus' || id === 'MUJI_woody') {
-        state.quantities[id] = state.choiceQty[key];
-      } else if (ITEMS[id]) {
+      if (ITEMS[id]) {
         state.quantities[id] = state.choiceQty[key] * (ITEMS[id].min || 1);
       }
     });
@@ -1345,9 +1362,7 @@ function changeChoiceQty(key, delta) {
   state.choiceQty[key] = Math.max(0, (state.choiceQty[key]||0) + delta * step);
   // 紐付くIDを同期
   opt.ids.forEach(id => {
-    if (id === 'MUJI_citrus' || id === 'MUJI_woody') {
-      state.quantities[id] = state.choiceQty[key];
-    } else if (ITEMS[id]) {
+    if (ITEMS[id]) {
       state.quantities[id] = state.choiceQty[key];
     }
   });
@@ -1375,8 +1390,7 @@ function calcTotal() {
   // 通常品目
   for (const [id, qty] of Object.entries(state.quantities)) {
     if (qty <= 0) continue;
-    if (id === 'MUJI_citrus') { total += 5620 * qty; continue; }
-    if (id === 'MUJI_woody')  { total += 5500 * qty; continue; }
+    // MUJI_citrus/MUJI_woodyは廃止（実品目IDで計算される）
     const item = ITEMS[id];
     if (item) total += item.price * qty;
   }
@@ -2152,8 +2166,8 @@ function renderOptKitchenTableware() {
 
 function renderOptAromaOther() {
   return `<div class="section-head"><div class="section-title">芳香・その他</div><div class="section-sub">芳香剤・室内備品・ペット・ベビー用品等を選択します</div></div>
-  <div class="subsection"><div class="subsection-title">無印良品 インテリアフレグランス（任意）</div>${choiceCardHTML('muji_fragrance')}</div>
-  <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0021','B0129','B0138'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">無印良品 インテリアフレグランス</div>${choiceCardHTML('muji_citrus')}${choiceCardHTML('muji_woody')}</div>
+  <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0021','B0129'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">文具</div>${['S0019','S0041','B0094','S0127'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">その他設備</div>${['B0182','B0241','S0196'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">収納</div>${['B0023'].map(id => itemCardHTML(id)).join('')}</div>
@@ -2217,8 +2231,8 @@ function renderStep8() {
 
 function renderStep9() {
   return `<div class="section-head"><div class="section-title">芳香・室内備品</div><div class="section-sub">芳香剤・空間演出グッズを選択します</div></div>
-  <div class="subsection"><div class="subsection-title">無印良品 インテリアフレグランス（任意）</div>${choiceCardHTML('muji_fragrance')}</div>
-  <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0021','B0129','B0138'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">無印良品 インテリアフレグランス</div>${choiceCardHTML('muji_citrus')}${choiceCardHTML('muji_woody')}</div>
+  <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0021','B0129'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">文具</div>${['S0019','S0041','B0094','S0127'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">その他設備</div>${['B0182','B0241','S0196'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">収納</div>${['B0023'].map(id => itemCardHTML(id)).join('')}</div>`;
@@ -2239,6 +2253,11 @@ function renderStep11() {
 }
 
 // ── 確認画面：数量変更・削除ボタン付き ──
+function confirmGradeChange(gid, grade) {
+  state.gradeSelections[gid] = grade;
+  if (!(state.gradeQty[gid] > 0)) state.gradeQty[gid] = 1;
+  render(true);
+}
 function confirmQtyChange(type, key, delta) {
   if (type === 'grade') {
     const g = GRADE_GROUPS.find(x=>x.id===key);
@@ -2301,84 +2320,188 @@ function confirmDelete(type, key) {
 
 function renderStep12() {
   const total = calcTotal();
+  const NI = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%23f1f5f9%22/%3E%3C/svg%3E';
   const TRASH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path></svg>';
 
-  // 行生成ヘルパー
-  function makeRow(name, qty, unitLabel, price, isMandatory, type, key) {
-    const qtyCtrl = `<div style="display:flex;align-items:center;gap:4px;flex-shrink:0">`
-      + `<button onclick="confirmQtyChange('${type}','${key}',-1)" style="width:26px;height:26px;border-radius:50%;border:1.5px solid #e2e8f0;background:#f8fafc;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b">−</button>`
-      + `<span style="font-size:13px;font-weight:700;font-family:var(--mono);min-width:28px;text-align:center">${qty}</span>`
-      + `<button onclick="confirmQtyChange('${type}','${key}',1)" style="width:26px;height:26px;border-radius:50%;border:1.5px solid #e2e8f0;background:#f8fafc;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#215387">＋</button>`
+  // 数量コントロール（縦配置）
+  function qtyBlock(type, key, qty, unit, isMandatory) {
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">`
+      + `<button onclick="confirmQtyChange('${type}','${key}',1)" style="width:30px;height:30px;border-radius:50%;border:1.5px solid #e2e8f0;background:#f8fafc;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#215387">+</button>`
+      + `<span style="font-size:14px;font-weight:800;font-family:var(--mono);min-width:24px;text-align:center;line-height:1">${qty}</span>`
+      + `<span style="font-size:9px;color:#94a3b8;line-height:1">${unit}</span>`
+      + `<button onclick="confirmQtyChange('${type}','${key}',-1)" style="width:30px;height:30px;border-radius:50%;border:1.5px solid #e2e8f0;background:#f8fafc;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b">−</button>`
       + `</div>`;
-    const deleteBtn = !isMandatory
-      ? `<button onclick="confirmDelete('${type}','${key}')" title="削除" style="width:28px;height:28px;border-radius:50%;border:1.5px solid #fecaca;background:#fff5f5;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ef4444;flex-shrink:0">${TRASH_SVG}</button>`
-      : `<div style="width:28px"></div>`;
-    const mandatoryBadge = isMandatory ? `<span style="font-size:9px;font-weight:800;color:#ea4d3c;background:#fff0ee;border:1px solid #fecaca;border-radius:4px;padding:1px 5px;margin-left:4px;flex-shrink:0">必須</span>` : '';
-    return `<div class="summary-row" style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)">`
+  }
+
+  // トラッシュボタン
+  function trashBtn(type, key) {
+    return `<button onclick="confirmDelete('${type}','${key}')" title="削除" style="position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:1.5px solid #fecaca;background:#fff5f5;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ef4444">${TRASH_SVG}</button>`;
+  }
+
+  // 必須バッジ
+  function mandBadge(isMandatory) {
+    return isMandatory ? `<span style="font-size:9px;font-weight:800;color:#ea4d3c;background:#fff0ee;border:1px solid #fecaca;border-radius:4px;padding:1px 5px">必須</span>` : '';
+  }
+
+  // 商品画像行（本体・詰替共通）
+  function itemRow(img, id, label, name, price, isMain) {
+    const sz = isMain ? '52px' : '40px';
+    const fs = isMain ? '12px' : '11px';
+    const fw = isMain ? '700' : '600';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:${isMain?'8px':'6px'};background:var(--bg);border-radius:${isMain?'10px':'8px'};margin-bottom:${isMain?'6px':'4px'}">`
+      + `<img style="width:${sz};height:${sz};border-radius:${isMain?'8px':'6px'};object-fit:contain;background:#fff;border:1px solid #e8edf2;flex-shrink:0" src="${img||NI}" onerror="this.onerror=null;this.src='${NI}'" referrerpolicy="no-referrer" loading="lazy">`
       + `<div style="flex:1;min-width:0">`
-      + `<div style="font-size:12px;font-weight:600;color:#1e293b;display:flex;align-items:center;flex-wrap:wrap;gap:4px">${name}${mandatoryBadge}</div>`
-      + `<div style="font-size:11px;color:#64748b;margin-top:2px">${unitLabel} &nbsp;→&nbsp; <span style="font-weight:700;color:#215387">${fmt(price)}</span></div>`
+      + `<div style="font-size:9px;font-family:var(--mono);color:#94a3b8">${id} <span style="color:var(--text-sub)">${label}</span></div>`
+      + `<div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">`
+      + `<div style="font-size:${fs};font-weight:${fw};flex:1;min-width:0">${name}</div>`
+      + `<div style="flex-shrink:0;font-size:${isMain?'13px':'12px'};font-weight:${isMain?'900':'800'};font-family:var(--mono);color:var(--brand)">${fmt(price)}</div>`
+      + `</div></div></div>`;
+  }
+
+  // カードラッパー
+  function cardWrap(badgeHTML, title, tabsHTML, bodyHTML, totalAmt, qtyHTML, isMandatory, type, key) {
+    const del = !isMandatory ? trashBtn(type, key) : '';
+    return `<div style="position:relative;background:#fff;border:1.5px solid ${isMandatory?'#fde68a':'#e8edf2'};border-radius:14px;padding:14px;margin-bottom:10px;overflow:hidden">`
+      + `<div style="display:flex;align-items:flex-start;gap:8px">`
+      + `<div style="flex:1;min-width:0">`
+      + `<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap">${badgeHTML}<span style="font-size:13px;font-weight:800;color:#1e293b">${title}</span></div>`
+      + (tabsHTML ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${tabsHTML}</div>` : '')
+      + bodyHTML
+      + `<div style="border-top:1px solid #e8edf2;margin-top:8px;padding-top:8px;display:flex;align-items:center;justify-content:space-between">`
+      + `<span style="font-size:11px;font-weight:600;color:#64748b">合計</span>`
+      + `<span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalAmt)}</span>`
       + `</div>`
-      + qtyCtrl
-      + deleteBtn
+      + `</div>`
+      + qtyHTML
+      + `</div>`
+      + del
       + `</div>`;
   }
 
   let rows = '';
-  // グレードグループ
+
+  // ── グレードグループ ──
   for (const g of GRADE_GROUPS) {
     const sel = state.gradeSelections[g.id];
     const qty = state.gradeQty[g.id] || 0;
-    if (sel && qty > 0) {
-      const opt = g.options.find(o=>o.grade===sel);
-      if (opt) {
-        const p = opt.items.reduce((s,i)=>s+i.price,0);
-        rows += makeRow(`${g.name}（${opt.label}）`, qty, `${p.toLocaleString()}円/セット`, p*qty, g.req==='必須', 'grade', g.id);
-      }
+    if (!sel || qty <= 0) continue;
+    const isMandatory = g.req === '必須';
+    // グレードタブ
+    const tabsHTML = g.options.map(o => {
+      const active = o.grade === sel;
+      return `<div onclick="confirmGradeChange('${g.id}','${o.grade}')" style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;border:1.5px solid ${active?'var(--brand)':'#e2e8f0'};background:${active?'var(--brand-base)':'#f8fafc'};color:${active?'var(--brand)':'#64748b'}">${o.label}</div>`;
+    }).join('');
+    const opt = g.options.find(o=>o.grade===sel);
+    if (!opt) continue;
+    // 本体・詰替分類
+    const bodyItems = opt.items.filter(i => i.id.startsWith('B') || (i.name||'').includes('本体'));
+    const refillItems = opt.items.filter(i => !bodyItems.includes(i));
+    const mainItems = bodyItems.length > 0 ? bodyItems : opt.items;
+    const subItems  = bodyItems.length > 0 ? refillItems : [];
+    let bodyHTML = mainItems.map(i => itemRow(ITEMS[i.id]?.img||'', i.id, '本体', i.name, i.price, true)).join('');
+    if (subItems.length > 0) {
+      bodyHTML += `<div style="margin-left:16px;border-left:2px solid #e8edf2;padding-left:12px">`
+        + subItems.map(i => itemRow(ITEMS[i.id]?.img||'', i.id, '詰替', i.name, i.price, false)).join('')
+        + `</div>`;
     }
+    const totalAmt = opt.items.reduce((s,i)=>s+i.price,0) * qty;
+    rows += cardWrap(mandBadge(isMandatory), g.name, tabsHTML, bodyHTML, totalAmt, qtyBlock('grade', g.id, qty, 'セット', isMandatory), isMandatory, 'grade', g.id);
   }
-  // セット
+
+  // ── セット ──
   for (const [k, def] of Object.entries(SET_DEFS)) {
     const qty = state.setQty[k] || 0;
-    if (qty > 0) {
-      const p = def.items.reduce((s,i)=>s+i.price,0);
-      rows += makeRow(def.title, qty, `${p.toLocaleString()}円/セット`, p*qty, def.req==='必須', 'set', k);
+    if (qty <= 0) continue;
+    const isMandatory = def.req === '必須';
+    const bodyItems = def.items.filter(i => i.id.startsWith('B') || (i.name||'').includes('本体'));
+    const refillItems = def.items.filter(i => !bodyItems.includes(i));
+    const mainItems = bodyItems.length > 0 ? bodyItems : def.items;
+    const subItems  = bodyItems.length > 0 ? refillItems : [];
+    let bodyHTML = mainItems.map(i => itemRow(ITEMS[i.id]?.img||'', i.id, '本体', i.name, i.price, true)).join('');
+    if (subItems.length > 0) {
+      bodyHTML += `<div style="margin-left:16px;border-left:2px solid #e8edf2;padding-left:12px">`
+        + subItems.map(i => itemRow(ITEMS[i.id]?.img||'', i.id, '詰替', i.name, i.price, false)).join('')
+        + `</div>`;
     }
+    const totalAmt = def.items.reduce((s,i)=>s+i.price,0) * qty;
+    rows += cardWrap(mandBadge(isMandatory), def.title, '', bodyHTML, totalAmt, qtyBlock('set', k, qty, 'セット', isMandatory), isMandatory, 'set', k);
   }
-  // 詰替選択カード（REFILL_CHOICE_DEFS）
+
+  // ── 詰替選択カード（REFILL_CHOICE_DEFS） ──
   for (const [k, def] of Object.entries(REFILL_CHOICE_DEFS)) {
     const sel = state.refillChoices[k];
     const qty = state.refillQty[k] || 0;
-    if (sel && qty > 0) {
-      const opt = def.opts.find(o=>o.key===sel);
-      const baseP = def.base ? def.base.price : 0;
-      const extraP = opt && opt.extraPrice ? opt.extraPrice : (opt && opt.price ? opt.price : 0);
-      const totalP = (baseP + extraP) * qty;
-      const isMandatory = def.req === '必須';
-      rows += makeRow(`${def.title}（${opt ? opt.label : sel}）`, qty, `${(baseP+extraP).toLocaleString()}円/セット`, totalP, isMandatory, 'refill', k);
+    if (!sel || qty <= 0) continue;
+    const isMandatory = def.req === '必須';
+    const opt = def.opts.find(o=>o.key===sel);
+    // タブ
+    const tabsHTML = def.opts.map(o => {
+      const active = o.key === sel;
+      return `<div onclick="selectRefill('${k}','${o.key}')" style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;border:1.5px solid ${active?'var(--brand)':'#e2e8f0'};background:${active?'var(--brand-base)':'#f8fafc'};color:${active?'var(--brand)':'#64748b'}">${o.label}</div>`;
+    }).join('');
+    // 本体（固定）
+    let bodyHTML = itemRow(def.base.img||'', def.base.id, '本体（固定）', def.base.name, def.base.price, true);
+    // 詰替・追加品
+    if (opt && opt.extraId) {
+      const extraItem = ITEMS[opt.extraId];
+      bodyHTML += `<div style="margin-left:16px;border-left:2px solid #e8edf2;padding-left:12px">`
+        + itemRow(extraItem?.img||'', opt.extraId, '追加', opt.extraName||extraItem?.name||'', opt.extraPrice, false)
+        + `</div>`;
+    } else if (opt && opt.id) {
+      const refillItem = ITEMS[opt.id];
+      bodyHTML += `<div style="margin-left:16px;border-left:2px solid #e8edf2;padding-left:12px">`
+        + itemRow(refillItem?.img||'', opt.id, '詰替', refillItem?.name||opt.label, opt.price, false)
+        + `</div>`;
     }
+    const baseP = def.base.price;
+    const extraP = opt && opt.extraPrice ? opt.extraPrice : (opt && opt.price ? opt.price : 0);
+    rows += cardWrap(mandBadge(isMandatory), def.title, tabsHTML, bodyHTML, (baseP+extraP)*qty, qtyBlock('refill', k, qty, 'セット', isMandatory), isMandatory, 'refill', k);
   }
-  // 選択カード（CHOICE_DEFS）
+
+  // ── 選択カード（CHOICE_DEFS） ──
   for (const [k, def] of Object.entries(CHOICE_DEFS)) {
     const sel = state.choiceSelections[k];
     const qty = state.choiceQty[k] || 0;
-    if (sel && qty > 0) {
-      const opt = def.opts.find(o=>o.key===sel);
-      if (opt) rows += makeRow(`${def.title}（${opt.label}）`, qty, `${opt.price.toLocaleString()}円/${opt.unit||'個'}`, opt.price*qty, def.req===true, 'choice', k);
-    }
+    if (!sel || qty <= 0) continue;
+    const isMandatory = def.req === true;
+    const opt = def.opts.find(o=>o.key===sel);
+    if (!opt) continue;
+    // タブ
+    const tabsHTML = def.opts.map(o => {
+      const active = o.key === sel;
+      return `<div onclick="selectChoice('${k}','${o.key}')" style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;border:1.5px solid ${active?'var(--brand)':'#e2e8f0'};background:${active?'var(--brand-base)':'#f8fafc'};color:${active?'var(--brand)':'#64748b'}">${o.label}</div>`;
+    }).join('');
+    // 商品画像・詳細
+    let bodyHTML = `<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border-radius:10px;margin-bottom:6px">`
+      + `<img style="width:52px;height:52px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid #e8edf2;flex-shrink:0" src="${opt.img||NI}" onerror="this.onerror=null;this.src='${NI}'" referrerpolicy="no-referrer" loading="lazy">`
+      + `<div style="flex:1;min-width:0">`
+      + `<div style="font-size:12px;font-weight:700">${opt.label}</div>`
+      + (opt.desc ? `<div style="font-size:10px;color:#64748b;margin-top:2px">${opt.desc}</div>` : '')
+      + `</div></div>`;
+    rows += cardWrap(mandBadge(isMandatory), def.title, tabsHTML, bodyHTML, opt.price*qty, qtyBlock('choice', k, qty, opt.unit||'個', isMandatory), isMandatory, 'choice', k);
   }
-  // 通常品目
+
+  // ── 通常品目 ──
   for (const [id, qty] of Object.entries(state.quantities)) {
     if (qty <= 0) continue;
-    if (id === 'MUJI_citrus') { rows += makeRow('無印良品フレグランス（シトラス）', qty, '5,620円/個', 5620*qty, false, 'virtual', id); continue; }
-    if (id === 'MUJI_woody')  { rows += makeRow('無印良品フレグランス（ウッディ）',  qty, '5,500円/個', 5500*qty, false, 'virtual', id); continue; }
     const item = ITEMS[id];
-    if (item) rows += makeRow(`${item.name}`, qty, `${item.price.toLocaleString()}円/${item.unit}`, item.price*qty, item.req==='必須', 'item', id);
+    if (!item) continue;
+    const isMandatory = item.req === '必須';
+    const bodyHTML = `<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border-radius:10px;margin-bottom:6px">`
+      + `<img style="width:52px;height:52px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid #e8edf2;flex-shrink:0" src="${item.img||NI}" onerror="this.onerror=null;this.src='${NI}'" referrerpolicy="no-referrer" loading="lazy">`
+      + `<div style="flex:1;min-width:0">`
+      + `<div style="font-size:9px;font-family:var(--mono);color:#94a3b8">${id}</div>`
+      + `<div style="font-size:12px;font-weight:700">${item.name}</div>`
+      + `<div style="font-size:11px;color:#64748b">${item.brand}</div>`
+      + `<div style="font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(item.price)}<span style="font-size:10px;font-weight:500"> / ${item.unit}</span></div>`
+      + `</div></div>`;
+    rows += cardWrap(mandBadge(isMandatory), item.name, '', bodyHTML, item.price*qty, qtyBlock('item', id, qty, item.unit, isMandatory), isMandatory, 'item', id);
   }
+
   if (!rows) rows = '<div style="text-align:center;padding:20px;color:var(--text-sub)">選択された品目がありません</div>';
   return `<div class="section-head"><div class="section-title">確認・送信</div><div class="section-sub">数量の変更や不要な品目の削除ができます。確認後に発注してください。</div></div>
   <div class="summary-total"><div class="total-label">合計金額（目安）</div><div class="total-amount">${fmt(total)}</div></div>
-  <div class="summary-card"><div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:4px;display:flex;justify-content:space-between"><span>発注品目</span><span style="font-size:10px;color:#94a3b8">必須以外はゴミ箱で削除できます</span></div>${rows}</div>
+  <div class="summary-card"><div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:8px;display:flex;justify-content:space-between"><span>発注品目</span><span style="font-size:10px;color:#94a3b8">必須以外はゴミ箱で削除できます</span></div>${rows}</div>
   <button onclick="openStep('hostInfo')" class="btn-submit" style="width:100%;margin-top:16px">📦 この内容で発注する</button>`;
 }
 
