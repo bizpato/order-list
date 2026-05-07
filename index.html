@@ -21,7 +21,7 @@
   --bg:#f8fafc;--card:#fff;--border:#e2e8f0;
   --text:#1e293b;--text-sub:#64748b;
   --mono:'SF Mono',Monaco,Consolas,monospace;
-  --radius:14px;
+  --radius:28px;
   /* alias for JS compatibility */
   --accent:var(--brand);
   --accent-light:var(--brand-base);
@@ -32,11 +32,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
 .header-inner{max-width:720px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .header-logo{display:flex;align-items:center;gap:12px}
-.logo-icon{background:var(--brand);padding:9px;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(33,83,135,0.22);flex-shrink:0}
+.logo-icon{background:var(--brand);padding:9px;border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(33,83,135,0.22);flex-shrink:0}
 .logo-icon svg{width:22px;height:22px;color:#fff;display:block}
 .logo-title{font-size:16px;font-weight:900;color:var(--text);letter-spacing:-.4px}
 .logo-sub{font-size:10px;font-weight:700;color:#94a3b8;margin-top:1px}
-.progress-bar-wrap{display:flex;align-items:center;gap:10px;background:#fff;padding:8px 16px;border-radius:14px;border:1px solid #f1f5f9;box-shadow:0 1px 4px rgba(0,0,0,.04);min-width:160px}
+.progress-bar-wrap{display:flex;align-items:center;gap:10px;background:#fff;padding:8px 16px;border-radius:16px;border:1px solid #f1f5f9;box-shadow:0 1px 4px rgba(0,0,0,.04);min-width:160px}
 .progress-label{font-size:9px;font-weight:900;color:#cbd5e1;text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}
 .progress-track{flex:1;height:7px;background:#f1f5f9;border-radius:99px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand-light));border-radius:99px;transition:width .6s cubic-bezier(.65,0,.35,1)}
@@ -51,7 +51,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .subsection-title{font-size:10px;font-weight:900;color:var(--text-sub);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding-left:2px}
 
 /* ── アイテムカード ── */
-.item-card{background:var(--card);border:1px solid #e8edf2;border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;transition:border-color .15s;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.item-card{background:var(--card);border:1px solid #e8edf2;border-radius:20px;padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .item-card.has-qty{border-color:var(--brand)}
 
 .item-card.host-mode .qty-control{opacity:.35;pointer-events:none}
@@ -86,7 +86,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .qty-unit{font-size:10px;color:var(--text-sub)}
 
 /* ── セットカード ── */
-.set-card{background:var(--card);border:1px solid #e8edf2;border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.set-card{background:var(--card);border:1px solid #e8edf2;border-radius:20px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .set-card.has-qty{border-color:var(--brand)}
 
 .set-title{font-size:13px;font-weight:800;margin-bottom:8px}
@@ -102,7 +102,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .set-total-sub{font-size:10px;color:var(--text-sub)}
 
 /* ── 選択カード（2択・3択） ── */
-.choice-card-wrap{background:var(--card);border:1px solid #e8edf2;border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.choice-card-wrap{background:var(--card);border:1px solid #e8edf2;border-radius:20px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .choice-card-wrap.has-sel{border-color:var(--brand)}
 .choice-label{font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:block}
 .choice-title{font-size:14px;font-weight:800;margin-bottom:12px}
@@ -123,7 +123,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .choice-opt-btn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-base)}
 
 /* ── グレードカード ── */
-.grade-card{background:var(--card);border:1px solid #e8edf2;border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.grade-card{background:var(--card);border:1px solid #e8edf2;border-radius:20px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .grade-card.selected{border-color:var(--brand)}
 .grade-label{font-size:10px;font-weight:700;color:var(--purple);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
 .grade-name{font-size:14px;font-weight:800;margin-bottom:10px}
@@ -142,9 +142,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .total-wrap .total-label{font-size:10px;color:var(--text-sub);font-weight:700}
 .total-wrap .total-amount{font-size:18px;font-weight:900;font-family:var(--mono);color:var(--brand)}
 .nav-btns{display:flex;gap:8px}
-.btn-back{padding:10px 20px;border-radius:10px;border:1.5px solid var(--border);background:#fff;font-size:13px;font-weight:700;cursor:pointer;color:var(--text)}
-.btn-next{padding:10px 24px;border-radius:10px;border:none;background:var(--brand);color:#fff;font-size:13px;font-weight:700;cursor:pointer}
-.btn-submit{padding:16px 24px;border-radius:14px;border:none;background:var(--brand);color:#fff;font-size:16px;font-weight:800;cursor:pointer;width:100%;margin-top:20px;box-shadow:0 4px 16px rgba(33,83,135,0.25);transition:all .15s}
+.btn-back{padding:10px 20px;border-radius:14px;border:1.5px solid var(--border);background:#fff;font-size:13px;font-weight:700;cursor:pointer;color:var(--text);transition:all .15s}
+.btn-back:hover{border-color:var(--brand);color:var(--brand)}
+.btn-next{padding:10px 24px;border-radius:14px;border:none;background:var(--brand);color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+.btn-next:hover{background:var(--brand-light)}
+.btn-submit{padding:16px 24px;border-radius:20px;border:none;background:var(--brand);color:#fff;font-size:16px;font-weight:800;cursor:pointer;width:100%;margin-top:20px;box-shadow:0 4px 16px rgba(33,83,135,0.25);transition:all .15s}
 .btn-submit:hover{background:var(--brand-light);transform:translateY(-1px)}
 .btn-submit.disabled{background:#cbd5e1;color:#94a3b8;cursor:not-allowed;box-shadow:none;transform:none}
 
@@ -152,35 +154,35 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .form-group{margin-bottom:16px}
 .form-label{font-size:12px;font-weight:700;margin-bottom:6px;display:block;color:var(--text)}
 .form-label span.req{color:var(--danger);margin-left:2px}
-.form-input{width:100%;padding:12px 14px;border:1.5px dashed #f97316;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;background:#fff}
+.form-input{width:100%;padding:12px 16px;border:1.5px dashed #f97316;border-radius:16px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;background:rgb(248,250,252)}
 .form-input:focus{border-color:var(--brand);border-style:solid}
-.form-card{background:#fff;border-radius:20px;border:1.5px solid var(--border);box-shadow:0 1px 6px rgba(0,0,0,.04);padding:20px 24px;margin-bottom:20px}
-.form-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.form-card{background:#fff;border-radius:28px;border:1px solid var(--border);box-shadow:rgba(0,0,0,0.04) 0px 1px 6px;overflow:hidden;margin-bottom:20px}
+.form-card-header{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;background:rgb(248,250,252);border-bottom:1px solid #f1f5f9}
 .form-card-title{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
-.form-card-badge{font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;background:#f1f5f9;padding:3px 8px;border-radius:20px}
+.form-card-badge{font-size:9px;font-weight:900;color:var(--brand);text-transform:uppercase;letter-spacing:.2em;background:var(--brand-accent);padding:4px 10px;border-radius:99px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:480px){.form-row{grid-template-columns:1fr}}
 
 /* ── ダッシュボード タスクカード ── */
-.task-card{display:flex;align-items:center;gap:14px;padding:16px 18px;background:#fff;border:1.5px solid var(--border);border-radius:16px;margin-bottom:10px;cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.task-card:hover{border-color:var(--brand);box-shadow:0 2px 8px rgba(33,83,135,.1)}
+.task-card{display:flex;align-items:center;gap:14px;padding:16px 20px;background:#fff;border:1px solid var(--border);border-radius:28px;margin-bottom:10px;cursor:pointer;transition:all .2s;box-shadow:rgba(0,0,0,0.04) 0px 1px 6px}
+.task-card:hover{border-color:var(--brand);box-shadow:rgba(33,83,135,0.08) 0px 4px 16px;transform:translateY(-2px)}
 .task-card.done{border-color:var(--brand);background:var(--brand-base)}
-.task-card-icon{font-size:22px;line-height:1;flex-shrink:0}
+.task-card-icon{width:40px;height:40px;border-radius:12px;background:var(--brand-accent);display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;flex-shrink:0}
 .task-card-body{flex:1}
 .task-card-title{font-size:14px;font-weight:700}
 .task-card-sub{font-size:11px;color:var(--text-sub);margin-top:2px}
 .task-card-sub.done-text{color:var(--brand);font-weight:600}
-.task-card-arrow{font-size:18px;color:var(--text-sub)}
-.section-label{font-size:10px;font-weight:900;color:var(--text-sub);text-transform:uppercase;letter-spacing:.5px;margin:20px 0 8px}
+.task-card-arrow{font-size:18px;color:var(--text-sub);flex-shrink:0}
+.section-label{display:block;font-size:10px;font-weight:900;color:var(--brand);background:var(--brand-accent);text-transform:uppercase;letter-spacing:.2em;margin:20px 0 10px;padding:4px 12px;border-radius:99px;width:fit-content}
 
 /* ── サマリー ── */
-.summary-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .summary-row{display:flex;align-items:baseline;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)}
 .summary-row:last-child{border-bottom:none}
 .summary-name{flex:1;font-size:12px}
 .summary-qty{font-size:11px;color:var(--text-sub);white-space:nowrap;font-family:var(--mono)}
 .summary-price{font-size:12px;font-weight:700;font-family:var(--mono);white-space:nowrap}
-.summary-total{background:var(--brand);color:#fff;border-radius:16px;padding:18px;text-align:center;margin-bottom:16px}
+.summary-total{background:var(--brand);color:#fff;border-radius:20px;padding:18px;text-align:center;margin-bottom:16px}
 .total-label{font-size:11px;opacity:.8;margin-bottom:4px}
 .total-amount{font-size:28px;font-weight:900;font-family:var(--mono)}
 .mandatory-banner{background:var(--purple-light);border:1.5px solid var(--purple);border-radius:14px;padding:12px 14px;margin-bottom:16px}
@@ -466,7 +468,7 @@ const ITEMS = {
   'S0049':{id:'S0049',name:'パイプユニッシュ 800g',brand:'ジョンソン',price:590,min:1,unit:'本',cat:'浴室清掃道具',img:'https://m.media-amazon.com/images/I/71LJsEX7zjL._AC_SL1500_.jpg'},
   'B0150':{id:'B0150',name:'バスブラシ',brand:'3M スコッチブライト',price:790,min:1,unit:'個',cat:'浴室清掃道具',req:'推奨',img:'https://m.media-amazon.com/images/I/61YeQkQPGZS._AC_SL1500_.jpg'},
   'B0185':{id:'B0185',name:'バススポンジ 3個',brand:'ノーブランド',price:250,min:1,unit:'個',cat:'浴室清掃道具',req:'必須',img:'https://m.media-amazon.com/images/I/51w-JKrc-3L._AC_.jpg'},
-  'B0186':{id:'B0186',name:'排水溝ブラシ',brand:'オーエ',price:380,min:1,unit:'個',cat:'浴室清掃道具',img:'https://m.media-amazon.com/images/I/61nxH+7R4OL._AC_SL1000_.jpg'},
+  'B0186':{id:'B0186',name:'排水溝ブラシ',brand:'オーエ',price:380,min:1,unit:'個',cat:'浴室清掃道具',req:'推奨',img:'https://m.media-amazon.com/images/I/61nxH+7R4OL._AC_SL1000_.jpg'},
   'B0154':{id:'B0154',name:'バスマジックリン本体 350ml',brand:'花王',price:350,min:1,unit:'個',cat:'浴室洗剤',req:'必須',img:'https://m.media-amazon.com/images/I/41+CiIrGt6L._AC_.jpg'},
   'B0157':{id:'B0157',name:'カビキラー本体 400g',brand:'ジョンソン',price:980,min:1,unit:'個',cat:'浴室洗剤',req:'必須',img:'https://m.media-amazon.com/images/I/71q918lUgPL._AC_SL1500_.jpg'},
   'S0167':{id:'S0167',name:'カビキラー 業務用 5000ml',brand:'ジョンソン',price:4200,min:1,unit:'本',cat:'浴室洗剤',req:'必須',img:'https://m.media-amazon.com/images/I/71S4yYdy4YL._AC_SL1500_.jpg'},
@@ -803,15 +805,12 @@ const REQUIRED_STEPS = [
 const RECOMMEND_STEP = {key:'recommend', label:'推奨品目',      fn:function(){return renderRecommend();}};
 const FAMILY_STEP    = {key:'family',    label:'ファミリー必須', fn:function(){return renderFamily();}};
 const OPT_CATS = [
-  {key:'bath',      label:'バスアメニティ',   fn:function(){return renderStep3();}},
-  {key:'toilet',    label:'トイレ用品',       fn:function(){return renderStep4();}},
-  {key:'kitchen',   label:'キッチン',         fn:function(){return renderStep5();}},
-  {key:'tableware', label:'食器・カトラリー', fn:function(){return renderStep6();}},
-  {key:'laundry',   label:'洗濯・掃除',       fn:function(){return renderStep7();}},
+  {key:'amenity',   label:'アメニティ',         fn:function(){return renderOptAmenity();}},
+  {key:'toilet_laundry', label:'トイレ・洗濯',   fn:function(){return renderOptToiletLaundry();}},
+  {key:'kitchen_tableware', label:'キッチン・食器', fn:function(){return renderOptKitchenTableware();}},
   {key:'food',      label:'食品・飲料',       fn:function(){return renderStep8();}},
-  {key:'aroma',     label:'芳香・室内備品',   fn:function(){return renderStep9();}},
+  {key:'aroma_other', label:'芳香・その他',   fn:function(){return renderOptAromaOther();}},
   {key:'bbq',       label:'BBQ',             fn:function(){return renderStep10();}},
-  {key:'other',     label:'その他・オプション', fn:function(){return renderStep11();}},
 ];
 
 function renderStep12() {
@@ -973,6 +972,12 @@ function render(scrollToTop) {
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
+  } else if (v === 'info') {
+    html = renderPropertyInfo();
+    (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='物件情報';})();
+    (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
+    (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
+    (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
   } else if (v === 'hostInfo') {
     html = renderHostInfo();
     (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='ホスト様情報の入力';})();
@@ -1027,6 +1032,8 @@ function openStep(key) {
     state.view = 'confirm';
   } else if (key === 'hostInfo') {
     state.view = 'hostInfo';
+  } else if (key === 'info') {
+    state.view = 'info';
   } else {
     state.view = 'step';
     state.currentStepKey = key;
@@ -1715,29 +1722,45 @@ function renderDashboard() {
 
   function taskCard(step, isRequired) {
     const done = state.completedSteps[step.key];
-    const icon = done ? '✅' : (isRequired ? '⭕' : '○');
+    const iconStyle = done
+      ? 'background:rgb(16,185,129);border-radius:12px;'
+      : (isRequired ? 'background:var(--brand-accent);border-radius:12px;' : 'background:#f1f5f9;border-radius:12px;');
+    const iconText = done ? '✓' : (isRequired ? '!' : '○');
+    const iconColor = done ? 'color:#fff;font-weight:900;font-size:16px;' : (isRequired ? 'color:var(--brand);font-weight:900;font-size:14px;' : 'color:#94a3b8;font-size:16px;');
     return '<div onclick="openStep(\''+step.key+'\')" class="task-card'+(done?' done':'')+'">'
-      + '<div class="task-card-icon">'+icon+'</div>'
+      + '<div class="task-card-icon" style="'+iconStyle+iconColor+'">'+iconText+'</div>'
       + '<div class="task-card-body"><div class="task-card-title">'+step.label+'</div>'
-      + (done ? '<div class="task-card-sub done-text">完了</div>' : '<div class="task-card-sub">タップして入力</div>')
+      + (done ? '<div class="task-card-sub done-text">✓ 完了</div>' : '<div class="task-card-sub">'+(isRequired?'必須 — ':'')+'タップして入力</div>')
       + '</div>'
-      + '<div class="task-card-arrow">›</div>'
+      + '<div class="task-card-arrow" style="color:#cbd5e1;font-size:20px;">›</div>'
       + '</div>';
   }
 
   function optCard() {
     const anyDone = OPT_CATS.some(s => state.completedSteps[s.key]);
     const doneCnt = OPT_CATS.filter(s => state.completedSteps[s.key]).length;
+    const iconStyle = anyDone ? 'background:rgb(16,185,129);border-radius:12px;color:#fff;font-weight:900;font-size:16px;' : 'background:#f1f5f9;border-radius:12px;color:#94a3b8;font-size:16px;';
     return '<div onclick="openStep(\'optList\')" class="task-card'+(anyDone?' done':'')+'">'
-      + '<div class="task-card-icon">○</div>'
+      + '<div class="task-card-icon" style="'+iconStyle+'">'+(anyDone?'✓':'＋')+'</div>'
       + '<div class="task-card-body"><div class="task-card-title">任意追加品目</div>'
-      + '<div class="task-card-sub">'+(doneCnt > 0 ? doneCnt+'カテゴリ選択済み' : '9カテゴリから選択')+'</div>'
+      + '<div class="task-card-sub">'+(doneCnt > 0 ? doneCnt+'カテゴリ選択済み' : '6カテゴリから選択')+'</div>'
       + '</div>'
-      + '<div class="task-card-arrow">›</div>'
+      + '<div class="task-card-arrow" style="color:#cbd5e1;font-size:20px;">›</div>'
       + '</div>';
   }
 
-  let html = '<div class="section-head"><div class="section-title">初回セット・補充備品発注フォーム</div><div class="section-sub">各項目を入力して発注を送信してください</div></div>';
+  let html = '<div class="section-head" style="margin-bottom:24px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="width:4px;height:28px;background:linear-gradient(180deg,var(--brand),var(--brand-light));border-radius:2px"></div><div class="section-title">初回セット・補充備品発注フォーム</div></div><div class="section-sub">各項目を入力して発注を送信してください</div></div>';
+
+  // 物件情報カード
+  const infoDone = state.completedSteps['info'];
+  const infoStyle = infoDone ? 'background:rgb(16,185,129);border-radius:12px;color:#fff;font-weight:900;font-size:16px;' : 'background:var(--brand-accent);border-radius:12px;color:var(--brand);font-weight:900;font-size:14px;';
+  html += '<div onclick="openStep(\'info\')" class="task-card'+(infoDone?' done':'')+'">'
+    + '<div class="task-card-icon" style="'+infoStyle+'">'+(infoDone?'✓':'i')+'</div>'
+    + '<div class="task-card-body"><div class="task-card-title">物件情報</div>'
+    + (infoDone ? '<div class="task-card-sub done-text">✓ 完了</div>' : '<div class="task-card-sub">必須 — 物件名・物件番号を入力</div>')
+    + '</div>'
+    + '<div class="task-card-arrow" style="color:#cbd5e1;font-size:20px;">›</div>'
+    + '</div>';
 
   html += '<div class="section-label">必須項目</div>';
   REQUIRED_STEPS.forEach(s => { html += taskCard(s, true); });
@@ -1764,11 +1787,12 @@ function renderOptionalList() {
   let html = '<div class="section-head"><div class="section-title">任意追加品目</div><div class="section-sub">必要なカテゴリを選んで追加してください</div></div>';
   OPT_CATS.forEach(cat => {
     const done = state.completedSteps[cat.key];
+    const iconStyle = done ? 'background:rgb(16,185,129);border-radius:12px;color:#fff;font-weight:900;font-size:16px;' : 'background:#f1f5f9;border-radius:12px;color:#94a3b8;font-size:16px;';
     html += '<div onclick="openOptCat(\''+cat.key+'\')" class="task-card'+(done?' done':'')+'">'
-      + '<div class="task-card-icon">'+(done?'✅':'○')+'</div>'
+      + '<div class="task-card-icon" style="'+iconStyle+'">'+(done?'✓':'○')+'</div>'
       + '<div class="task-card-body"><div class="task-card-title">'+cat.label+'</div>'
-      + '<div class="task-card-sub'+(done?' done-text':'')+'">'+(done?'確認済み':'タップして確認')+'</div></div>'
-      + '<div class="task-card-arrow">›</div>'
+      + '<div class="task-card-sub'+(done?' done-text':'')+'">'+( done?'✓ 確認済み':'タップして確認')+'</div></div>'
+      + '<div class="task-card-arrow" style="color:#cbd5e1;font-size:20px;">›</div>'
       + '</div>';
   });
   html += '<button onclick="openStep(\'dashboard\')" class="btn-back" style="width:100%;margin-top:12px">← ダッシュボードに戻る</button>';
@@ -1781,19 +1805,24 @@ function renderOptionalList() {
 function renderRecommend() {
   return '<div class="section-head"><div class="section-title">推奨品目</div><div class="section-sub">必須ではありませんが、設置をお勧めする品目です。</div></div>'
     + '<div class="subsection"><div class="subsection-title">キッチン消耗品</div>'
-    + ['S0048','S0083','S0131','S0249'].map(itemCardHTML).join('')
+    + ['S0048','S0083','S0131','S0249'].map(id => itemCardHTML(id)).join('')
     + '</div>'
     + '<div class="subsection"><div class="subsection-title">除菌・消臭</div>'
-    + ['S0215','S0216','S0160'].map(itemCardHTML).join('')
+    + ['S0215','S0216','S0160'].map(id => itemCardHTML(id)).join('')
+    + '</div>'
+    + '<div class="subsection"><div class="subsection-title">スキンケア</div>'
+    + refillCardHTML('skincare_lotion')
+    + refillCardHTML('skincare_milk')
+    + refillCardHTML('skincare_cleansing')
     + '</div>'
     + '<div class="subsection"><div class="subsection-title">食器・調理器具</div>'
-    + ['B0102','B0121','B0109','B0117','B0120'].map(itemCardHTML).join('')
+    + ['B0102','B0121','B0109','B0117','B0120'].map(id => itemCardHTML(id)).join('')
     + '</div>'
     + '<div class="subsection"><div class="subsection-title">洗濯・掃除</div>'
-    + ['B0007','B0146','B0147'].map(itemCardHTML).join('')
+    + ['B0007','B0146','B0147'].map(id => itemCardHTML(id)).join('')
     + '</div>'
     + '<div class="subsection"><div class="subsection-title">その他設備</div>'
-    + ['B0150','B0186','B0017'].map(itemCardHTML).join('')
+    + ['B0150','B0186','B0017'].map(id => itemCardHTML(id)).join('')
     + '</div>';
 }
 
@@ -1806,7 +1835,7 @@ function renderFamily() {
     + refillCardHTML('kids_shampoo')
     + '</div>'
     + '<div class="subsection"><div class="subsection-title">子供用食器</div>'
-    + ['B0113','B0114','B0115','B0116'].map(itemCardHTML).join('')
+    + ['B0113','B0114','B0115','B0116'].map(id => itemCardHTML(id)).join('')
     + '</div>';
 }
 
@@ -1843,19 +1872,31 @@ function initDefaults() {
   });
 }
 
-function renderStep0() {
+function renderPropertyInfo() {
   return `<div class="section-head"><div class="section-title">物件情報</div><div class="section-sub">発注する物件の情報を入力してください</div></div>
-  <div class="form-group"><label class="form-label">物件名 <span style="color:red">*</span></label><input class="form-input" type="text" value="${state.property.name}" oninput="state.property.name=this.value" placeholder="例：〇〇ヴィラ 〇〇号室"></div>
-  <div class="form-group"><label class="form-label">物件番号</label><input class="form-input" type="text" value="${state.property.number}" oninput="state.property.number=this.value" placeholder="例：P-001"></div>
-  <div class="form-group"><label class="form-label">担当者名</label><input class="form-input" type="text" value="${state.property.contact}" oninput="state.property.contact=this.value" placeholder="例：山田 太郎"></div>
-  <div class="form-group"><label class="form-label">Webhook URL（n8n）</label><input class="form-input" type="url" value="${state.webhookUrl}" oninput="state.webhookUrl=this.value" placeholder="https://..."></div>`;
+  <div class="form-card">
+    <div class="form-card-header"><div class="form-card-title">🏠 物件基本情報</div><div class="form-card-badge">REQUIRED</div></div>
+    <div style="padding:20px 24px">
+      <div class="form-group"><label class="form-label">物件名 <span class="req">*</span></label><input class="form-input" type="text" value="${state.property.name}" oninput="state.property.name=this.value" placeholder="例：マリンバイラ 101号室"></div>
+      <div class="form-group"><label class="form-label">物件番号 <span class="req">*</span></label><input class="form-input" type="text" value="${state.property.number}" oninput="state.property.number=this.value" placeholder="例：0240（4桁の半角数字）"></div>
+      <div class="form-group"><label class="form-label">担当者名</label><input class="form-input" type="text" value="${state.property.contact}" oninput="state.property.contact=this.value" placeholder="例：山田 太郎"></div>
+      <div class="form-group"><label class="form-label">連絡先メールアドレス <span class="req">*</span></label><input class="form-input" type="email" value="${state.property.email||''}" oninput="state.property.email=this.value" placeholder="例：host@example.com"></div>
+    </div>
+  </div>
+  <button onclick="completeStep('info',false)" class="btn-submit">✓ 物件情報を確定して戻る</button>
+  <button onclick="openStep('dashboard')" class="btn-back" style="width:100%;margin-top:10px;text-align:center">← ダッシュボードに戻る</button>`;
+}
+
+function renderStep0() {
+  return renderPropertyInfo();
 }
 
 function renderStep1() {
   return `<div class="section-head"><div class="section-title">初回必須セット①</div><div class="section-sub">選択肢のない必須品目です。全品目がデフォルト数量で自動投入されます。</div></div>
+  <div class="mandatory-banner" style="background:#fff7ed;border-left:3px solid #f97316"><div class="mandatory-banner-title" style="color:#c2410c">⚠ 各品目の数量を必ず「1以上」に設定してください</div><div class="mandatory-banner-sub">初期値はデフォルト数量で設定されていますが、内容をご確認の上、必要に応じて数量を調整してください</div></div>
 
   <div class="subsection"><div class="subsection-title">キッチン消耗品</div>
-  ${['S0142'].map(itemCardHTML).join('')}
+  ${['S0142'].map(id => itemCardHTML(id)).join('')}
   </div>
 
   <div class="subsection"><div class="subsection-title">キッチン洗浄・衛生</div>
@@ -1876,7 +1917,7 @@ function renderStep1() {
   </div>
 
   <div class="subsection"><div class="subsection-title">トイレ用消耗品</div>
-  ${['S0043'].map(itemCardHTML).join('')}
+  ${['S0043'].map(id => itemCardHTML(id)).join('')}
   </div>
 
   <div class="subsection"><div class="subsection-title">トイレ洗剤</div>
@@ -1884,15 +1925,15 @@ function renderStep1() {
   </div>
 
   <div class="subsection"><div class="subsection-title">害虫対策</div>
-  ${['S0034','S0052'].map(itemCardHTML).join('')}
+  ${['S0034','S0052'].map(id => itemCardHTML(id)).join('')}
   </div>
 
   <div class="subsection"><div class="subsection-title">浴室清掃道具</div>
-  ${['B0185'].map(itemCardHTML).join('')}
+  ${['B0185'].map(id => itemCardHTML(id)).join('')}
   </div>
 
   <div class="subsection"><div class="subsection-title">拭き掃除</div>
-  ${['B0166'].map(itemCardHTML).join('')}
+  ${['B0166'].map(id => itemCardHTML(id)).join('')}
   </div>
 
   <div class="subsection"><div class="subsection-title">トイレ消臭（置き型）</div>
@@ -1901,25 +1942,25 @@ function renderStep1() {
 }
 
 function renderStep2() {
-  return `<div class="section-head"><div class="section-title">初回必須セット②</div><div class="section-sub">グレード・選択肢のある必須品目です。各項目のグレードまたは選択肢を確認・変更してください。</div></div>
+  return `<div class="section-head"><div class="section-title">初回必須セット②</div><div class="section-sub">グレード選択・弊社／ホスト様の備品準備分担の選択が必要な必須品目です。各項目を確認・設定してください。</div></div>
   <div class="mandatory-banner"><div class="mandatory-banner-title">⚠ 全項目のグレード・選択設定が必須です</div><div class="mandatory-banner-sub">デフォルトはスタンダード（最下位グレード）に設定されています</div></div>
 
   <div class="subsection"><div class="subsection-title">🏠 弊社/ホスト構成品目（調理器具・食器・清掃用具等）</div>
   <div style="font-size:12px;color:var(--text-sub);margin-bottom:12px;padding:8px 12px;background:#f0f7ff;border-radius:8px;border-left:3px solid var(--brand)">弊社が自動補充するか、ホスト様がご準備いただくかを選択してください。「弊社が自動補充」を選択すると数量が1になります。</div>
   <div class="subsection"><div class="subsection-title">調理器具</div>
-  ${['B0104','B0105','B0106','B0107','B0108','B0118','B0119','B0122','B0123'].map(itemCardHTML).join('')}
+  ${['B0104','B0105','B0106','B0107','B0108','B0118','B0119','B0122','B0123'].map(id => itemCardHTML(id)).join('')}
   </div>
   <div class="subsection"><div class="subsection-title">食器</div>
-  ${['B0101','B0103','B0110','B0111'].map(itemCardHTML).join('')}
+  ${['B0101','B0103','B0110','B0111'].map(id => itemCardHTML(id)).join('')}
   </div>
   <div class="subsection"><div class="subsection-title">カトラリー</div>
-  ${['B0095','B0096','B0112'].map(itemCardHTML).join('')}
+  ${['B0095','B0096','B0112'].map(id => itemCardHTML(id)).join('')}
   </div>
   <div class="subsection"><div class="subsection-title">トイレ掃除道具</div>
-  ${['B0145','B0152'].map(itemCardHTML).join('')}
+  ${['B0145','B0152'].map(id => itemCardHTML(id)).join('')}
   </div>
   <div class="subsection"><div class="subsection-title">衣類管理</div>
-  ${['B0124'].map(itemCardHTML).join('')}
+  ${['B0124'].map(id => itemCardHTML(id)).join('')}
   </div>
   </div>
 
@@ -1940,91 +1981,131 @@ function renderStep2() {
   <div class="subsection"><div class="subsection-title">トイレ清掃シート</div>${choiceCardHTML('toilet_sheet')}</div>
   <div class="subsection"><div class="subsection-title">ゴミ袋 45L</div>${choiceCardHTML('gomibag45')}</div>
   <div class="subsection"><div class="subsection-title">サニタリー用ゴミ袋</div>${choiceCardHTML('sanitary_bag')}</div>
-  <div class="subsection"><div class="subsection-title">子供用シャンプー</div>${refillCardHTML('kids_shampoo')}</div>
   </div>`;
 }
 
+// 統合カテゴリ関数
+function renderOptAmenity() {
+  return `<div class="section-head"><div class="section-title">アメニティ</div><div class="section-sub">バス・洗面用アメニティを選択します</div></div>
+  <div class="subsection"><div class="subsection-title">洗面アメニティ</div>${['S0065','S0066','S0067','S0068','S0069','S0070'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">子供用シャンプー</div>${refillCardHTML('kids_shampoo')}</div>`;
+}
+
+function renderOptToiletLaundry() {
+  return `<div class="section-head"><div class="section-title">トイレ・洗濯</div><div class="section-sub">トイレ用品・洗濯・掃除用品を選択します</div></div>
+  <div class="subsection"><div class="subsection-title">トイレ清掃道具</div>${['B0145','B0152'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">トイレ消臭（追加）</div>${['S0006','S0128'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171','S0225'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0040','S0042','S0230','S0231'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">消臭袋</div>${['S0133'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0007','B0087'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">掃き掃除</div>${['B0146','B0147'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">拭き掃除</div>${['S0160'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">除菌消臭（追加）</div>${['S0215','S0216'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">掃除機</div>${['E0089','E0148','E0162'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">電球・電池</div>${['S0172','S0173','S0174','S0175','S0176','S0177','S0178','S0179','S0180','S0181'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">紙製品</div>${['S0005','S0039','S0139'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">害虫対策（追加）</div>${['S0035','S0036','S0046','S0053','S0254'].map(id => itemCardHTML(id)).join('')}</div>`;
+}
+
+function renderOptKitchenTableware() {
+  return `<div class="section-head"><div class="section-title">キッチン・食器</div><div class="section-sub">キッチン用品・食器・カトラリーを選択します</div></div>
+  <div class="subsection"><div class="subsection-title">紙コップ（どちらか選択）</div>${choiceCardHTML('paper_cup')}</div>
+  <div class="subsection"><div class="subsection-title">キッチン消耗品</div>${['S0048','S0083','S0131','S0136','S0255','S0249'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">衛生消耗品</div>${['S0161','B0155'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">食器</div>${['B0102','B0121','B0101','B0103','B0110','B0111'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">子供用食器</div>${['B0113','B0114','B0115','B0116'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">カトラリー（追加）</div>${['B0097','B0098','B0099','B0100'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">調理器具（追加）</div>${['B0109','B0117','B0120'].map(id => itemCardHTML(id)).join('')}</div>`;
+}
+
+function renderOptAromaOther() {
+  return `<div class="section-head"><div class="section-title">芳香・その他</div><div class="section-sub">芳香剤・室内備品・ペット・ベビー用品等を選択します</div></div>
+  <div class="subsection"><div class="subsection-title">無印良品 インテリアフレグランス（任意）</div>${choiceCardHTML('muji_fragrance')}</div>
+  <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0021','B0129','B0138'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">文具</div>${['S0019','S0041','B0094','S0127'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">その他設備</div>${['B0182','B0241','S0196'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">収納</div>${['B0023'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">ペット用品</div>${['S0022','S0037','S0038','S0134'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">子供・ベビー衛生</div>${['S0020','S0024','S0025','B0026','S0195','S0029'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">レジャー・玩具</div>${['S0207','S0208'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">サウナ用アロマオイル</div>${['S0245','S0246','S0247','S0248'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">医療・安全</div>${['S0075','S0126'].map(id => itemCardHTML(id)).join('')}</div>`;
+}
+
 function renderStep3() {
-  return `<div class="section-head"><div class="section-title">バスアメニティ</div><div class="section-sub">追加のバスアメニティ・洗面用品を選択します</div></div>
-  <div class="subsection"><div class="subsection-title">洗面アメニティ</div>${['S0065','S0066','S0067','S0068','S0069','S0070'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">スキンケア</div>
-  ${refillCardHTML('skincare_lotion')}
-  ${refillCardHTML('skincare_milk')}
-  ${refillCardHTML('skincare_cleansing')}
-  </div>
-  <div class="subsection"><div class="subsection-title">子供用シャンプー</div>
-  ${refillCardHTML('kids_shampoo')}
-  </div>`;
+  return renderOptAmenity();
 }
 
 function renderStep4() {
   return `<div class="section-head"><div class="section-title">トイレ用品</div><div class="section-sub">追加のトイレ用品を選択します</div></div>
-  <div class="subsection"><div class="subsection-title">トイレ掃除道具</div>${['B0145','B0152'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">トイレ消臭（追加）</div>${['S0006','S0128'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171','S0225'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0040','S0042','S0230','S0231'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">消臭袋</div>${['S0133'].map(itemCardHTML).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">トイレ掃除道具</div>${['B0145','B0152'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">トイレ消臭（追加）</div>${['S0006','S0128'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171','S0225'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0040','S0042','S0230','S0231'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">消臭袋</div>${['S0133'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep5() {
   return `<div class="section-head"><div class="section-title">キッチン</div><div class="section-sub">キッチン用品を選択します</div></div>
   <div class="subsection"><div class="subsection-title">紙コップ（どちらか選択）</div>${choiceCardHTML('paper_cup')}</div>
-  <div class="subsection"><div class="subsection-title">キッチン消耗品</div>${['S0048','S0083','S0131','S0136','S0255','S0249'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">コーヒー・茶類</div>${['S0086','S0197','S0198','S0199','S0200','S0217','S0218','S0219','S0220','S0233','S0244'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">衛生消耗品</div>${['S0161','B0155'].map(itemCardHTML).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">キッチン消耗品</div>${['S0048','S0083','S0131','S0136','S0255','S0249'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">コーヒー・茶類</div>${['S0086','S0197','S0198','S0199','S0200','S0217','S0218','S0219','S0220','S0233','S0244'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">衛生消耗品</div>${['S0161','B0155'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep6() {
   return `<div class="section-head"><div class="section-title">食器・カトラリー</div><div class="section-sub">追加の食器・カトラリーを選択します</div></div>
-  <div class="subsection"><div class="subsection-title">食器</div>${['B0102','B0121','B0101','B0103','B0110','B0111'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">子供用食器</div>${['B0113','B0114','B0115','B0116'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">カトラリー（追加）</div>${['B0097','B0098','B0099','B0100'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">調理器具（追加）</div>${['B0109','B0117','B0120'].map(itemCardHTML).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">食器</div>${['B0102','B0121','B0101','B0103','B0110','B0111'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">子供用食器</div>${['B0113','B0114','B0115','B0116'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">カトラリー（追加）</div>${['B0097','B0098','B0099','B0100'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">調理器具（追加）</div>${['B0109','B0117','B0120'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep7() {
   return `<div class="section-head"><div class="section-title">洗濯・掃除</div><div class="section-sub">洗濯・清掃用品を選択します</div></div>
-  <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0007','B0087'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">掃き掃除</div>${['B0146','B0147'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">拭き掃除</div>${['S0160'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">除菌消臭（追加）</div>${['S0215','S0216'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">掃除機</div>${['E0089','E0148','E0162'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">電球・電池</div>${['S0172','S0173','S0174','S0175','S0176','S0177','S0178','S0179','S0180','S0181'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">紙製品</div>${['S0005','S0039','S0139'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">害虫対策（追加）</div>${['S0035','S0036','S0046','S0053','S0254'].map(itemCardHTML).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0007','B0087'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">掃き掃除</div>${['B0146','B0147'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">拭き掃除</div>${['S0160'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">除菌消臭（追加）</div>${['S0215','S0216'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">掃除機</div>${['E0089','E0148','E0162'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">電球・電池</div>${['S0172','S0173','S0174','S0175','S0176','S0177','S0178','S0179','S0180','S0181'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">紙製品</div>${['S0005','S0039','S0139'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">害虫対策（追加）</div>${['S0035','S0036','S0046','S0053','S0254'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep8() {
   return `<div class="section-head"><div class="section-title">食品・飲料</div><div class="section-sub">食品・飲料を選択します</div></div>
-  <div class="subsection"><div class="subsection-title">調味料</div>${['S0031','S0032','S0045','S0132','S0135','S0213'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">コーヒー・茶類</div>${['S0086','S0197','S0198','S0199','S0200','S0217','S0218','S0219','S0220','S0233','S0244'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">ソフトドリンク</div>${['S0205','S0206','S0214','S0250'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">アルコール</div>${['S0202','S0203','S0204','S0212','S0243'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">食品・軽食</div>${['S0201','S0209','S0210','S0211','S0238'].map(itemCardHTML).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">調味料</div>${['S0031','S0032','S0045','S0132','S0135','S0213'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">コーヒー・茶類</div>${['S0086','S0197','S0198','S0199','S0200','S0217','S0218','S0219','S0220','S0233','S0244'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">ソフトドリンク</div>${['S0205','S0206','S0214','S0250'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">アルコール</div>${['S0202','S0203','S0204','S0212','S0243'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">食品・軽食</div>${['S0201','S0209','S0210','S0211','S0238'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep9() {
   return `<div class="section-head"><div class="section-title">芳香・室内備品</div><div class="section-sub">芳香剤・空間演出グッズを選択します</div></div>
   <div class="subsection"><div class="subsection-title">無印良品 インテリアフレグランス（任意）</div>${choiceCardHTML('muji_fragrance')}</div>
-  <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0021','B0129','B0138'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">文具</div>${['S0019','S0041','B0094','S0127'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">その他設備</div>${['B0182','B0241','S0196'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">収納</div>${['B0023'].map(itemCardHTML).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0021','B0129','B0138'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">文具</div>${['S0019','S0041','B0094','S0127'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">その他設備</div>${['B0182','B0241','S0196'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">収納</div>${['B0023'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep10() {
   return `<div class="section-head"><div class="section-title">BBQ</div><div class="section-sub">BBQ関連用品を選択します</div></div>
-  ${['S0012','S0013','B0014','B0015','S0016','B0018','S0047','B0090','B0091','B0092','S0228','S0229','S0235','B0242'].map(itemCardHTML).join('')}`;
+  ${['S0012','S0013','B0014','B0015','S0016','B0018','S0047','B0090','B0091','B0092','S0228','S0229','S0235','B0242'].map(id => itemCardHTML(id)).join('')}`;
 }
 
 function renderStep11() {
   return `<div class="section-head"><div class="section-title">その他・オプション</div><div class="section-sub">ペット・ベビー・レジャー等を選択します</div></div>
-  <div class="subsection"><div class="subsection-title">ペット用品</div>${['S0022','S0037','S0038','S0134'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">子供・ベビー衛生</div>${['S0020','S0024','S0025','B0026','S0195','S0029'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">レジャー・玩具</div>${['S0207','S0208'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">サウナ用アロマオイル</div>${['S0245','S0246','S0247','S0248'].map(itemCardHTML).join('')}</div>
-  <div class="subsection"><div class="subsection-title">医療・安全</div>${['S0075','S0126'].map(itemCardHTML).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">ペット用品</div>${['S0022','S0037','S0038','S0134'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">子供・ベビー衛生</div>${['S0020','S0024','S0025','B0026','S0195','S0029'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">レジャー・玩具</div>${['S0207','S0208'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">サウナ用アロマオイル</div>${['S0245','S0246','S0247','S0248'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">医療・安全</div>${['S0075','S0126'].map(id => itemCardHTML(id)).join('')}</div>`;
 }
 
 function renderStep12() {
