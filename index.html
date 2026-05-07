@@ -905,6 +905,7 @@ function doReset() {
   state.stepIndex = 0;
   state.propertyInfo = {};
   state.senderInfo = {};
+  initDefaults(); // リセット後に必須品目の初期数量を再設定
   saveState();
   render();
   showToast('入力内容をリセットしました');
