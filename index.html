@@ -880,12 +880,6 @@ function renderStep12() {
   }
   if (!rows) rows = '<div style="text-align:center;padding:20px;color:var(--text-sub)">選択された品目がありません</div>';
   return '<div class="section-head"><div class="section-title">確認・送信</div><div class="section-sub">内容をご確認の上、発注を送信してください</div></div>'
-    + '<div class="summary-card"><div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:8px">物件情報</div>'
-    + '<div class="summary-row"><div class="summary-name">物件番号</div><div class="summary-price">'+(state.property.number||'—')+'</div></div>'
-    + '<div class="summary-row"><div class="summary-name">物件名</div><div class="summary-price">'+(state.property.name||'—')+'</div></div>'
-    + '<div class="summary-row"><div class="summary-name">担当者</div><div class="summary-price">'+(state.property.contact||'—')+'</div></div>'
-    + '<div class="summary-row"><div class="summary-name">メール</div><div class="summary-price">'+((state.property.email)||'—')+'</div></div>'
-    + '</div>'
     + '<div class="summary-total"><div class="total-label">合計金額（目安）</div><div class="total-amount">'+fmt(total)+'</div></div>'
     + '<div class="summary-card"><div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:8px">発注品目</div>'+rows+'</div>'
     + '<button onclick="openStep(\'hostInfo\')" class="btn-submit" style="width:100%;margin-top:16px">📦 この内容で発注する</button>';
@@ -897,10 +891,11 @@ function renderStep12() {
 // ══════════════════════════════════════════════
 function renderHostInfo() {
   const total = calcTotal();
-  return `<div class="section-head"><div class="section-title">ホスト様情報の入力</div><div class="section-sub">発注メールに記載するホスト様の情報を入力してください</div></div>
-  <div class="summary-card" style="margin-bottom:16px">
-    <div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:12px">📧 送信先：<span style="font-family:var(--mono);color:var(--brand)">customer@bizpato.com</span></div>
-    <div style="font-size:11px;color:var(--text-sub)">以下の情報を入力すると、発注内容をメールで送信できます。</div>
+  return `<div class="section-head"><div class="section-title">発注者情報の入力</div><div class="section-sub">発注メールに記載する情報を入力してください</div></div>
+  <div class="summary-card" style="margin-bottom:16px;background:var(--brand-accent);border:1px solid rgba(33,83,135,0.15)">
+    <div style="font-size:12px;font-weight:700;color:var(--brand);margin-bottom:4px">📧 送信先</div>
+    <div style="font-family:var(--mono);font-size:14px;font-weight:700;color:var(--brand)">customer@bizpato.com</div>
+    <div style="font-size:11px;color:var(--text-sub);margin-top:6px">入力内容を確認して「メールを送信する」を押すと、メールアプリが起動します。</div>
   </div>
   <div class="form-group">
     <label class="form-label">物件名 <span style="color:var(--accent)">*</span></label>
@@ -980,7 +975,7 @@ function render(scrollToTop) {
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
   } else if (v === 'hostInfo') {
     html = renderHostInfo();
-    (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='ホスト様情報の入力';})();
+    (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='発注者情報の入力';})();
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
@@ -1718,7 +1713,7 @@ function gradeGroupHTML(g) {
 // ══════════════════════════════════════════════
 function renderDashboard() {
   const allRequired = REQUIRED_STEPS.every(s => state.completedSteps[s.key]);
-  const canSubmit = state.completedSteps['info'] && state.completedSteps['fixed'] && state.completedSteps['select'];
+  const canSubmit = state.completedSteps['fixed'] && state.completedSteps['select'];
 
   function taskCard(step, isRequired) {
     const done = state.completedSteps[step.key];
@@ -1750,17 +1745,6 @@ function renderDashboard() {
   }
 
   let html = '<div class="section-head" style="margin-bottom:24px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="width:4px;height:28px;background:linear-gradient(180deg,var(--brand),var(--brand-light));border-radius:2px"></div><div class="section-title">初回セット・補充備品発注フォーム</div></div><div class="section-sub">各項目を入力して発注を送信してください</div></div>';
-
-  // 物件情報カード
-  const infoDone = state.completedSteps['info'];
-  const infoStyle = infoDone ? 'background:rgb(16,185,129);border-radius:12px;color:#fff;font-weight:900;font-size:16px;' : 'background:var(--brand-accent);border-radius:12px;color:var(--brand);font-weight:900;font-size:14px;';
-  html += '<div onclick="openStep(\'info\')" class="task-card'+(infoDone?' done':'')+'">'
-    + '<div class="task-card-icon" style="'+infoStyle+'">'+(infoDone?'✓':'i')+'</div>'
-    + '<div class="task-card-body"><div class="task-card-title">物件情報</div>'
-    + (infoDone ? '<div class="task-card-sub done-text">✓ 完了</div>' : '<div class="task-card-sub">必須 — 物件名・物件番号を入力</div>')
-    + '</div>'
-    + '<div class="task-card-arrow" style="color:#cbd5e1;font-size:20px;">›</div>'
-    + '</div>';
 
   html += '<div class="section-label">必須項目</div>';
   REQUIRED_STEPS.forEach(s => { html += taskCard(s, true); });
@@ -2150,14 +2134,9 @@ function renderStep12() {
   }
   if (!rows) rows = '<div style="text-align:center;padding:20px;color:var(--text-sub)">選択された品目がありません</div>';
   return `<div class="section-head"><div class="section-title">確認・送信</div><div class="section-sub">内容をご確認の上、発注を送信してください</div></div>
-  <div class="summary-card">
-    <div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:8px">物件情報</div>
-    <div class="summary-row"><div class="summary-name">物件名</div><div class="summary-price">${state.property.name||'—'}</div></div>
-    <div class="summary-row"><div class="summary-name">物件番号</div><div class="summary-price">${state.property.number||'—'}</div></div>
-    <div class="summary-row"><div class="summary-name">担当者</div><div class="summary-price">${state.property.contact||'—'}</div></div>
-  </div>
   <div class="summary-total"><div class="total-label">合計金額（目安）</div><div class="total-amount">${fmt(total)}</div></div>
-  <div class="summary-card"><div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:8px">発注品目</div>${rows}</div>`;
+  <div class="summary-card"><div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:8px">発注品目</div>${rows}</div>
+  <button onclick="openStep('hostInfo')" class="btn-submit" style="width:100%;margin-top:16px">📦 この内容で発注する</button>`;
 }
 
 
