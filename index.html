@@ -620,7 +620,7 @@ const CHOICE_DEFS = {
     title:'水切りネット', req:true, reqLabel:'必須',
     opts:[
       {key:'net', label:'水切りネット 兼用 30枚',          ids:['S0001'], img:'https://m.media-amazon.com/images/I/71DFq0Yj-uL._AC_SL1500_.jpg', price:500, priceNote:'(¥250×2個)'},
-      {key:'bag', label:'水切りゴミ袋 浅型排水口用 100枚', ids:['S0065'], img:'', price:520},
+      {key:'bag', label:'水切りゴミ袋 浅型 100枚', ids:['S0065'], img:'', price:520},
     ]
   },
   tissue:{
@@ -633,15 +633,15 @@ const CHOICE_DEFS = {
   toilet_deodor:{
     title:'トイレ消臭スプレー', req:true, reqLabel:'必須 — どちらか選択',
     opts:[
-      {key:'upper', label:'上位モデル 280ml',       ids:['S0090'], img:'https://m.media-amazon.com/images/I/31JbXkKmDsL._AC_PIbundle-24,TopRight,0,0_SH20_.jpg', price:450},
-      {key:'lower', label:'消臭力スプレー 無香料',  ids:['S0096'], img:'https://m.media-amazon.com/images/I/71hmtvdm6vL._AC_SL1500_.jpg', price:380},
+      {key:'upper', label:'上位モデル',       ids:['S0090'], img:'https://m.media-amazon.com/images/I/31JbXkKmDsL._AC_PIbundle-24,TopRight,0,0_SH20_.jpg', price:450},
+      {key:'lower', label:'スタンダード',  ids:['S0096'], img:'https://m.media-amazon.com/images/I/71hmtvdm6vL._AC_SL1500_.jpg', price:380},
     ]
   },
   sanitary_bag:{
     title:'サニタリー用ゴミ袋', req:true, reqLabel:'必須 — どちらか選択',
     opts:[
-      {key:'s1', label:'① 30枚',              ids:['S0091'], img:'https://m.media-amazon.com/images/I/71kXVVl9UpL._AC_SL1500_.jpg', price:320},
-      {key:'s2', label:'② ホテル仕様 100枚',  ids:['S0095'], img:'', price:400, priceNote:'(¥4×100枚)'},
+      {key:'s1', label:'30枚',              ids:['S0091'], img:'https://m.media-amazon.com/images/I/71kXVVl9UpL._AC_SL1500_.jpg', price:320},
+      {key:'s2', label:'100枚',  ids:['S0095'], img:'', price:400, priceNote:'(¥4×100枚)'},
     ]
   },
   room_deodor:{
@@ -649,24 +649,24 @@ const CHOICE_DEFS = {
     opts:[
       {key:'fab_set',  label:'ファブリーズ 本体＋詰替',        ids:['B0208','S0211'], img:'https://m.media-amazon.com/images/I/71BYhPXQPGL._AC_SL1500_.jpg', price:3180, desc:'本体 370ml（B0208）＋ 詰替 1600ml（S0211）'},
       {key:'fab_only', label:'ファブリーズ 詰替のみ',          ids:['S0211'],         img:'https://m.media-amazon.com/images/I/81BwiZbmH3L._AC_SL1500_.jpg', price:2580, desc:'詰替 1600ml（S0211）', note:'⚠️ 本体ボトルはホスト様ご準備'},
-      {key:'shi_set',  label:'清水香 詰替＋ボトル',            ids:['S0200','B0234'], img:'https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg', price:1700, desc:'詰替 1L（S0200）＋ ボトル（B0234）'},
-      {key:'shi_only', label:'清水香 詰替のみ',                ids:['S0200'],         img:'https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg', price:1400, desc:'詰替 1L（S0200）', note:'⚠️ ボトルはホスト様ご準備'},
+      {key:'shi_set',  label:'清水香ボトル＋詰替',            ids:['S0200','B0234'], img:'https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg', price:1700, desc:'詰替 1L（S0200）＋ ボトル（B0234）'},
+      {key:'shi_only', label:'清水香詰替のみ',                ids:['S0200'],         img:'https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg', price:1400, desc:'詰替 1L（S0200）', note:'⚠️ ボトルはホスト様ご準備'},
     ]
   },
   laundry:{
     title:'洗濯洗剤', req:true, reqLabel:'必須 — どれか選択',
     opts:[
-      {key:'attackzero',      label:'アタックZERO 本体＋詰替',        ids:['S0154','S0246'], img:'https://m.media-amazon.com/images/I/81oDXh5sL5L._AC_SL1500_.jpg', price:3170, desc:'本体 580ml（S0154）＋ 詰替 2000ml（S0246）'},
-      {key:'bold',            label:'ボールドジェルボール 詰替 100個', ids:['S0232'],         img:'', price:3480, desc:'ジェルボール 100個入（S0232）'},
-      {key:'attackzero_only', label:'アタックZERO 詰替のみ',          ids:['S0246'],         img:'https://m.media-amazon.com/images/I/81oDXh5sL5L._AC_SL1500_.jpg', price:2380, desc:'詰替 2000ml（S0246）', note:'⚠️ ボトルはホスト様ご準備'},
+      {key:'attackzero',      label:'洗濯洗剤本体＋詰替',        ids:['S0154','S0246'], img:'https://m.media-amazon.com/images/I/81oDXh5sL5L._AC_SL1500_.jpg', price:3170, desc:'本体 580ml（S0154）＋ 詰替 2000ml（S0246）'},
+      {key:'bold',            label:'ジェルボール', ids:['S0249'],         img:'', price:3480, desc:'ジェルボール 100個入（S0249）'},
+      {key:'attackzero_only', label:'詰替のみ',          ids:['S0246'],         img:'https://m.media-amazon.com/images/I/81oDXh5sL5L._AC_SL1500_.jpg', price:2380, desc:'詰替 2000ml（S0246）', note:'⚠️ ボトルはホスト様ご準備'},
     ]
   },
   dishsoap:{
     title:'食器用洗剤', req:true, reqLabel:'必須 — どれか選択',
     opts:[
-      {key:'pump',        label:'本体ポンプ＋業務用詰替',           ids:['S0033','S0014'], img:'https://m.media-amazon.com/images/I/41HoQN9MqRL._AC_.jpg',      price:3680, desc:'本体ポンプ 480ml（S0033）＋ 業務用詰替 4.5L（S0014）'},
-      {key:'stainless',   label:'ステンレスディスペンサー＋業務用詰替', ids:['S0032','S0014'], img:'https://m.media-amazon.com/images/I/61yHUrq13lL._AC_SL1280_.jpg', price:5580, desc:'ステンレスディスペンサー（S0032）＋ 業務用詰替 4.5L（S0014）'},
-      {key:'refill_only', label:'業務用詰替のみ',                   ids:['S0014'],         img:'', price:3180, desc:'業務用詰替 4.5L（S0014）', note:'⚠️ ディスペンサー・容器はホスト様ご準備'},
+      {key:'pump',        label:'キュキュット本体＋詰替',           ids:['S0033','S0014'], img:'https://m.media-amazon.com/images/I/41HoQN9MqRL._AC_.jpg',      price:3680, desc:'本体ポンプ 480ml（S0033）＋ 業務用詰替 4.5L（S0014）'},
+      {key:'stainless',   label:'ステンレスディスペンサー＋詰替', ids:['S0032','S0014'], img:'https://m.media-amazon.com/images/I/61yHUrq13lL._AC_SL1280_.jpg', price:5580, desc:'ステンレスディスペンサー（S0032）＋ 業務用詰替 4.5L（S0014）'},
+      {key:'refill_only', label:'詰替のみ',                   ids:['S0014'],         img:'', price:3180, desc:'業務用詰替 4.5L（S0014）', note:'⚠️ ディスペンサー・容器はホスト様ご準備'},
     ]
   },
   paper_cup:{
@@ -679,7 +679,7 @@ const CHOICE_DEFS = {
   toilet_sheet:{
     title:'トイレ清掃シート', req:true, reqLabel:'必須 — どちらか選択',
     opts:[
-      {key:'quickle',    label:'トイレクイックル 本体＋詰替', ids:['B0103','S0107'], img:'https://m.media-amazon.com/images/I/81XL5d0-TIL._SL1500_.jpg', price:730,  desc:'本体 30枚（B0103）＋ 詰替 20枚（S0107）'},
+      {key:'quickle',    label:'トイレクイックル本体＋詰替', ids:['B0103','S0107'], img:'https://m.media-amazon.com/images/I/81XL5d0-TIL._SL1500_.jpg', price:730,  desc:'本体 30枚（B0103）＋ 詰替 20枚（S0107）'},
       {key:'soujisheat', label:'そうじシート KT20 20枚',      ids:['S0105'],         img:'https://m.media-amazon.com/images/I/71o-y2jcyVS._AC_SL1500_.jpg', price:650},
     ]
   },
@@ -726,7 +726,7 @@ const CHOICE_DEFS = {
   softener:{
     title:'柔軟剤', req:true, reqLabel:'必須 — どちらか選択',
     opts:[
-      {key:'with_bottle', label:'容器付き（ボトル＋詰替）',
+      {key:'with_bottle', label:'柔軟剤ボトル＋詰替',
         ids:['B0248','S0245'],
         img:'https://m.media-amazon.com/images/I/41-u1qTKgwS._AC_SL1500_.jpg',
         price:2500, desc:'柔軟剤容器 1000ml チャコールグレー（B0248）＋ レノア ハピネス 詰替 1380ml（S0245）'},
@@ -742,6 +742,66 @@ const CHOICE_DEFS = {
     opts: [
       { key: 'with_bottle', label: '本体＋詰替', ids: ['B0113','S0114'], price: 2250 },
       { key: 'refill_only', label: '詰替のみ', ids: ['S0114'], price: 1200 },
+    ]
+  },
+  skincare_lotion: {
+    title: '化粧水', req: '推奨',
+    opts: [
+      { key: 'with_disp', label: '化粧水ディスペンサー＋詰替',
+        ids: ['B0070','S0067'],
+        img: 'https://img21.shop-pro.jp/PA01473/149/product/163229981_o1.jpg',
+        price: 6850, desc: '化粧水ディスペンサー（B0070）＋ 化粧水 2L（S0067）' },
+      { key: 'refill_only', label: '詰替のみ',
+        ids: ['S0067'],
+        img: 'https://img21.shop-pro.jp/PA01473/149/product/163230225.jpg',
+        price: 6200, desc: '化粧水 2L（S0067）', note: '⚠️ ディスペンサーはホスト様ご準備ください' },
+    ]
+  },
+  skincare_milk: {
+    title: '乳液', req: '推奨',
+    opts: [
+      { key: 'with_disp', label: '乳液ディスペンサー＋詰替',
+        ids: ['B0071','S0068'],
+        img: 'https://img21.shop-pro.jp/PA01473/149/product/163229981_o1.jpg',
+        price: 6850, desc: '乳液ディスペンサー（B0071）＋ 乳液 2L（S0068）' },
+      { key: 'refill_only', label: '詰替のみ',
+        ids: ['S0068'],
+        img: 'https://img21.shop-pro.jp/PA01473/149/product/163229981.jpg',
+        price: 6200, desc: '乳液 2L（S0068）', note: '⚠️ ディスペンサーはホスト様ご準備ください' },
+    ]
+  },
+  skincare_cleansing: {
+    title: 'クレンジング', req: '推奨',
+    opts: [
+      { key: 'with_disp', label: 'クレンジングディスペンサー＋詰替',
+        ids: ['B0072','S0069'],
+        img: 'https://img21.shop-pro.jp/PA01473/149/product/163229981_o1.jpg',
+        price: 6850, desc: 'クレンジングディスペンサー（B0072）＋ クレンジング 2L（S0069）' },
+      { key: 'refill_only', label: '詰替のみ',
+        ids: ['S0069'],
+        img: 'https://img21.shop-pro.jp/PA01473/149/product/163230279.jpg',
+        price: 6200, desc: 'クレンジング 2L（S0069）', note: '⚠️ ディスペンサーはホスト様ご準備ください' },
+    ]
+  },
+  counter_cloth: {
+    title: 'カウンタークロス', req: '推奨',
+    opts: [
+      { key: 'yamato', label: '大和物産',
+        ids: ['S0066'],
+        img: '', price: 1580, desc: 'カウンタークロス 100枚（S0066）' },
+      { key: 'fuji', label: 'フジスーパー',
+        ids: ['S0035'],
+        img: 'https://m.media-amazon.com/images/I/71m0wXG-UbL._AC_SL1500_.jpg',
+        price: 1500, desc: 'カウンタークロス薄手 100枚（S0035）' },
+    ]
+  },
+  bed_pad: {
+    title: 'ベッドパッド', req: '推奨',
+    opts: [
+      { key: 'p100_upper', label: '100×200 上位', ids: ['B0263'], img: '', price: 0 },
+      { key: 'p120_upper', label: '120×200 上位', ids: ['B0264'], img: '', price: 0 },
+      { key: 'p140_upper', label: '140×200 上位', ids: ['B0265'], img: '', price: 0 },
+      { key: 'p140',       label: '140×200',      ids: ['B0266'], img: '', price: 0 },
     ]
   },
 };
@@ -770,6 +830,14 @@ const SET_DEFS = {
     items: [
       { id: 'B0007', name: '哺乳びん洗い泡スプレー本体 270ml', price: 780, unit: '本' },
       { id: 'S0006', name: '哺乳びん洗い泡スプレー詰替 250ml', price: 680, unit: '本' },
+    ]
+  },
+  jouan_spray: {
+    title: '除菌スプレーセット',
+    req: '推奨',
+    items: [
+      { id: 'S0056', name: 'クイックルジョアン 除菌スプレー本体', price: 450 },
+      { id: 'S0057', name: 'クイックルジョアン 除菌詰替 630ml', price: 600 },
     ]
   },
 };
@@ -832,42 +900,6 @@ const REFILL_CHOICE_DEFS = {
       {key:'refill_only', label:'詰替のみ',
         img:'https://m.media-amazon.com/images/I/51yDOpI5JrL._AC_SL1000_.jpg',
         note:'⚠️ 本体はホスト様ご準備ください'},
-    ]
-  },
-  skincare_lotion:{
-    title:'化粧水', req:'推奨',
-    base:{id:'S0067', name:"化粧水 2L", price:6200, img:'https://img21.shop-pro.jp/PA01473/149/product/163230225.jpg?cmsp_timestamp=20210909111541'},
-    opts:[
-      {key:'with_disp',   label:'ディスペンサー＋詰替',
-        extraId:'B0070', extraName:'化粧水ディスペンサー', extraPrice:650,
-        img:'https://img21.shop-pro.jp/PA01473/149/product/163229981_o1.jpg'},
-      {key:'refill_only', label:'詰替のみ',
-        img:'https://img21.shop-pro.jp/PA01473/149/product/163230225.jpg',
-        note:'⚠️ ディスペンサーはホスト様ご準備ください'},
-    ]
-  },
-  skincare_milk:{
-    title:'乳液', req:'推奨',
-    base:{id:'S0068', name:"乳液 2L", price:6200, img:'https://img21.shop-pro.jp/PA01473/149/product/163229981.jpg?cmsp_timestamp=20210909111233'},
-    opts:[
-      {key:'with_disp',   label:'ディスペンサー＋詰替',
-        extraId:'B0071', extraName:'乳液ディスペンサー', extraPrice:650,
-        img:'https://img21.shop-pro.jp/PA01473/149/product/163229981_o1.jpg'},
-      {key:'refill_only', label:'詰替のみ',
-        img:'https://img21.shop-pro.jp/PA01473/149/product/163229981.jpg',
-        note:'⚠️ ディスペンサーはホスト様ご準備ください'},
-    ]
-  },
-  skincare_cleansing:{
-    title:'クレンジング', req:'推奨',
-    base:{id:'S0069', name:"クレンジング 2L", price:6200, img:'https://img21.shop-pro.jp/PA01473/149/product/163230279.jpg?cmsp_timestamp=20210909111918'},
-    opts:[
-      {key:'with_disp',   label:'ディスペンサー＋詰替',
-        extraId:'B0072', extraName:'クレンジングディスペンサー', extraPrice:650,
-        img:'https://img21.shop-pro.jp/PA01473/149/product/163229981_o1.jpg'},
-      {key:'refill_only', label:'詰替のみ',
-        img:'https://img21.shop-pro.jp/PA01473/149/product/163230279.jpg',
-        note:'⚠️ ディスペンサーはホスト様ご準備ください'},
     ]
   },
 };
@@ -1102,9 +1134,9 @@ function renderStep12() {
   const total = calcTotal();
   let rows = '';
   // 洗濯洗剤
-  if (state.laundryType === 'gel' && (state.quantities['S0232']||0) > 0) {
-    const gi = ITEMS['S0232'];
-    if (gi) rows += '<div class="summary-row"><div class="summary-name"><span style="font-family:var(--mono);font-size:10px;color:#94a3b8">S0232</span> '+gi.name+'</div><div class="summary-qty">'+(state.quantities['S0232']||0)+' 個</div><div class="summary-price">'+fmt(gi.price*(state.quantities['S0232']||0))+'</div></div>';
+  if (state.laundryType === 'gel' && (state.quantities['S0249']||0) > 0) {
+    const gi = ITEMS['S0249'];
+    if (gi) rows += '<div class="summary-row"><div class="summary-name"><span style="font-family:var(--mono);font-size:10px;color:#94a3b8">S0232</span> '+gi.name+'</div><div class="summary-qty">'+(state.quantities['S0249']||0)+' 個</div><div class="summary-price">'+fmt(gi.price*(state.quantities['S0249']||0))+'</div></div>';
   }
   // 詰替選択
   for (const [k, def] of Object.entries(REFILL_CHOICE_DEFS)) {
@@ -2483,7 +2515,7 @@ function renderDashboard() {
     return '<div onclick="openStep(\'optList\')" class="task-card'+(anyDone?' done':'')+'">'
       + checkbox
       + '<div class="task-card-body"><div class="task-card-title">任意追加品目</div>'
-      + '<div class="task-card-sub">'+(doneCnt > 0 ? doneCnt+'カテゴリ選択済み' : '6カテゴリから選択')+'</div>'
+      + '<div class="task-card-sub">'+(doneCnt > 0 ? doneCnt+'カテゴリ選択済み' : '9カテゴリから選択')+'</div>'
       + '</div>'
       + '<div class="task-card-arrow">›</div>'
       + '</div>';
@@ -2598,25 +2630,27 @@ function renderOptionalList() {
 // ══════════════════════════════════════════════
 function renderRecommend() {
   return '<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#fef9c3;border:1px solid #fde68a;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#92400e;letter-spacing:.15em">STEP 2</span></div><div class="section-title">推奨品目</div><div class="section-sub">弊社がお勧めする品目です。追加希望のものを選んでください。不要な場合はスキップできます。</div></div>'
+    + '<div class="subsection"><div class="subsection-title">スキンケア</div>'
+    + choiceCardHTML('skincare_lotion')
+    + choiceCardHTML('skincare_milk')
+    + choiceCardHTML('skincare_cleansing')
+    + '</div>'
     + '<div class="subsection"><div class="subsection-title">キッチン消耗品</div>'
-    + ['S0048','S0083','S0131','S0249'].map(id => itemCardHTML(id)).join('')
+    + ['S0010','S0013','S0029'].map(id => itemCardHTML(id)).join('')
+    + choiceCardHTML('counter_cloth')
     + '</div>'
     + '<div class="subsection"><div class="subsection-title">除菌・消臭</div>'
-    + ['S0215','S0216','S0160'].map(id => itemCardHTML(id)).join('')
-    + '</div>'
-    + '<div class="subsection"><div class="subsection-title">スキンケア</div>'
-    + refillCardHTML('skincare_lotion')
-    + refillCardHTML('skincare_milk')
-    + refillCardHTML('skincare_cleansing')
+    + setCardHTML('jouan_spray')
     + '</div>'
     + '<div class="subsection"><div class="subsection-title">食器・調理器具</div>'
-    + ['B0102','B0121','B0109','B0117','B0120'].map(id => itemCardHTML(id)).join('')
+    + ['B0080','B0089','B0022','B0023','B0026'].map(id => itemCardHTML(id)).join('')
     + '</div>'
     + '<div class="subsection"><div class="subsection-title">洗濯・掃除</div>'
-    + ['B0007','B0146','B0147'].map(id => itemCardHTML(id)).join('')
+    + ['B0244','B0167','B0168','B0135','B0141'].map(id => itemCardHTML(id)).join('')
     + '</div>'
     + '<div class="subsection"><div class="subsection-title">その他設備</div>'
-    + ['B0150','B0186','B0017'].map(id => itemCardHTML(id)).join('')
+    + ['B0161','B0270','B0271','B0272','B0274'].map(id => itemCardHTML(id)).join('')
+    + choiceCardHTML('bed_pad')
     + '</div>';
 }
 
