@@ -723,6 +723,19 @@ const CHOICE_DEFS = {
         price:3120, desc:'本体（B0138）＋ ラタンスティック（S0141）'},
     ]
   },
+  softener:{
+    title:'柔軟剤', req:true, reqLabel:'必須 — どちらか選択',
+    opts:[
+      {key:'with_bottle', label:'容器付き（ボトル＋詰替）',
+        ids:['B0248','S0245'],
+        img:'https://m.media-amazon.com/images/I/41-u1qTKgwS._AC_SL1500_.jpg',
+        price:2500, desc:'柔軟剤容器 1000ml チャコールグレー（B0248）＋ レノア ハピネス 詰替 1380ml（S0245）'},
+      {key:'refill_only', label:'詰替のみ',
+        ids:['S0245'],
+        img:'https://m.media-amazon.com/images/I/81cSWEbOhzL._AC_SL1500_.jpg',
+        price:1380, desc:'レノア ハピネス 詰替 1380ml（S0245）', note:'⚠️ ボトルはホスト様ご準備ください'},
+    ]
+  },
 };
 
 // ─── セット定義 ───
@@ -747,18 +760,7 @@ const SET_DEFS = {
 
 // カビキラー・トイレマジックリンは本体固定＋詰替2択
 const REFILL_CHOICE_DEFS = {
-  softener:{
-    title:'柔軟剤', req:'必須',
-    base:{id:'S0245', name:"レノア ハピネス 詰替 1380ml", price:1380, img:'https://m.media-amazon.com/images/I/81cSWEbOhzL._AC_SL1500_.jpg'},
-    opts:[
-      {key:'with_bottle', label:'容器付き（ボトル＋詰替）',
-        extraId:'B0248', extraName:'柔軟剤容器 1000ml チャコールグレー', extraPrice:1120,
-        img:'https://m.media-amazon.com/images/I/41-u1qTKgwS._AC_SL1500_.jpg'},
-      {key:'refill_only', label:'詰替のみ',
-        img:'https://m.media-amazon.com/images/I/81cSWEbOhzL._AC_SL1500_.jpg',
-        note:'⚠️ ボトルはホスト様ご準備ください'},
-    ]
-  },
+  // softener は CHOICE_DEFS に移動
   kabikiller:{
     title:'カビキラー', req:'必須',
     base:{id:'B0137', name:"カビキラー本体 400ml", price:980, img:'https://m.media-amazon.com/images/I/71q918lUgPL._AC_SL1500_.jpg'},
@@ -1016,33 +1018,44 @@ const FAMILY_STEP    = {key:'family',    label:'ファミリー物件必須', fn
 const OPT_CATS = [
   {
     key: 'amenity',
-    label: 'アメニティ・化粧品',
+    label: 'アメニティ',
     pages: [
-      { title: 'アメニティ・化粧品', fn: function(){ return renderOptAmenityPage1(); } },
+      { title: 'アメニティ', fn: function(){ return renderOptAmenityPage1(); } },
     ]
   },
   {
     key: 'cleaning',
-    label: '清掃・消耗品',
+    label: '清掃',
     pages: [
-      { title: '清掃・消耗品 ① トイレ・ゴミ襲・消臭', fn: function(){ return renderOptCleaningPage1(); } },
-      { title: '清掃・消耗品 ② 掃除機・電球・紙製品・害虫', fn: function(){ return renderOptCleaningPage2(); } },
-    ]
-  },
-  {
-    key: 'kitchen',
-    label: 'キッチン・食器・食品',
-    pages: [
-      { title: 'キッチン・食器 ① キッチン消耗品・食器・カトラリー', fn: function(){ return renderOptKitchenPage1(); } },
-      { title: 'キッチン・食器 ② 調味料・コーヒー・飲料・アルコール', fn: function(){ return renderOptKitchenPage2(); } },
+      { title: '清掃', fn: function(){ return renderOptCleaningPage1(); } },
     ]
   },
   {
     key: 'aroma',
-    label: '芳香・インテリア・特殊オプション',
+    label: '芳香',
     pages: [
-      { title: '芳香・インテリア ① フレグランス・芳香剤・文具・設備', fn: function(){ return renderOptAromaPage1(); } },
-      { title: '芳香・インテリア ② ペット・ベビー・レジャー・サウナ・医療', fn: function(){ return renderOptAromaPage2(); } },
+      { title: '芳香', fn: function(){ return renderOptAromaPage1(); } },
+    ]
+  },
+  {
+    key: 'aroma2',
+    label: '防虫',
+    pages: [
+      { title: '防虫', fn: function(){ return renderOptAromaPage2(); } },
+    ]
+  },
+  {
+    key: 'kitchen',
+    label: '食品・飲料',
+    pages: [
+      { title: '食品・飲料', fn: function(){ return renderOptKitchenPage1(); } },
+    ]
+  },
+  {
+    key: 'kitchen2',
+    label: '食器・カトラリー',
+    pages: [
+      { title: '食器・カトラリー', fn: function(){ return renderOptKitchenPage2(); } },
     ]
   },
   {
@@ -1050,6 +1063,20 @@ const OPT_CATS = [
     label: 'BBQ',
     pages: [
       { title: 'BBQ用品', fn: function(){ return renderOptBBQ(); } },
+    ]
+  },
+  {
+    key: 'sauna',
+    label: 'サウナ',
+    pages: [
+      { title: 'サウナ', fn: function(){ return renderOptSauna(); } },
+    ]
+  },
+  {
+    key: 'pet',
+    label: 'ペット用品',
+    pages: [
+      { title: 'ペット用品', fn: function(){ return renderOptPet(); } },
     ]
   },
 ];
@@ -2688,21 +2715,12 @@ function renderStep1() {
   ${setCardHTML('corocoro')}
   </div>
 
-  <div class="subsection"><div class="subsection-title">床掃除</div>
-  ${refillCardHTML('quickle')}
-  </div>
-
   <div class="subsection"><div class="subsection-title">浴室洗剤</div>
   ${setCardHTML('bath_magic')}
-  ${refillCardHTML('kabikiller')}
   </div>
 
   <div class="subsection"><div class="subsection-title">トイレ用消耗品</div>
   ${['S0092'].map(id => itemCardHTML(id)).join('')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">トイレ洗剤</div>
-  ${refillCardHTML('toilet_magic')}
   </div>
 
   <div class="subsection"><div class="subsection-title">害虫対策</div>
@@ -2753,6 +2771,10 @@ function renderStep2() {
   </div>
   </div>
 
+  <div class="subsection"><div class="subsection-title">床掃除</div>${refillCardHTML('quickle')}</div>
+  <div class="subsection"><div class="subsection-title">浴室洗剤（詰替選択）</div>${refillCardHTML('kabikiller')}</div>
+  <div class="subsection"><div class="subsection-title">トイレ洗剤（詰替選択）</div>${refillCardHTML('toilet_magic')}</div>
+
   <div class="subsection"><div class="subsection-title"> グレード選択品目</div>
 
   <div class="subsection"><div class="subsection-title">シャンプー</div>${gradeGroupHTML(GRADE_GROUPS[0])}</div>
@@ -2763,7 +2785,7 @@ function renderStep2() {
   <div class="subsection"><div class="subsection-title">歯ブラシ</div>${choiceCardHTML('toothbrush')}</div>
   <div class="subsection"><div class="subsection-title">食器用洗剤</div>${choiceCardHTML('dishsoap')}</div>
   <div class="subsection"><div class="subsection-title">洗濯洗剤</div>${choiceCardHTML('laundry')}</div>
-  <div class="subsection"><div class="subsection-title">柔軟剤</div>${refillCardHTML('softener')}</div>
+  <div class="subsection"><div class="subsection-title">柔軟剤</div>${choiceCardHTML('softener')}</div>
   <div class="subsection"><div class="subsection-title">ティッシュペーパー</div>${choiceCardHTML('tissue')}</div>
   <div class="subsection"><div class="subsection-title">室内消臭スプレー</div>${choiceCardHTML('room_deodor')}</div>
   <div class="subsection"><div class="subsection-title">トイレ消臭スプレー</div>${choiceCardHTML('toilet_deodor')}</div>
@@ -2780,75 +2802,81 @@ function renderStep2() {
 
 // アメニティ・化粧品（1ページ）
 function renderOptAmenityPage1() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 1/5</span></div><div class="section-title">アメニティ・化粧品</div><div class="section-sub">バス・洗面用アメニティを選択します。不要な場合は「完了」でスキップできます。</div></div>
-  <div class="subsection"><div class="subsection-title">洗面アメニティ</div>${['S0067','S0068','S0069','S0070'].map(id => itemCardHTML(id)).join('')}</div>
-  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_amenity','アメニティ・化粧品')">このステップをリセット</button></div>`;
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — アメニティ</span></div><div class="section-title">アメニティ</div><div class="section-sub">バス・洗面用アメニティを選択します。不要な場合は「完了」でスキップできます。</div></div>
+  <div class="subsection"><div class="subsection-title">アメニティ品目</div>${['S0126','S0127','S0128','S0129','S0131','S0157','S0253','S0112'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_amenity','アメニティ')">このステップをリセット</button></div>`;
 }
 
-// 清掃・消耗品 ①（トイレ・ゴミ袋・消臭）
+// 清掃（Numbersカテゴリ）
 function renderOptCleaningPage1() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 2/5 ①</span></div><div class="section-title"> 清掃・消耗品 ①</div><div class="section-sub">トイレ清掃道具・ゴミ袋・消臭関連を選択します。</div></div>
-  <div class="subsection"><div class="subsection-title">トイレ清掃シート（追加）</div>${['B0171'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">ゴミ袋（追加）</div>${['S0042','S0230'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">消臭袋</div>${['S0133'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">洗濯関連</div>${['B0087'].map(id => itemCardHTML(id)).join('')}</div>
-  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_cleaning1','清掃・消耗品 ①')">このステップをリセット</button></div>`;
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 清掃</span></div><div class="section-title">清掃</div><div class="section-sub">清掃用品・消耗品を選択します。不要な場合は「完了」でスキップできます。</div></div>
+  <div class="subsection"><div class="subsection-title">浴室・排水</div>${['B0115','S0116','B0135','B0141','S0155','S0156'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">キッチン・衛生</div>${['S0040','S0036','S0236','S0171','B0207'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">ゴミ袋・消臭</div>${['S0009','S0062','S0097','S0030'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">床掃除（追加）</div>${['S0267'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_cleaning1','清掃')">このステップをリセット</button></div>`;
 }
 
-// 清掃・消耗品 ②（掃除機・電球・紙製品・害虫）
+// 清掃ページ2（統合済み、後方互換用）
 function renderOptCleaningPage2() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 2/5 ②</span></div><div class="section-title"> 清掃・消耗品 ②</div><div class="section-sub">掃除機・電球・紙製品・害虫対策用品を選択します。</div></div>
-  <div class="subsection"><div class="subsection-title">掃除機</div>${['E0089','E0148','E0162'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">電球・電池</div>${['S0172','S0173','S0174','S0175','S0176','S0177','S0178','S0179','S0180','S0181'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">紙製品（キッチンペーパー等）</div>${['S0005'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">害虫対策（追加）</div>${['S0035','S0036','S0046','S0053','S0254'].map(id => itemCardHTML(id)).join('')}</div>`;
+  return renderOptCleaningPage1();
 }
 
-// キッチン・食器・食品 ①（キッチン消耗品・食器・カトラリー）
+// 食品・飲料（Numbersカテゴリ）
 function renderOptKitchenPage1() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 3/5 ①</span></div><div class="section-title"> キッチン・食器 ①</div><div class="section-sub">キッチン消耗品・食器・カトラリーを選択します。</div></div>
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 食品・飲料</span></div><div class="section-title">食品・飲料</div><div class="section-sub">食品・飲料・調味料を選択します。不要な場合は「完了」でスキップできます。</div></div>
+  <div class="subsection"><div class="subsection-title">コーヒー・お茶</div>${['S0240','S0042','S0043','S0044','S0045','S0058','S0059','S0061','S0226','S0232'].map(id => itemCardHTML(id)).join('')}</div>
   <div class="subsection"><div class="subsection-title">紙コップ（どちらか選択）</div>${choiceCardHTML('paper_cup')}</div>
-  <div class="subsection"><div class="subsection-title">キッチン消耗品</div>${['S0136','S0255'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">衛生消耗品</div>${['S0161','B0155'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">カトラリー（追加）</div>${['B0097','B0098','B0099','B0100'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0236','S0237'].map(id => itemCardHTML(id)).join('')}</div>`;
+  <div class="subsection"><div class="subsection-title">調味料</div>${['S0237','S0238','S0239','S0241','S0242','S0054'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">飲料水</div>${['S0049','S0050','S0233'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">アルコール</div>${['S0046','S0047','S0048','S0053','S0231'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">軽食・お菓子</div>${['S0243','S0225','S0051','S0052','S0230'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_kitchen1','食品・飲料')">このステップをリセット</button></div>`;
 }
 
-// キッチン・食器・食品 ②（調味料・コーヒー・飲料・アルコール）
+// 食器・カトラリー（Numbersカテゴリ）
 function renderOptKitchenPage2() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 3/5 ②</span></div><div class="section-title"> キッチン・食器 ②</div><div class="section-sub">調味料・コーヒー・飲料・アルコールを選択します。</div></div>
-  <div class="subsection"><div class="subsection-title">調味料</div>${['S0031','S0032','S0045','S0132','S0135','S0213'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">コーヒー・茶類</div>${['S0086','S0197','S0198','S0199','S0200','S0217','S0218','S0219','S0220','S0233','S0244'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">ソフトドリンク</div>${['S0205','S0206','S0214','S0250'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">アルコール</div>${['S0202','S0203','S0204','S0212','S0243'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">食品・軽食</div>${['S0201','S0209','S0210','S0211','S0238'].map(id => itemCardHTML(id)).join('')}</div>`;
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 食器・カトラリー</span></div><div class="section-title">食器・カトラリー</div><div class="section-sub">食器・カトラリーを選択します。不要な場合は「完了」でスキップできます。</div></div>
+  <div class="subsection"><div class="subsection-title">カトラリー</div>${['B0075','B0076','B0077','B0078'].map(id => itemCardHTML(id)).join('')}</div>
+  <div class="subsection"><div class="subsection-title">使い捨てカトラリー</div>${['S0229','S0064'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_kitchen2','食器・カトラリー')">このステップをリセット</button></div>`;
 }
 
-// 芳香・インテリア ①（フレグランス・芳香剤・文具・設備）
+// 芳香（Numbersカテゴリ）
 function renderOptAromaPage1() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 4/5 ①</span></div><div class="section-title"> 芳香・インテリア ①</div><div class="section-sub">フレグランス・芳香剤・文具・設備・収納を選択します。</div></div>
-  <div class="subsection"><div class="subsection-title">無印良品 インテリアフレグランス</div>${choiceCardHTML('muji_citrus')}${choiceCardHTML('muji_woody')}</div>
-  <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0021','B0129'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">文具</div>${['S0019','S0041','B0094','S0127'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">その他設備</div>${['B0182','B0241','S0196'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">収納</div>${['B0023'].map(id => itemCardHTML(id)).join('')}</div>`;
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 芳香</span></div><div class="section-title">芳香</div><div class="section-sub">芳香・フレグランス用品を選択します。不要な場合は「完了」でスキップできます。</div></div>
+  <div class="subsection"><div class="subsection-title">無印良品 インテリアフレグランス（セット選択）</div>${choiceCardHTML('muji_citrus')}${choiceCardHTML('muji_woody')}</div>
+  <div class="subsection"><div class="subsection-title">その他 芳香剤</div>${['B0187','B0199','B0201'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_aroma1','芳香')">このステップをリセット</button></div>`;
 }
 
-// 芳香・インテリア ②（ペット・ベビー・レジャー・サウナ・医療）
+// 防虫（Numbersカテゴリ）
 function renderOptAromaPage2() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 4/5 ②</span></div><div class="section-title"> 芳香・インテリア ②</div><div class="section-sub">ペット・ベビー・レジャー・サウナ・医療安全用品を選択します。</div></div>
-  <div class="subsection"><div class="subsection-title">ペット用品</div>${['S0022','S0037','S0038','S0134'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">子供・ベビー衛生</div>${['S0020','S0024','S0025','B0026','S0195','S0029'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">レジャー・玩具</div>${['S0207','S0208'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">サウナ用アロマオイル</div>${['S0245','S0246','S0247','S0248'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">医療・安全</div>${['S0075','S0126'].map(id => itemCardHTML(id)).join('')}</div>`;
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 防虫</span></div><div class="section-title">防虫</div><div class="section-sub">防虫・害虫対策用品を選択します。不要な場合は「完了」でスキップできます。</div></div>
+  <div class="subsection"><div class="subsection-title">防虫・害虫対策</div>${['S0180','S0181','S0182','S0184','S0235'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_aroma2','防虫')">このステップをリセット</button></div>`;
 }
 
-// BBQ（1ページ）
+// BBQ（Numbersカテゴリ）
 function renderOptBBQ() {
-  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — 5/5</span></div><div class="section-title"> BBQ用品</div><div class="section-sub">BBQ関連用品を選択します。不要な場合は「完了」でスキップできます。</div></div>
-  ${['S0012','S0013','B0014','B0015','S0016','B0018','S0047','B0090','B0091','B0092','S0228','S0229','S0235','B0242'].map(id => itemCardHTML(id)).join('')}
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — BBQ</span></div><div class="section-title">BBQ用品</div><div class="section-sub">BBQ関連用品を選択します。不要な場合は「完了」でスキップできます。</div></div>
+  ${['S0158','S0159','B0002','B0003','S0160','B0162','S0165','B0166','B0015','B0016','S0170','S0171','S0228','B0173'].map(id => itemCardHTML(id)).join('')}
   <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_bbq','BBQ用品')">このステップをリセット</button></div>`;
+}
+
+
+// サウナ（Numbersカテゴリ）
+function renderOptSauna() {
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — サウナ</span></div><div class="section-title">サウナ</div><div class="section-sub">サウナ用アロマオイルを選択します。不要な場合は「完了」でスキップできます。</div></div>
+  <div class="subsection"><div class="subsection-title">サウナ用アロマオイル</div>${['S0174','S0175','S0176','S0177'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_sauna','サウナ')">このステップをリセット</button></div>`;
+}
+
+// ペット用品（Numbersカテゴリ）
+function renderOptPet() {
+  return `<div class="section-head"><div style="display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 14px;margin-bottom:10px"><span style="font-size:10px;font-weight:900;color:#16a34a;letter-spacing:.15em">STEP 3 — ペット用品</span></div><div class="section-title">ペット用品</div><div class="section-sub">ペット用品を選択します。不要な場合は「完了」でスキップできます。</div></div>
+  <div class="subsection"><div class="subsection-title">ペット用品</div>${['S0250','S0254','S0251','S0252'].map(id => itemCardHTML(id)).join('')}</div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center"><button class="btn-step-reset" onclick="showStepResetDialog('opt_pet','ペット用品')">このステップをリセット</button></div>`;
 }
 
 // 後方互換用エイリアス（古い参照が残っている場合のフォールバック）
