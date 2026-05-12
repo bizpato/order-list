@@ -1143,6 +1143,24 @@ function setUnitFamily(idx, value) {
 
 // ── localStorage 永続化 ──
 const LS_KEY = 'bizpato_order_state_v1';
+// 送信済み物件番号を記録するキー（state とは別管理で永続保持）
+const LS_SUBMITTED_KEY = 'bizpato_submitted_props_v1';
+
+// 送信済み物件番号の取得
+function getSubmittedProps() {
+  try { return JSON.parse(localStorage.getItem(LS_SUBMITTED_KEY) || '[]'); } catch(e) { return []; }
+}
+// 物件番号が送信済みかチェック（4桁文字列で比較）
+function isAlreadySubmitted(numbers) {
+  const submitted = getSubmittedProps();
+  return numbers.some(n => submitted.includes(String(n)));
+}
+// 送信済みとして物件番号を記録
+function markAsSubmitted(numbers) {
+  const submitted = getSubmittedProps();
+  numbers.forEach(n => { if (!submitted.includes(String(n))) submitted.push(String(n)); });
+  localStorage.setItem(LS_SUBMITTED_KEY, JSON.stringify(submitted));
+}
 const LS_PERSIST_KEYS = ['quantities','gradeSelections','gradeQty','gradeRefillQty','choiceSelections','choiceQty','setQty','hostChoice','refillChoices','refillQty','completedSteps','cartAdded','familyProperty','property','hostInfo','laundryType','confirmedSelections','confirmedGradeQty','confirmedChoiceQty','confirmedRefillQty','confirmedQty','confirmedSetQty','confirmedSetRefillQty'];
 
 
@@ -2285,6 +2303,66 @@ function nextStep(){
 }
 
 // ─── 送信 ───
+// 2回目送信時のメール誘導画面を表示する
+function showDuplicateSubmitScreen(p, units) {
+  const numUnits = units.length;
+  const isMulti = numUnits > 1;
+  const subjectNumbers = units.map(u => u.number||'').filter(Boolean).join('・');
+  const subjectLabel = isMulti ? (subjectNumbers + '（' + numUnits + '室）') : subjectNumbers;
+  const contactName = p.contactSameAsOwner ? p.owner : (p.contact || p.owner);
+
+  // 変更依頼メール本文テンプレート
+  let changeBody = '【発注内容の変更依頼】\n';
+  changeBody += '============================\n';
+  changeBody += 'ご契約者様名：' + (p.owner||'') + '\n';
+  changeBody += 'ご担当者名：' + (contactName||'') + '\n';
+  changeBody += '連絡先メール：' + (p.email||'') + '\n';
+  changeBody += '物件番号：' + subjectNumbers + '\n';
+  changeBody += '============================\n\n';
+  changeBody += '以下の内容に変更をお願いいたします。\n\n';
+  changeBody += '【変更内容】\n';
+  changeBody += '（変更したい品目・数量・その他をご記入ください）\n\n';
+  changeBody += '例）\n';
+  changeBody += '・〇〇（品番：XXXX）を X個 → Y個 に変更\n';
+  changeBody += '・〇〇（品番：XXXX）を追加 X個\n';
+  changeBody += '・〇〇（品番：XXXX）を削除\n\n';
+  changeBody += '============================\n';
+  changeBody += '送信日時：' + new Date().toLocaleString('ja-JP') + '\n';
+
+  const subject = encodeURIComponent('【変更依頼】' + (p.owner||'') + ' / ' + subjectLabel + ' 発注内容の変更');
+  const bodyEnc = encodeURIComponent(changeBody);
+  const mailto = 'mailto:customer@bizpato.com?cc=' + encodeURIComponent(p.email||'') + '&subject=' + subject + '&body=' + bodyEnc;
+
+  document.getElementById('main-content').innerHTML = `
+    <div style="text-align:center;padding:32px 20px">
+      <div style="font-size:48px;margin-bottom:16px">⚠️</div>
+      <div style="font-size:20px;font-weight:900;margin-bottom:8px;color:var(--brand)">この物件番号は発注済みです</div>
+      <div style="color:var(--text-sub);font-size:13px;margin-bottom:20px;line-height:1.7">
+        物件番号 <span style="font-family:var(--mono);font-weight:800;color:var(--text)">${subjectNumbers}</span> はすでに発注フォームが送信されています。<br>
+        発注内容の変更・追加がある場合は、直接メールにてご連絡ください。
+      </div>
+      <div style="background:#fff8f0;border:1.5px solid #fbbf24;border-radius:14px;padding:16px 20px;text-align:left;margin-bottom:20px">
+        <div style="font-size:12px;font-weight:800;color:#92400e;margin-bottom:8px">📋 変更依頼メールの送り方</div>
+        <div style="font-size:13px;color:#78350f;line-height:1.8">
+          ① 下の「変更依頼メールを送る」ボタンをタップ<br>
+          ② メールアプリが開きます（件名・本文テンプレ入り）<br>
+          ③ 変更内容を記入して送信してください
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius);padding:16px;text-align:left;margin-bottom:24px">
+        <div style="font-size:11px;color:var(--text-sub)">送信先</div>
+        <div style="font-weight:700;margin-bottom:8px;font-family:var(--mono)">customer@bizpato.com</div>
+        <div style="font-size:11px;color:var(--text-sub)">件名（自動入力）</div>
+        <div style="font-weight:700;font-size:13px">【変更依頼】${p.owner||''} / ${subjectLabel} 発注内容の変更</div>
+      </div>
+      <a href="${mailto}" style="display:block;background:var(--brand);color:#fff;font-weight:800;font-size:15px;padding:16px;border-radius:14px;text-decoration:none;margin-bottom:12px">
+        ✉️ 変更依頼メールを送る
+      </a>
+    </div>`;
+  const btnArea = document.getElementById('nav-btns-area');
+  if (btnArea) btnArea.innerHTML = '';
+}
+
 function sendOrderEmail() {
   // 物件情報の必須項目チェック（未入力ならpropInfo画面へ）
   if (!isPropInfoValid()) {
@@ -2302,6 +2380,13 @@ function sendOrderEmail() {
   const contactName = p.contactSameAsOwner ? p.owner : (p.contact || p.owner);
   const units = (p.units || []);
   const numUnits = units.length;
+
+  // ── 送信済みチェック（1物件番号1回制限） ──
+  const allNumbers = units.map(u => u.number||'').filter(Boolean);
+  if (isAlreadySubmitted(allNumbers)) {
+    showDuplicateSubmitScreen(p, units);
+    return;
+  }
   const isMulti = numUnits > 1;
 
   const total = calcTotal();
@@ -2391,6 +2476,9 @@ function sendOrderEmail() {
   const subject = encodeURIComponent('【発注】' + (p.owner||'') + ' / ' + subjectLabel + ' 初回セット・補充備品');
   const bodyEnc = encodeURIComponent(body);
   const mailto = 'mailto:customer@bizpato.com?cc=' + encodeURIComponent(p.email) + '&subject=' + subject + '&body=' + bodyEnc;
+  // 送信済みとして物件番号を記録
+  markAsSubmitted(allNumbers);
+
   window.location.href = mailto;
 
   // 送信完了画面へ
