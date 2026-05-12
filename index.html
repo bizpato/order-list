@@ -956,6 +956,7 @@ const REFILL_CHOICE_DEFS = {
         extraId:'S0192', extraName:'クイックルワイパーウエットシート 20枚', extraPrice:390,
         img:'https://jp.images-monotaro.com/Monotaro3/pi/full/mono11749562-170407-02.jpg'},
       {key:'sheet_only', label:'シートのみ',
+        extraId:'S0192', extraName:'クイックルワイパーウエットシート 20枚', extraPrice:390,
         img:'https://m.media-amazon.com/images/I/81Yzevrr8BL._AC_SL1500_.jpg',
         note:'⚠️ 本体はホスト様ご準備ください'},
     ]
@@ -3295,7 +3296,9 @@ function refillCardHTML(key) {
   const qty = state.refillQty[key] || 0;
   const selOpt = sel ? def.opts.find(function(o){return o.key===sel;}) : null;
   const extraPrice = (selOpt && selOpt.extraId) ? selOpt.extraPrice : 0;
-  const setPrice   = selOpt ? def.base.price + extraPrice : 0;
+  // sheet_onlyは本体不要のため、本体代金を含めずシートのみの価格で計算
+  const _sheetOnly = (selOpt && selOpt.key === 'sheet_only');
+  const setPrice   = selOpt ? (_sheetOnly ? extraPrice : def.base.price + extraPrice) : 0;
   const totalPrice = setPrice * qty;
   const reqBadge = def.req==='必須' ? '<span class="badge badge-essential">必須</span>' :
     def.req==='ファミリー必須' ? '<span class="badge badge-family">ファミリー必須</span>' :
@@ -3318,48 +3321,86 @@ function refillCardHTML(key) {
     const isReqRefill2 = (def.req === '必須' || def.req === 'ファミリー必須');
     const isAdded2 = (state.cartAdded || {})['refill_'+key];
     const optExtra = selOpt.extraId ? selOpt.extraPrice : 0;
-    const optTotal = def.base.price + optExtra;
-
-    detailHTML += '<div style="display:flex;align-items:flex-start;gap:8px;padding:12px;background:#fff;border-radius:12px;margin-top:10px">';
-    // 左：商品情報
-    detailHTML += '<div style="flex:1;min-width:0">';
+    const _isSheetOnly = (selOpt.key === 'sheet_only');
+    // sheet_only時は本体代金を含めずシートのみの価格
+    const optTotal = _isSheetOnly ? optExtra : def.base.price + optExtra;
     if (selOpt.extraId) {
       // 本体行（大）
-      detailHTML += '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border-radius:10px;margin-bottom:6px">';
-      detailHTML += '<img src="'+(def.base.img||NI)+'" onerror="this.onerror=null;this.src=\''+NI+'\';" referrerpolicy="no-referrer" loading="lazy" style="width:52px;height:52px;flex-shrink:0;object-fit:contain;border-radius:8px;background:#fff;border:1px solid #e8edf2">';
+      detailHTML += '<div style="display:flex;align-items:flex-start;gap:8px;padding:12px;background:#fff;border-radius:12px;margin-top:10px">';
+      // 左：商品情報
       detailHTML += '<div style="flex:1;min-width:0">';
-      detailHTML += '<div style="font-size:9px;font-family:var(--mono);color:#94a3b8">'+def.base.id+' <span style="color:var(--text-sub)">本体</span></div>';
-      detailHTML += '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">';
-      detailHTML += '<div style="font-size:12px;font-weight:700;flex:1;min-width:0">'+def.base.name+'</div>';
-      detailHTML += '<div style="flex-shrink:0;font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)">'+fmt(def.base.price)+'</div>';
-      detailHTML += '</div>';
-            const _baseItem = ITEMS[def.base.id];
-      if (_baseItem) detailHTML += '<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:1px">'+_baseItem.brand+'</div>';
-      detailHTML += '</div></div>';
-      // 詰替行（小・インデント）
-      detailHTML += '<div style="margin-left:16px;border-left:2px solid #e8edf2;padding-left:12px">';
-      detailHTML += '<div style="display:flex;align-items:center;gap:10px;padding:6px 8px;background:#f8fafc;border-radius:8px">';
-      detailHTML += '<img src="'+(selOpt.img||NI)+'" onerror="this.onerror=null;this.src=\''+NI+'\';" referrerpolicy="no-referrer" loading="lazy" style="width:40px;height:40px;flex-shrink:0;object-fit:contain;border-radius:6px;background:#fff;border:1px solid #e8edf2">';
-      detailHTML += '<div style="flex:1;min-width:0">';
-      detailHTML += '<div style="font-size:9px;font-family:var(--mono);color:#94a3b8">'+selOpt.extraId+' <span style="color:var(--text-sub)">詰替</span></div>';
-      detailHTML += '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">';
-      detailHTML += '<div style="font-size:11px;font-weight:600;flex:1;min-width:0">'+selOpt.extraName+'</div>';
-      detailHTML += '<div style="flex-shrink:0;font-size:12px;font-weight:800;font-family:var(--mono);color:var(--brand)">'+fmt(selOpt.extraPrice)+'</div>';
-      detailHTML += '</div>';
-      const _refillItem = ITEMS[selOpt.extraId];
-      if (_refillItem && _refillItem.brand) detailHTML += '<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:1px">'+_refillItem.brand+'</div>';
-      detailHTML += '</div></div></div>';
+      if (!_isSheetOnly) {
+        // 本体行（大）
+        detailHTML += '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border-radius:10px;margin-bottom:6px">';
+        detailHTML += '<img src="'+(def.base.img||NI)+'" onerror="this.onerror=null;this.src=\''+NI+'\';" referrerpolicy="no-referrer" loading="lazy" style="width:52px;height:52px;flex-shrink:0;object-fit:contain;border-radius:8px;background:#fff;border:1px solid #e8edf2">';
+        detailHTML += '<div style="flex:1;min-width:0">';
+        detailHTML += '<div style="font-size:9px;font-family:var(--mono);color:#94a3b8">'+def.base.id+' <span style="color:var(--text-sub)">本体</span></div>';
+        detailHTML += '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">';
+        detailHTML += '<div style="font-size:12px;font-weight:700;flex:1;min-width:0">'+def.base.name+'</div>';
+        detailHTML += '<div style="flex-shrink:0;font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)">'+fmt(def.base.price)+'</div>';
+        detailHTML += '</div>';
+        const _baseItem = ITEMS[def.base.id];
+        if (_baseItem) detailHTML += '<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:1px">'+_baseItem.brand+'</div>';
+        detailHTML += '</div></div>';
+        // 詰替行（小・インデント）
+        detailHTML += '<div style="margin-left:16px;border-left:2px solid #e8edf2;padding-left:12px">';
+        detailHTML += '<div style="display:flex;align-items:center;gap:10px;padding:6px 8px;background:#f8fafc;border-radius:8px">';
+        const _refillImgSrc = (ITEMS[selOpt.extraId]?.img) || selOpt.img || NI;
+        detailHTML += '<img src="'+_refillImgSrc+'" onerror="this.onerror=null;this.src=\''+NI+'\';" referrerpolicy="no-referrer" loading="lazy" style="width:40px;height:40px;flex-shrink:0;object-fit:contain;border-radius:6px;background:#fff;border:1px solid #e8edf2">';
+        detailHTML += '<div style="flex:1;min-width:0">';
+        detailHTML += '<div style="font-size:9px;font-family:var(--mono);color:#94a3b8">'+selOpt.extraId+' <span style="color:var(--text-sub)">詰替</span></div>';
+        detailHTML += '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">';
+        detailHTML += '<div style="font-size:11px;font-weight:600;flex:1;min-width:0">'+selOpt.extraName+'</div>';
+        detailHTML += '<div style="flex-shrink:0;font-size:12px;font-weight:800;font-family:var(--mono);color:var(--brand)">'+fmt(selOpt.extraPrice)+'</div>';
+        detailHTML += '</div>';
+        const _refillItem = ITEMS[selOpt.extraId];
+        if (_refillItem && _refillItem.brand) detailHTML += '<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:1px">'+_refillItem.brand+'</div>';
+        detailHTML += '</div></div></div>';
+      } else {
+        // sheet_only：シートのみを大きく表示（本体行なし）
+        detailHTML += '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border-radius:10px">';
+        const _sheetImgSrc = (ITEMS[selOpt.extraId]?.img) || selOpt.img || NI;
+        detailHTML += '<img src="'+_sheetImgSrc+'" onerror="this.onerror=null;this.src=\''+NI+'\';" referrerpolicy="no-referrer" loading="lazy" style="width:52px;height:52px;flex-shrink:0;object-fit:contain;border-radius:8px;background:#fff;border:1px solid #e8edf2">';
+        detailHTML += '<div style="flex:1;min-width:0">';
+        detailHTML += '<div style="font-size:9px;font-family:var(--mono);color:#94a3b8">'+selOpt.extraId+' <span style="color:var(--text-sub)">シート</span></div>';
+        detailHTML += '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">';
+        detailHTML += '<div style="font-size:12px;font-weight:700;flex:1;min-width:0">'+selOpt.extraName+'</div>';
+        detailHTML += '<div style="flex-shrink:0;font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)">'+fmt(selOpt.extraPrice)+'</div>';
+        detailHTML += '</div>';
+        const _sheetItem = ITEMS[selOpt.extraId];
+        if (_sheetItem && _sheetItem.brand) detailHTML += '<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:1px">'+_sheetItem.brand+'</div>';
+        if (selOpt.note) detailHTML += '<div style="font-size:10px;color:var(--amber);margin-top:2px">'+selOpt.note+'</div>';
+        detailHTML += '</div></div>';
+      }
     } else {
       // 詰替のみ行
-      // kids_shampooの詰替のみはextraIdの品目（S0114詰替）を表示
-      const _refillOnlyId   = (key === 'kids_shampoo') ? 'S0114' : def.base.id;
-      const _refillOnlyName = (key === 'kids_shampoo') ? 'ベビー全身泡ソープ詰替 800ml' : def.base.name;
-      const _refillOnlyPrice = (key === 'kids_shampoo') ? 1200 : def.base.price;
-      const _refillOnlyImg  = (key === 'kids_shampoo') ? 'https://m.media-amazon.com/images/I/51yDOpI5JrL._AC_SL1000_.jpg' : (selOpt.img||NI);
+      // kids_shampoo「詰替のみ」→ S0114（詰替）を表示
+      // quickle「シートのみ」→ S0192（シート）を表示（本体B0205ではなく）
+      let _refillOnlyId, _refillOnlyName, _refillOnlyPrice, _refillOnlyImg, _refillOnlyLabel;
+      if (key === 'kids_shampoo') {
+        _refillOnlyId    = 'S0114';
+        _refillOnlyName  = 'ベビー全身泡ソープ詰替 800ml';
+        _refillOnlyPrice = 1200;
+        _refillOnlyImg   = 'https://m.media-amazon.com/images/I/51yDOpI5JrL._AC_SL1000_.jpg';
+        _refillOnlyLabel = '詰替';
+      } else if (key === 'quickle') {
+        // selOpt.extraId(S0192) / extraName / extraPrice / img を使う
+        _refillOnlyId    = selOpt.extraId  || 'S0192';
+        _refillOnlyName  = selOpt.extraName || 'クイックルワイパーウエットシート 20枚';
+        _refillOnlyPrice = selOpt.extraPrice ?? 390;
+        _refillOnlyImg   = selOpt.img || (ITEMS[_refillOnlyId]?.img) || NI;
+        _refillOnlyLabel = 'シート';
+      } else {
+        _refillOnlyId    = def.base.id;
+        _refillOnlyName  = def.base.name;
+        _refillOnlyPrice = def.base.price;
+        _refillOnlyImg   = selOpt.img || NI;
+        _refillOnlyLabel = '詰替';
+      }
       detailHTML += '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border-radius:10px">';
       detailHTML += '<img src="'+_refillOnlyImg+'" onerror="this.onerror=null;this.src=\''+NI+'\';" referrerpolicy="no-referrer" loading="lazy" style="width:52px;height:52px;flex-shrink:0;object-fit:contain;border-radius:8px;background:#fff;border:1px solid #e8edf2">';
       detailHTML += '<div style="flex:1;min-width:0">';
-      detailHTML += '<div style="font-size:9px;font-family:var(--mono);color:#94a3b8">'+_refillOnlyId+' <span style="color:var(--text-sub)">詰替</span></div>';
+      detailHTML += '<div style="font-size:9px;font-family:var(--mono);color:#94a3b8">'+_refillOnlyId+' <span style="color:var(--text-sub)">'+_refillOnlyLabel+'</span></div>';
       detailHTML += '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">';
       detailHTML += '<div style="font-size:12px;font-weight:700;flex:1;min-width:0">'+_refillOnlyName+'</div>';
       detailHTML += '<div style="flex-shrink:0;font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)">'+fmt(_refillOnlyPrice)+'</div>';
