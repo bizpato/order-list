@@ -353,8 +353,8 @@ const ITEMS = {
   'S0037':{id:'S0037',name:"キッチン泡ハイター詰替 1000ml",brand:"花王",price:700,min:1,unit:"個",cat:"キッチン洗浄",req:"必須",img:"https://m.media-amazon.com/images/I/71qx0c1IUrL._AC_SL1500_.jpg"},
   'B0206':{id:'B0206',name:"コロコロクリーナー本体",brand:"レック",price:725,min:1,unit:"個",cat:"ゴミホコリ除去",req:"必須",img:"https://m.media-amazon.com/images/I/61vgsCFJHEL._AC_SL1500_.jpg"},
   'S0210':{id:'S0210',name:"コロコロスペア 3本",brand:"レック",price:480,min:1,unit:"個",cat:"ゴミホコリ除去",req:"必須",img:"https://m.media-amazon.com/images/I/712yN06aaKL._AC_SL1500_.jpg"},
-  'S0094':{id:'S0094',name:"消臭芳香剤トイレ用 本体",brand:"ファブリーズ",price:490,min:1,unit:"個",cat:"トイレ消臭",req:"必須",img:"https://m.media-amazon.com/images/I/819f4eB3FfL._AC_SL1500_.jpg"},
-  'B0093':{id:'B0093',name:"消臭芳香剤トイレ用 詰替 6個",brand:"ファブリーズ",price:1930,min:1,unit:"セット",cat:"トイレ消臭",req:"必須",img:"https://m.media-amazon.com/images/I/81E7-6RFIfL._AC_SL1500_.jpg"},
+  'B0093':{id:'B0093',name:"消臭芳香剤トイレ用 本体",brand:"ファブリーズ",price:490,min:1,unit:"個",cat:"トイレ消臭",req:"必須",img:"https://m.media-amazon.com/images/I/81E7-6RFIfL._AC_SL1500_.jpg"},
+  'S0094':{id:'S0094',name:"消臭芳香剤トイレ用 詰替 6個",brand:"ファブリーズ",price:1930,min:1,unit:"セット",cat:"トイレ消臭",req:"必須",img:"https://m.media-amazon.com/images/I/819f4eB3FfL._AC_SL1500_.jpg"},
   'B0136':{id:'B0136',name:"バスマジックリン本体 350ml",brand:"花王",price:350,min:1,unit:"個",cat:"浴室洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/41+CiIrGt6L._AC_.jpg"},
   'S0139':{id:'S0139',name:"業務用バスマジックリン 4.5L",brand:"花王",price:2180,min:1,unit:"個",cat:"浴室洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/61NNAuZHTpL._AC_SL1500_.jpg"},
   'S0031':{id:'S0031',name:"毎日とりかえスポンジ 30個",brand:"KK物産",price:520,min:1,unit:"個",cat:"キッチン消耗品",req:"必須",img:"https://m.media-amazon.com/images/I/71p4Y1WcCoL._AC_SL1500_.jpg"},
@@ -619,7 +619,7 @@ const NO_IMG_SM = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/20
 function fmt(n){return '¥'+n.toLocaleString();}
 
 // ── 物件情報自動設定対象 ──
-const AUTO_SET_IDS  = new Set(['B0079','B0081','B0082','B0083','B0074','B0084','B0196','B0101','S0094']);
+const AUTO_SET_IDS  = new Set(['B0079','B0081','B0082','B0083','B0074','B0084','B0196','B0101','B0093']);
 const AUTO_SET_GRADE_IDS = new Set(['shampoo','conditioner','bodysoap']);
 const AUTO_SET_CHOICE_KEYS = new Set(['toilet_sheet','toilet_deodor','slipper']);
 const AUTO_SET_SET_KEYS  = new Set(['toilet_fab']);
@@ -888,7 +888,7 @@ const SET_DEFS = {
   },
   toilet_fab:{
     title:'トイレ芳香剤 セット', req:'必須',
-    items:[{id:'S0094',name:'消臭芳香剤トイレ用 本体',price:490},{id:'B0093',name:'消臭芳香剤トイレ用 詰替 6個',price:1930}]
+    items:[{id:'B0093',name:'消臭芳香剤トイレ用 本体',price:490},{id:'S0094',name:'消臭芳香剤トイレ用 詰替 6個',price:1930}]
   },
   bath_magic:{
     title:'バスマジックリン セット', req:'必須',
