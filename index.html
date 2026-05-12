@@ -190,6 +190,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .form-label span.req{color:var(--danger);margin-left:2px}
 .form-input{width:100%;padding:14px 18px;border:1.5px solid #e2e8f0;border-radius:16px;font-size:15px;font-weight:700;color:#334155;font-family:inherit;outline:none;transition:border-color .15s, box-shadow .15s;background:#f8fafc}
 .form-input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(33,83,135,0.1)}
+/* 数字ステッパー */
+.num-stepper{display:flex;align-items:stretch;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:16px;overflow:hidden;transition:border-color .15s, box-shadow .15s}
+.num-stepper:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px rgba(33,83,135,0.1)}
+.num-stepper.invalid{border-color:#fca5a5}
+.num-stepper-btn{width:44px;flex-shrink:0;background:#fff;border:none;font-size:20px;font-weight:900;color:var(--brand);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s;padding:0}
+.num-stepper-btn:hover:not(:disabled){background:var(--brand-base)}
+.num-stepper-btn:active:not(:disabled){background:#dbeafe}
+.num-stepper-btn:disabled{color:#cbd5e1;cursor:not-allowed}
+.num-stepper-btn.minus{border-right:1px solid #e2e8f0}
+.num-stepper-btn.plus{border-left:1px solid #e2e8f0}
+.num-stepper-input{flex:1;min-width:0;width:100%;padding:14px 8px;border:none;background:transparent;font-size:15px;font-weight:800;color:#334155;font-family:var(--mono);text-align:center;outline:none;-moz-appearance:textfield}
+.num-stepper-input::-webkit-outer-spin-button,
+.num-stepper-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .form-card{background:#fff;border-radius:28px;border:1px solid var(--border);box-shadow:rgba(0,0,0,0.04) 0px 1px 6px;overflow:hidden;margin-bottom:20px}
 .form-card-header{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;background:rgb(248,250,252);border-bottom:1px solid #f1f5f9}
 .form-card-title{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
@@ -370,26 +383,26 @@ const ITEMS = {
   'S0145':{id:'S0145',name:"ミレニアム ハンドソープ詰替 1000ml",brand:"ホテルアメニティ",price:1750,min:1,unit:"個",cat:"手洗いミレニアム",img:""},
   'S0150':{id:'S0150',name:"カネヨ5L 無添加泡石鹸",brand:"カネヨ",price:2150,min:1,unit:"個",cat:"バスアメニティ",img:"https://c.superdeal.com/img/large/B07RQTRBJB.jpg"},
   'B0149':{id:'B0149',name:"ミレニアムボトル ハンドソープ 500ml",brand:"ホテルアメニティ",price:650,min:1,unit:"個",cat:"手洗いミレニアム",hostPrep:true,img:"https://essenza.co.jp/?mode=grp&gid=2519021"},
-  'S0001':{id:'S0001',name:"水切りネット 兼用 30枚",brand:"ダストマン",price:250,min:1,unit:"個",cat:"キッチン消耗品",req:"必須",img:"https://amzn.asia/d/047hSk82"},
+  'S0001':{id:'S0001',name:"水切りネット 兼用",brand:"ダストマン",price:250,min:2,unit:"個",cat:"キッチン消耗品",req:"必須",img:"https://amzn.asia/d/047hSk82"},
   'S0065':{id:'S0065',name:"水切りゴミ袋 浅型 100枚",brand:"-",price:520,min:1,unit:"個",cat:"キッチン消耗品",req:"必須",img:""},
   'S0188':{id:'S0188',name:"ティッシュペーパー BOX 5箱",brand:"クリネックス",price:730,min:1,unit:"個",cat:"紙製品",req:"必須",img:"https://m.media-amazon.com/images/I/71Xhy-r7+CL._AC_SL1000_.jpg"},
   'S0203':{id:'S0203',name:"ティッシュペーパー ソフト 5パック",brand:"コアレックス",price:75,min:1,unit:"個",cat:"紙製品",req:"必須",img:"https://m.media-amazon.com/images/I/81uKlGF2c7L._AC_SL1500_.jpg"},
   'S0090':{id:'S0090',name:"トイレ消臭スプレー 上位モデル 280ml",brand:"小林製薬",price:450,min:1,unit:"個",cat:"トイレ消臭",req:"必須",img:"https://m.media-amazon.com/images/I/31JbXkKmDsL._AC_PIbundle-24,TopRight,0,0_SH20_.jpg"},
   'S0096':{id:'S0096',name:"トイレの消臭力スプレー 無香料",brand:"エステー",price:380,min:1,unit:"個",cat:"トイレ消臭",req:"必須",img:"https://m.media-amazon.com/images/I/71hmtvdm6vL._AC_SL1500_.jpg"},
   'S0091':{id:'S0091',name:"サニタリー用ゴミ袋 30枚",brand:"セイケツネットワーク",price:320,min:1,unit:"個",cat:"トイレ用消耗品",req:"必須",img:"https://m.media-amazon.com/images/I/71kXVVl9UpL._AC_SL1500_.jpg"},
-  'S0095':{id:'S0095',name:"サニタリー用ゴミ袋 100枚",brand:"ホテルアメニティ",price:4,min:1,unit:"個",cat:"トイレ用消耗品",req:"必須",img:""},
+  'S0095':{id:'S0095',name:"サニタリー用ゴミ袋",brand:"ホテルアメニティ",price:4,min:100,unit:"個",cat:"トイレ用消耗品",req:"必須",img:""},
   'B0208':{id:'B0208',name:"ファブリーズ本体 370ml",brand:"ファブリーズ",price:600,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/71BYhPXQPGL._AC_SL1500_.jpg"},
   'S0211':{id:'S0211',name:"ファブリーズ詰替 1600ml",brand:"ファブリーズ",price:2580,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/81BwiZbmH3L._AC_SL1500_.jpg"},
   'B0234':{id:'B0234',name:"清水香ボトル",brand:"清水香",price:300,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/81LZrvMy4sL._AC_SL1500_.jpg"},
   'S0200':{id:'S0200',name:"清水香消臭スプレー詰替 1L",brand:"清水香",price:1400,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg"},
   'B0273':{id:'B0273',name:"ビニールスリッパ",brand:"カインズ",price:1100,min:1,unit:"足",cat:"その他",img:"https://amzn.asia/d/03tfn5Z0"},
-  'S0190':{id:'S0190',name:"使い捨てスリッパ EPE ダークグレー 100足",brand:"ホテルアメニティ",price:55,min:1,unit:"袋",cat:"履物",img:"https://www.sintoworld.jp/prod/images/prod_img/60452.jpg#tp"},
-  'S0191':{id:'S0191',name:"使い捨てスリッパ PS スーペリア白 100足",brand:"ホテルアメニティ",price:130,min:1,unit:"袋",cat:"履物",img:"https://www.sintoworld.jp/prod/images/prod_img/60033.jpg#tp"},
+  'S0190':{id:'S0190',name:"使い捨てスリッパ EPE ダークグレー",brand:"ホテルアメニティ",price:55,min:100,unit:"袋",cat:"履物",img:"https://www.sintoworld.jp/prod/images/prod_img/60452.jpg#tp"},
+  'S0191':{id:'S0191',name:"使い捨てスリッパ PS スーペリア白",brand:"ホテルアメニティ",price:130,min:100,unit:"袋",cat:"履物",img:"https://www.sintoworld.jp/prod/images/prod_img/60033.jpg#tp"},
   'S0033':{id:'S0033',name:"食器洗剤本体 キュキュット ポンプ 480ml",brand:"キュキュット",price:500,min:1,unit:"個",cat:"食器洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/41HoQN9MqRL._AC_.jpg"},
   'S0014':{id:'S0014',name:"キュキュット 業務用 4.5L",brand:"花王",price:3180,min:1,unit:"個",cat:"食器洗剤",req:"必須",img:""},
   'S0032':{id:'S0032',name:"ステンレスソープディスペンサー",brand:"HAMILO",price:2400,min:1,unit:"個",cat:"食器洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/61yHUrq13lL._AC_SL1280_.jpg"},
-  'S0124':{id:'S0124',name:"歯ブラシ スタンダード マットシリーズ",brand:"ホテルアメニティ",price:23,min:1,unit:"個",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg#tp"},
-  'S0125':{id:'S0125',name:"歯ブラシ プレミアム リーフシリーズ",brand:"ホテルアメニティ",price:43,min:1,unit:"個",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg#tp"},
+  'S0124':{id:'S0124',name:"歯ブラシ スタンダード マットシリーズ",brand:"ホテルアメニティ",price:23,min:100,unit:"個",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg#tp"},
+  'S0125':{id:'S0125',name:"歯ブラシ プレミアム リーフシリーズ",brand:"ホテルアメニティ",price:43,min:100,unit:"個",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg#tp"},
   'S0038':{id:'S0038',name:"とって付きポリ袋 45L 50枚",brand:"日本サニパック",price:650,min:1,unit:"個",cat:"ゴミ袋",req:"必須",img:"https://m.media-amazon.com/images/I/71JLcf-yIsL._AC_SL1500_.jpg"},
   'S0063':{id:'S0063',name:"ごみ袋 シャカシャカ 45L 200枚",brand:"-",price:2180,min:1,unit:"個",cat:"ゴミ袋",req:"必須",img:""},
   'B0103':{id:'B0103',name:"トイレクイックル本体 30枚",brand:"花王",price:400,min:1,unit:"個",cat:"トイレ清掃シート",req:"必須",img:"https://m.media-amazon.com/images/I/81XL5d0-TIL._SL1500_.jpg"},
@@ -470,25 +483,25 @@ const ITEMS = {
   'S0005':{id:'S0005',name:"哺乳瓶洗浄剤 Milton 36錠",brand:"Milton",price:1680,min:1,unit:"個",cat:"子供ベビー衛生",img:"https://m.media-amazon.com/images/I/61URVzwOYzL._AC_SL1000_.jpg"},
   'B0007':{id:'B0007',name:"哺乳びん洗い泡スプレー本体 270ml",brand:"PIGEON",price:780,min:1,unit:"個",cat:"子供ベビー衛生",img:"https://m.media-amazon.com/images/I/51lD9-3OZlL._AC_SL1000_.jpg"},
   'S0006':{id:'S0006',name:"哺乳びん洗い泡スプレー詰替 250ml",brand:"PIGEON",price:680,min:1,unit:"個",cat:"子供ベビー衛生",img:"https://m.media-amazon.com/images/I/51eHts4B9xL._AC_SL1000_.jpg"},
-  'S0041':{id:'S0041',name:"赤ちゃん用純水 500ml 24本",brand:"ピジョン",price:146,min:1,unit:"個",cat:"子供ベビー衛生",img:"https://m.media-amazon.com/images/I/71TFwav6bGL._AC_SL1500_.jpg"},
-  'S0130':{id:'S0130',name:"子供用アメニティセット",brand:"ホテルアメニティ",price:220,min:1,unit:"個",cat:"洗面アメニティ子供用",img:"https://www.sintoworld.jp/prod/images/prod_img/JK-SET12.jpg#tp"},
-  'S0132':{id:'S0132',name:"子供用ボディスポンジ アヒル",brand:"ホテルアメニティ",price:27,min:1,unit:"個",cat:"洗面アメニティ子供用",img:""},
-  'S0133':{id:'S0133',name:"子供用歯ブラシ イエロー",brand:"ミスターフレンドリー",price:55,min:1,unit:"個",cat:"洗面アメニティ子供用",img:"https://prospe.net/uploads/product/aa8fd3df526adebee5eb8d4fe3ecd0bf.jpg"},
-  'S0134':{id:'S0134',name:"子供用歯ブラシ ブルー",brand:"ミスターフレンドリー",price:55,min:1,unit:"個",cat:"洗面アメニティ子供用",img:"https://prospe.net/uploads/product/aa8fd3df526adebee5eb8d4fe3ecd0bf.jpg"},
+  'S0041':{id:'S0041',name:"赤ちゃん用純水 500ml",brand:"ピジョン",price:146,min:24,unit:"個",cat:"子供ベビー衛生",img:"https://m.media-amazon.com/images/I/71TFwav6bGL._AC_SL1500_.jpg"},
+  'S0130':{id:'S0130',name:"子供用アメニティセット",brand:"ホテルアメニティ",price:220,min:100,unit:"個",cat:"洗面アメニティ子供用",img:"https://www.sintoworld.jp/prod/images/prod_img/JK-SET12.jpg#tp"},
+  'S0132':{id:'S0132',name:"子供用ボディスポンジ アヒル",brand:"ホテルアメニティ",price:27,min:100,unit:"個",cat:"洗面アメニティ子供用",img:""},
+  'S0133':{id:'S0133',name:"子供用歯ブラシ イエロー",brand:"ミスターフレンドリー",price:55,min:100,unit:"個",cat:"洗面アメニティ子供用",img:"https://prospe.net/uploads/product/aa8fd3df526adebee5eb8d4fe3ecd0bf.jpg"},
+  'S0134':{id:'S0134',name:"子供用歯ブラシ ブルー",brand:"ミスターフレンドリー",price:55,min:100,unit:"個",cat:"洗面アメニティ子供用",img:"https://prospe.net/uploads/product/aa8fd3df526adebee5eb8d4fe3ecd0bf.jpg"},
   'S0223':{id:'S0223',name:"飛行機グライダー工作キット 24個",brand:"ディズニー",price:1880,min:1,unit:"個",cat:"レジャー玩具",img:"https://m.media-amazon.com/images/I/81s6feJ1cJL._AC_SL1500_.jpg"},
   'S0224':{id:'S0224',name:"タケコプター玩具 10個セット",brand:"小槌の竹とんぼ",price:1290,min:1,unit:"個",cat:"レジャー玩具",img:"https://m.media-amazon.com/images/I/71D-lRfqlxL._AC_SL1500_.jpg"},
-  'S0126':{id:'S0126',name:"ボディースポンジ",brand:"ホテルアメニティ",price:28,min:1,unit:"個",cat:"洗面アメニティ",img:"https://www.sintoworld.jp/prod/images/prod_img/8000801.jpg#tp"},
-  'S0127':{id:'S0127',name:"コットンセット",brand:"ホテルアメニティ",price:21,min:1,unit:"個",cat:"洗面アメニティ",img:"https://www.sintoworld.jp/prod/images/prod_img/8002510.jpg#tp"},
-  'S0128':{id:'S0128',name:"カミソリ",brand:"ホテルアメニティ",price:19,min:1,unit:"個",cat:"洗面アメニティ",img:"https://www.sintoworld.jp/prod/images/prod_img/8000705.jpg#tp"},
-  'S0129':{id:'S0129',name:"ヘアブラシ",brand:"ホテルアメニティ",price:25,min:1,unit:"個",cat:"洗面アメニティ",img:"https://www.sintoworld.jp/prod/images/prod_img/8060009.jpg#tp"},
-  'S0131':{id:'S0131',name:"スキンケアキット",brand:"ホテルアメニティ",price:140,min:1,unit:"個",cat:"洗面アメニティ",img:""},
-  'S0157':{id:'S0157',name:"耳栓 ブラック",brand:"ホテルアメニティ",price:18,min:1,unit:"個",cat:"医療安全",img:"https://www.sintoworld.jp/prod/images/prod_img/dummy.jpg#tp"},
+  'S0126':{id:'S0126',name:"ボディースポンジ",brand:"ホテルアメニティ",price:28,min:100,unit:"個",cat:"洗面アメニティ",img:"https://www.sintoworld.jp/prod/images/prod_img/8000801.jpg#tp"},
+  'S0127':{id:'S0127',name:"コットンセット",brand:"ホテルアメニティ",price:21,min:100,unit:"個",cat:"洗面アメニティ",img:"https://www.sintoworld.jp/prod/images/prod_img/8002510.jpg#tp"},
+  'S0128':{id:'S0128',name:"カミソリ",brand:"ホテルアメニティ",price:19,min:100,unit:"個",cat:"洗面アメニティ",img:"https://www.sintoworld.jp/prod/images/prod_img/8000705.jpg#tp"},
+  'S0129':{id:'S0129',name:"ヘアブラシ",brand:"ホテルアメニティ",price:25,min:100,unit:"個",cat:"洗面アメニティ",img:"https://www.sintoworld.jp/prod/images/prod_img/8060009.jpg#tp"},
+  'S0131':{id:'S0131',name:"スキンケアキット",brand:"ホテルアメニティ",price:140,min:100,unit:"個",cat:"洗面アメニティ",img:""},
+  'S0157':{id:'S0157',name:"耳栓 ブラック",brand:"ホテルアメニティ",price:18,min:100,unit:"個",cat:"医療安全",img:"https://www.sintoworld.jp/prod/images/prod_img/dummy.jpg#tp"},
   'S0253':{id:'S0253',name:"絆創膏セット 100枚",brand:"リバテープ製薬",price:780,min:1,unit:"個",cat:"医療安全",img:"https://m.media-amazon.com/images/I/711Wx5Fvu0L._AC_SL1500_.jpg"},
   'B0115':{id:'B0115',name:"バス水切りワイパー",brand:"アズマ",price:680,min:1,unit:"個",cat:"浴室清掃道具",img:"https://m.media-amazon.com/images/I/518wPuwWBgS._AC_SL1500_.jpg"},
   'S0116':{id:'S0116',name:"パイプユニッシュ 800g",brand:"ジョンソン",price:590,min:1,unit:"g",cat:"浴室清掃道具",img:"https://m.media-amazon.com/images/I/71LJsEX7zjL._AC_SL1500_.jpg"},
   'S0155':{id:'S0155',name:"ファブリーズ 防カビ消臭剤風呂用 4個",brand:"-",price:980,min:1,unit:"個",cat:"浴室洗剤",img:""},
   'S0156':{id:'S0156',name:"キーラ サンスター 水垢落とし",brand:"-",price:1280,min:1,unit:"個",cat:"浴室洗剤",img:""},
-  'S0112':{id:'S0112',name:"フェイスタオル 使い捨て",brand:"ホテルアメニティ",price:45,min:1,unit:"個",cat:"タオル",img:"https://jp.images-monotaro.com/Monotaro3/pi/full/mono57588589-200909-04.jpg"},
+  'S0112':{id:'S0112',name:"フェイスタオル 使い捨て",brand:"ホテルアメニティ",price:45,min:100,unit:"個",cat:"タオル",img:"https://jp.images-monotaro.com/Monotaro3/pi/full/mono57588589-200909-04.jpg"},
   'S0040':{id:'S0040',name:"マジックリン厨房油汚れ 業務用4.5L",brand:"花王",price:2400,min:1,unit:"個",cat:"キッチン洗浄",img:"https://m.media-amazon.com/images/I/81ago7Fw3EL._AC_SL1500_.jpg"},
   'S0036':{id:'S0036',name:"ニトリル使い捨て手袋 ブルー L 100枚",brand:"宇都宮製作",price:900,min:1,unit:"個",cat:"衛生消耗品",img:"https://m.media-amazon.com/images/I/61g2wXe-QRL._AC_SX679_PIbundle-30,TopRight,0,0_SH20_.jpg"},
   'S0236':{id:'S0236',name:"激落ちくん キューブ 120個",brand:"-",price:880,min:1,unit:"個",cat:"キッチン消耗品",img:""},
@@ -518,7 +531,7 @@ const ITEMS = {
   'S0186':{id:'S0186',name:"両面テープ コマンドタブ L 40枚",brand:"3M",price:800,min:1,unit:"個",cat:"文具",img:"https://m.media-amazon.com/images/I/71btB-W42KL._SL1500_.jpg"},
   'S0189':{id:'S0189',name:"両面テープ ひっつき虫",brand:"コクヨ",price:800,min:1,unit:"セット",cat:"文具",img:"https://m.media-amazon.com/images/I/61ib716u8jL._SL1080_.jpg"},
   'B0195':{id:'B0195',name:"レザークリアーファイル",brand:"キングジム",price:1680,min:1,unit:"個",cat:"文具",img:"https://m.media-amazon.com/images/I/4141cY43lpL._AC_SL1000_.jpg"},
-  'S0198':{id:'S0198',name:"ボールペン",brand:"Mon amulette",price:40,min:1,unit:"セット",cat:"文具",img:"https://m.media-amazon.com/images/I/71yp7aS0kSL._AC_SL1500_.jpg"},
+  'S0198':{id:'S0198',name:"ボールペン",brand:"Mon amulette",price:40,min:10,unit:"セット",cat:"文具",img:"https://m.media-amazon.com/images/I/71yp7aS0kSL._AC_SL1500_.jpg"},
   'B0169':{id:'B0169',name:"南京錠",brand:"-",price:980,min:1,unit:"個",cat:"その他設備",img:"https://m.media-amazon.com/images/I/51JYBr2CpnL._AC_SL1500_.jpg"},
   'B0172':{id:'B0172',name:"セキュリティキーボックス 4桁",brand:"-",price:2180,min:1,unit:"個",cat:"その他設備",img:""},
   'S0178':{id:'S0178',name:"ECOバイオエタノール 18L",brand:"ヒロバゼロ",price:8900,min:1,unit:"個",cat:"その他設備",img:"https://m.media-amazon.com/images/I/61jMWj-BtRL._SL1000_.jpg"},
@@ -542,10 +555,10 @@ const ITEMS = {
   'S0229':{id:'S0229',name:"木製フォーク 個包装 100本",brand:"-",price:1280,min:1,unit:"個",cat:"カトラリー",img:""},
   'S0064':{id:'S0064',name:"竹製丸箸 個包装 100膳",brand:"-",price:580,min:1,unit:"個",cat:"カトラリー",img:""},
   'S0240':{id:'S0240',name:"スティックシュガー 100本",brand:"三井製糖",price:389,min:1,unit:"個",cat:"コーヒー茶類",img:"https://m.media-amazon.com/images/I/61pa-vWTbUL._AC_SL1200_.jpg"},
-  'S0042':{id:'S0042',name:"ホテルブレンド豆 2kg",brand:"ドリップコーヒーファクトリー",price:1600,min:1,unit:"個",cat:"コーヒー茶類",img:"https://m.media-amazon.com/images/I/61WJVG1J6cL._AC_SL1200_.jpg"},
+  'S0042':{id:'S0042',name:"ホテルブレンド豆 2kg",brand:"ドリップコーヒーファクトリー",price:1600,min:2,unit:"個",cat:"コーヒー茶類",img:"https://m.media-amazon.com/images/I/61WJVG1J6cL._AC_SL1200_.jpg"},
   'S0011':{id:'S0011',name:"紙コップ 150ml 100個",brand:"ヘイコー",price:500,min:1,unit:"個",cat:"コーヒー飲料備品",img:"https://m.media-amazon.com/images/I/810GHCfnjcL._AC_SL1500_.jpg"},
   'S0227':{id:'S0227',name:"紙コップ柄付き 205ml 50個",brand:"-",price:380,min:1,unit:"個",cat:"コーヒー飲料備品",img:""},
-  'S0043':{id:'S0043',name:"コーヒーフィルター 300枚",brand:"パール金属",price:375,min:1,unit:"個",cat:"コーヒー飲料備品",img:"https://m.media-amazon.com/images/I/713wA5ORBSL._AC_SL1500_.jpg"},
+  'S0043':{id:'S0043',name:"コーヒーフィルター",brand:"パール金属",price:375,min:4,unit:"個",cat:"コーヒー飲料備品",img:"https://m.media-amazon.com/images/I/713wA5ORBSL._AC_SL1500_.jpg"},
   'S0044':{id:'S0044',name:"リプトン 紅茶 120袋",brand:"リプトン",price:1750,min:1,unit:"個",cat:"コーヒー茶類",img:"https://m.media-amazon.com/images/I/61GVTreVT4L._AC_SL1200_.jpg"},
   'S0045':{id:'S0045',name:"緑茶 ティーバッグ 100個",brand:"茶つみの里",price:1550,min:1,unit:"個",cat:"コーヒー茶類",img:"https://m.media-amazon.com/images/I/71pHuwHKXZL._AC_SL1500_.jpg"},
   'S0058':{id:'S0058',name:"ドルチェグスト カプセル 60P",brand:"Perhe",price:5170,min:1,unit:"個",cat:"コーヒー茶類",img:"https://m.media-amazon.com/images/I/819hu1TjXfL._AC_SL1500_.jpg"},
@@ -579,10 +592,10 @@ const ITEMS = {
   'B0187':{id:'B0187',name:"CULTI TESSUTO ディフューザー 1000ml",brand:"CULTI",price:12000,min:1,unit:"個",cat:"芳香空間演出",img:"https://m.media-amazon.com/images/I/31xl8cCqJ-L._AC_SL1001_.jpg"},
   'B0199':{id:'B0199',name:"清水香 ウッディーグリーン ディスペンサー 250ml",brand:"清水香",price:1680,min:1,unit:"個",cat:"芳香空間演出",img:"https://m.media-amazon.com/images/I/81LZrvMy4sL._AC_SL1500_.jpg"},
   'B0201':{id:'B0201',name:"リードディフューザー ハピネスの香り 300ml",brand:"不二貿易",price:2000,min:1,unit:"個",cat:"芳香空間演出",img:"https://m.media-amazon.com/images/I/71zLtLdvW2L._AC_SL1500_.jpg"},
-  'S0158':{id:'S0158',name:"着火剤",brand:"NorwegianStyle",price:25,min:1,unit:"個",cat:"BBQ",img:"https://m.media-amazon.com/images/I/61j-8953VHL._AC_SL1200_.jpg"},
+  'S0158':{id:'S0158',name:"着火剤",brand:"NorwegianStyle",price:25,min:100,unit:"個",cat:"BBQ",img:"https://m.media-amazon.com/images/I/61j-8953VHL._AC_SL1200_.jpg"},
   'S0159':{id:'S0159',name:"チャッカマン",brand:"東海",price:380,min:1,unit:"個",cat:"BBQ",img:"https://m.media-amazon.com/images/I/51GtwWfMBNL._AC_SL1500_.jpg"},
-  'B0002':{id:'B0002',name:"BBQ網",brand:"ゴジマル東京",price:300,min:1,unit:"セット",cat:"BBQ",hostPrep:true,img:"https://m.media-amazon.com/images/I/61Kf1u5aUtL._AC_SL1000_.jpg"},
-  'B0003':{id:'B0003',name:"耐熱アルミ皿 700ml",brand:"ziureunt",price:80,min:1,unit:"セット",cat:"BBQ",img:"https://m.media-amazon.com/images/I/71H8O0hUdeL._AC_SL1500_.jpg"},
+  'B0002':{id:'B0002',name:"BBQ網",brand:"ゴジマル東京",price:300,min:5,unit:"セット",cat:"BBQ",hostPrep:true,img:"https://m.media-amazon.com/images/I/61Kf1u5aUtL._AC_SL1000_.jpg"},
+  'B0003':{id:'B0003',name:"耐熱アルミ皿 700ml",brand:"ziureunt",price:80,min:10,unit:"セット",cat:"BBQ",img:"https://m.media-amazon.com/images/I/71H8O0hUdeL._AC_SL1500_.jpg"},
   'S0160':{id:'S0160',name:"BBQガスボンベ Weber OD缶",brand:"Weber",price:1600,min:1,unit:"個",cat:"BBQ",img:"https://m.media-amazon.com/images/I/61WItLfiZDL._AC_SL1500_.jpg"},
   'B0162':{id:'B0162',name:"ファイヤーグローブ",brand:"MinistoreDirect",price:1100,min:1,unit:"個",cat:"BBQ",hostPrep:true,img:"https://m.media-amazon.com/images/I/71nV3H-oXiL._SL1500_.jpg"},
   'S0165':{id:'S0165',name:"最高級炭 15kg",brand:"炭",price:2500,min:1,unit:"個",cat:"BBQ",img:"https://m.media-amazon.com/images/I/81wrcwBsEJL._AC_SL1500_.jpg"},
@@ -988,7 +1001,10 @@ const REFILL_CHOICE_DEFS = {
 
 const state = {
   currentStep: 0,
-  property: {name:'',number:'',owner:'',contact:'',contactSameAsOwner:false,email:'',maxGuests:0,bathrooms:0,toilets:0,isFamily:null},
+  property: {owner:'',contact:'',contactSameAsOwner:false,email:'',
+    numUnits:1,
+    units:[{number:'',maxGuests:0,bathrooms:0,toilets:0,isFamily:null}]
+  },
   hostInfo: {propName:'',propNum:'',owner:'',contact:'',email:''},
   quantities: {},      // id→数量（通常品目＋バーチャルID）
   gradeSelections: {}, // グループid→grade
@@ -1016,6 +1032,114 @@ const state = {
   currentOptCat: '',
   optCatSubPage: 0,  // カテゴリ内サブページ番号（0始まり）
 };
+
+// ── 物件情報：複数室の合算値を返すgetter ──
+function _setupPropertyGetters() {
+  // 既に定義済みなら何もしない
+  if (Object.getOwnPropertyDescriptor(state.property, 'maxGuests')?.get) return;
+  // 既存のプロパティを削除（getterを上書きできるように）
+  ['maxGuests','bathrooms','toilets','number','isFamily','familyUnitCount','familyBathrooms'].forEach(k => {
+    try { delete state.property[k]; } catch(e) {}
+  });
+  Object.defineProperty(state.property, 'maxGuests', {
+    get() { return (this.units||[]).reduce((s,u)=>s+(parseInt(u.maxGuests)||0),0); },
+    configurable: true
+  });
+  Object.defineProperty(state.property, 'bathrooms', {
+    get() { return (this.units||[]).reduce((s,u)=>s+(parseInt(u.bathrooms)||0),0); },
+    configurable: true
+  });
+  Object.defineProperty(state.property, 'toilets', {
+    get() { return (this.units||[]).reduce((s,u)=>s+(parseInt(u.toilets)||0),0); },
+    configurable: true
+  });
+  // 物件番号：複数室の場合カンマ区切り（1件目）。メールなどで利用
+  Object.defineProperty(state.property, 'number', {
+    get() {
+      const arr = (this.units||[]).map(u => (u.number||'').trim()).filter(Boolean);
+      return arr.join('・');
+    },
+    configurable: true
+  });
+  // ファミリー判定：全物件のいずれかがファミリーならtrue
+  // 全物件が "いいえ" なら false、未選択ありなら null
+  Object.defineProperty(state.property, 'isFamily', {
+    get() {
+      const us = this.units||[];
+      if (us.length === 0) return null;
+      const vals = us.map(u => u.isFamily);
+      if (vals.some(v => v === null || v === undefined)) return null;
+      return vals.some(v => v === true);
+    },
+    configurable: true
+  });
+  // ファミリー物件の数
+  Object.defineProperty(state.property, 'familyUnitCount', {
+    get() {
+      return (this.units||[]).filter(u => u.isFamily === true).length;
+    },
+    configurable: true
+  });
+  // ファミリー物件のバス数合計
+  Object.defineProperty(state.property, 'familyBathrooms', {
+    get() {
+      return (this.units||[]).filter(u => u.isFamily === true).reduce((s,u)=>s+(parseInt(u.bathrooms)||0),0);
+    },
+    configurable: true
+  });
+}
+_setupPropertyGetters();
+
+// 室数を変更（units配列を伸縮）
+function setNumUnits(n) {
+  n = parseInt(n, 10) || 1;
+  if (n < 1) n = 1;
+  if (n > 20) n = 20;
+  state.property.numUnits = n;
+  const cur = state.property.units || [];
+  if (n > cur.length) {
+    for (let i = cur.length; i < n; i++) cur.push({number:'',maxGuests:0,bathrooms:0,toilets:0,isFamily:null});
+  } else if (n < cur.length) {
+    cur.length = n;
+  }
+  state.property.units = cur;
+  autoSetPropertyQty();
+  saveState();
+  render(true);
+}
+
+// 物件項目のステッパー操作
+function stepUnitField(idx, field, delta, min, max) {
+  if (!state.property.units || !state.property.units[idx]) return;
+  const cur = parseInt(state.property.units[idx][field]) || 0;
+  let next = cur + delta;
+  if (typeof min === 'number' && next < min) next = min;
+  if (typeof max === 'number' && next > max) next = max;
+  state.property.units[idx][field] = next;
+  if (field === 'maxGuests') autoSetSlipperQty();
+  autoSetPropertyQty();
+  saveState();
+  render();
+}
+function setUnitField(idx, field, value, min, max) {
+  if (!state.property.units || !state.property.units[idx]) return;
+  let v = parseInt(value);
+  if (isNaN(v)) v = 0;
+  if (typeof min === 'number' && v < min && v !== 0) v = min;
+  if (typeof max === 'number' && v > max) v = max;
+  state.property.units[idx][field] = v;
+  if (field === 'maxGuests') autoSetSlipperQty();
+  updatePropInfoBtn();
+}
+
+// 物件のファミリー判定（物件ごと）
+function setUnitFamily(idx, value) {
+  if (!state.property.units || !state.property.units[idx]) return;
+  state.property.units[idx].isFamily = value;
+  autoSetPropertyQty();
+  saveState();
+  render();
+}
 
 // ── localStorage 永続化 ──
 const LS_KEY = 'bizpato_order_state_v1';
@@ -1059,7 +1183,14 @@ function doReset() {
   state.confirmedSetRefillQty = {};
   state.view = 'dashboard';
   state.stepIndex = 0;
-  state.property = {name:'',number:'',contact:'',email:'',maxGuests:0,bathrooms:0,toilets:0,isFamily:null};
+  // 物件情報リセット（getterを維持するため再代入ではなく個別初期化）
+  state.property.owner = '';
+  state.property.contact = '';
+  state.property.contactSameAsOwner = false;
+  state.property.email = '';
+  state.property.numUnits = 1;
+  state.property.units = [{number:'',maxGuests:0,bathrooms:0,toilets:0,isFamily:null}];
+  _setupPropertyGetters();
   state.propertyInfo = {};
   state.senderInfo = {};
   initDefaults();
@@ -1213,13 +1344,37 @@ function loadState() {
     const data = JSON.parse(raw);
     LS_PERSIST_KEYS.forEach(function(k){
       if (data[k] !== undefined) {
-        if (typeof state[k] === 'object' && state[k] !== null && !Array.isArray(state[k])) {
+        if (k === 'property') {
+          // property は getter があるので個別マージ（getter化されたフィールドは代入無視）
+          const p = data.property || {};
+          ['owner','contact','contactSameAsOwner','email','numUnits','units','name'].forEach(function(field){
+            if (p[field] !== undefined) state.property[field] = p[field];
+          });
+          // 旧形式（units なし）からの移行：単室として初期化、旧 isFamily は1物件目に引き継ぐ
+          if (!Array.isArray(state.property.units) || state.property.units.length === 0) {
+            state.property.units = [{
+              number: p.number || '',
+              maxGuests: p.maxGuests || 0,
+              bathrooms: p.bathrooms || 0,
+              toilets: p.toilets || 0,
+              isFamily: (p.isFamily === true || p.isFamily === false) ? p.isFamily : null,
+            }];
+            state.property.numUnits = 1;
+          } else {
+            // 各 unit に isFamily が欠けている場合は null で補完
+            state.property.units.forEach(function(u){
+              if (u.isFamily === undefined) u.isFamily = null;
+            });
+          }
+        } else if (typeof state[k] === 'object' && state[k] !== null && !Array.isArray(state[k])) {
           Object.assign(state[k], data[k]);
         } else {
           state[k] = data[k];
         }
       }
     });
+    // getter再セット（safety）
+    _setupPropertyGetters();
   } catch(e) {}
 }
 
@@ -1616,12 +1771,9 @@ function render(scrollToTop) {
       const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='none';
     },10);
   } else if (v === 'info') {
-    html = renderPropertyInfo();
-    (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='物件情報';})();
-    (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
-    (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
-    (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-    setTimeout(function(){const ft=document.querySelector('.footer');if(ft)ft.style.display='';},10);
+    // 旧 info ビューは廃止。propInfo へリダイレクト
+    state.view = 'propInfo';
+    return render(scrollToTop);
   } else if (v === 'hostInfo') {
     // 旧モーダルビューは廃止。物件情報画面へリダイレクト
     state.view = 'step';
@@ -1780,6 +1932,65 @@ function autoSetPropertyQty() {
   const maxG  = parseInt(state.property && state.property.maxGuests)  || 0;
   const baths = parseInt(state.property && state.property.bathrooms)  || 0;
   const wcs   = parseInt(state.property && state.property.toilets)    || 0;
+  const numUnits = (state.property && state.property.units && state.property.units.length) || 1;
+
+  // ── 室数連動（各物件に1個ずつ必要な品目）──
+  // 物件ごとに1個ずつ必要な必須品目（人数・バス・トイレ数の影響を受けないもの）
+  if (numUnits > 0) {
+    if (!state.quantities) state.quantities = {};
+    if (!state.confirmedQty) state.confirmedQty = {};
+    if (!state.setQty) state.setQty = {};
+    if (!state.confirmedSetQty) state.confirmedSetQty = {};
+    // 単品（必須）
+    [
+      // STEP1-1
+      'S0031','S0092','S0179','S0183','B0140','B0212',
+      // STEP1-2 調理器具
+      'B0017','B0018','B0019','B0020','B0021','B0024','B0025','B0027','B0028',
+      // STEP1-2 カトラリーケース
+      'B0073',
+      // STEP1-2 トイレ掃除道具（ラバーカップ）
+      'B0100',
+    ].forEach(function(id){
+      state.quantities[id] = numUnits;
+      state.confirmedQty[id] = numUnits;
+    });
+    // セット（必須）：kitchen_bleach / corocoro / bath_magic
+    ['kitchen_bleach','corocoro','bath_magic'].forEach(function(k){
+      state.setQty[k] = numUnits;
+      state.confirmedSetQty[k] = numUnits;
+    });
+    // STEP1-3 refillCard（必須）：床掃除・浴室洗剤・トイレ洗剤
+    if (!state.refillQty) state.refillQty = {};
+    if (!state.confirmedRefillQty) state.confirmedRefillQty = {};
+    ['quickle','kabikiller','toilet_magic'].forEach(function(k){
+      if (state.refillChoices && state.refillChoices[k]) {
+        state.refillQty[k] = numUnits;
+        state.confirmedRefillQty[k] = numUnits;
+      }
+    });
+    // STEP1-3 grade（必須）：ハンドソープ（バス数連動なし）
+    if (!state.gradeQty) state.gradeQty = {};
+    if (!state.confirmedGradeQty) state.confirmedGradeQty = {};
+    const _hsGrp = GRADE_GROUPS.find(function(g){ return g.id === 'handsoap'; });
+    const _hsSel = state.gradeSelections && state.gradeSelections['handsoap'];
+    const _hsOpt = _hsGrp && _hsSel ? _hsGrp.options.find(function(o){ return o.grade === _hsSel; }) : null;
+    const _hsHasBottle = _hsOpt && _hsOpt.items.some(function(i){ return i.id.startsWith('B'); });
+    if (_hsHasBottle) {
+      state.gradeQty['handsoap'] = numUnits;
+      state.confirmedGradeQty['handsoap'] = numUnits;
+    }
+    // STEP1-3 choice（必須）：自動連動がない品目を室数に
+    if (!state.choiceQty) state.choiceQty = {};
+    if (!state.confirmedChoiceQty) state.confirmedChoiceQty = {};
+    [
+      'mizukiri','toothbrush','dishsoap','laundry','softener','tissue',
+      'room_deodor','gomibag45','sanitary_bag'
+    ].forEach(function(k){
+      state.choiceQty[k] = numUnits;
+      state.confirmedChoiceQty[k] = numUnits;
+    });
+  }
 
   // ── バスルーム数分 ──
   // シャンプー・コンディショナー・ボディソープ（ハンドソープは自動設定対象外）
@@ -1799,13 +2010,6 @@ function autoSetPropertyQty() {
       }
       // 詰替のみグレードはqty変更しない（デフォルト1を維持）
     });
-    // 子供用シャンプー（refillCard）もバスルーム数に
-    if (!state.refillQty) state.refillQty = {};
-    if (state.refillChoices && state.refillChoices['kids_shampoo']) {
-      state.refillQty['kids_shampoo'] = baths;
-      if (!state.confirmedRefillQty) state.confirmedRefillQty = {};
-      state.confirmedRefillQty['kids_shampoo'] = baths;
-    }
   }
 
   // ── トイレ数分 ──
@@ -1856,6 +2060,20 @@ function autoSetPropertyQty() {
       if (opt) opt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = maxG; });
     }
   }
+
+  // ── ファミリー物件に連動 ──
+  // 子供用シャンプー（refillCard）はファミリー物件のバス数合計に連動
+  // ファミリー必須食器（B0085〜B0088）はセット品目のため数量1のまま（自動連動なし）
+  const famBaths = (state.property && state.property.familyBathrooms) || 0;
+  if (famBaths > 0) {
+    if (!state.quantities) state.quantities = {};
+    if (state.refillChoices && state.refillChoices['kids_shampoo']) {
+      if (!state.refillQty) state.refillQty = {};
+      if (!state.confirmedRefillQty) state.confirmedRefillQty = {};
+      state.refillQty['kids_shampoo'] = famBaths;
+      state.confirmedRefillQty['kids_shampoo'] = famBaths;
+    }
+  }
 }
 function updatePropInfoBtn() {
   // 入力中にボタンの有効/無効だけ更新（フルレンダリングなし）
@@ -1866,6 +2084,35 @@ function updatePropInfoBtn() {
       btn.disabled = !valid;
       btn.style.opacity = valid ? '1' : '0.4';
       btn.style.cursor = valid ? 'pointer' : 'not-allowed';
+    }
+  });
+}
+
+// 物件番号の重複警告をリアルタイムで更新（render不要）
+function updateDuplicateWarnings() {
+  const p = state.property;
+  if (!p || !p.units) return;
+  const dupIdx = getDuplicateNumberIndices();
+  p.units.forEach((u, i) => {
+    const errEl = document.querySelector('.prop-number-error[data-idx="'+i+'"]');
+    if (!errEl) return;
+    const numberInvalid = u.number && !/^[0-9]{4}$/.test(u.number);
+    const isDup = dupIdx.has(i);
+    // 入力欄の枠色更新
+    const input = errEl.parentElement?.querySelector('input.form-input');
+    if (input) {
+      input.style.borderColor = (u.number && !numberInvalid && !isDup) ? '#e2e8f0' : '#fca5a5';
+    }
+    // エラーメッセージ更新
+    if (numberInvalid) {
+      errEl.textContent = '4桁の半角数字で入力してください';
+      errEl.style.display = '';
+    } else if (isDup) {
+      errEl.textContent = 'この物件番号は他の物件と重複しています';
+      errEl.style.display = '';
+    } else {
+      errEl.textContent = '';
+      errEl.style.display = 'none';
     }
   });
 }
@@ -2053,22 +2300,42 @@ function sendOrderEmail() {
   }
   const p = state.property;
   const contactName = p.contactSameAsOwner ? p.owner : (p.contact || p.owner);
+  const units = (p.units || []);
+  const numUnits = units.length;
+  const isMulti = numUnits > 1;
 
   const total = calcTotal();
+  const famCountEmail = p.familyUnitCount;
   let body = '【初回セット・補充備品発注】\n';
   body += '============================\n';
-  body += '物件屋号：' + p.name + '\n';
-  body += '物件番号：' + p.number + '\n';
   body += 'ご契約者様名：' + p.owner + '\n';
   body += 'ご担当者名：' + contactName + '\n';
   body += '連絡先メール：' + p.email + '\n';
-  body += '最大宿泊人数：' + p.maxGuests + '名\n';
-  body += 'バスルーム：' + p.bathrooms + '\n';
-  body += 'トイレ：' + p.toilets + '\n';
-  body += 'ファミリー物件：' + (p.isFamily ? 'はい' : 'いいえ') + '\n';
+  body += '契約室数：' + numUnits + '室';
+  if (famCountEmail > 0) body += '（うちファミリー対応 ' + famCountEmail + '室）';
+  body += '\n';
+  body += '============================\n';
+  // 物件ごとの内訳
+  body += '【契約物件内訳】\n';
+  units.forEach((u, i) => {
+    body += '─ 物件 #' + (i+1) + ' ─\n';
+    body += '  物件番号：' + (u.number||'') + '\n';
+    body += '  最大宿泊人数：' + (u.maxGuests||0) + '名\n';
+    body += '  バスルーム：' + (u.bathrooms||0) + '室\n';
+    body += '  トイレ：' + (u.toilets||0) + '室\n';
+    body += '  ファミリー対応：' + (u.isFamily === true ? 'はい' : 'いいえ') + '\n';
+  });
+  if (isMulti) {
+    body += '─ 合算（全' + numUnits + '室） ─\n';
+    body += '  最大宿泊人数：' + p.maxGuests + '名\n';
+    body += '  バスルーム：' + p.bathrooms + '室\n';
+    body += '  トイレ：' + p.toilets + '室\n';
+    body += '  ファミリー対応：' + famCountEmail + '室\n';
+  }
   body += '============================\n';
   body += '合計金額（目安）：' + fmt(total) + '\n';
   body += '============================\n\n';
+  body += '※ 発注品目は全' + numUnits + '室分の合算数量です。\n\n';
   body += '【発注品目】\n';
 
   // グレードグループ
@@ -2118,7 +2385,10 @@ function sendOrderEmail() {
   body += '\n============================\n';
   body += '送信日時：' + new Date().toLocaleString('ja-JP') + '\n';
 
-  const subject = encodeURIComponent('【発注】' + p.name + '（' + p.number + '） 初回セット・補充備品');
+  // 件名：複数物件の場合は「物件番号一覧（N室）」、単一なら「物件番号」のみ
+  const subjectNumbers = units.map(u => u.number||'').filter(Boolean).join('・');
+  const subjectLabel = isMulti ? (subjectNumbers + '（' + numUnits + '室）') : subjectNumbers;
+  const subject = encodeURIComponent('【発注】' + (p.owner||'') + ' / ' + subjectLabel + ' 初回セット・補充備品');
   const bodyEnc = encodeURIComponent(body);
   const mailto = 'mailto:customer@bizpato.com?cc=' + encodeURIComponent(p.email) + '&subject=' + subject + '&body=' + bodyEnc;
   window.location.href = mailto;
@@ -2133,8 +2403,10 @@ function sendOrderEmail() {
         <div style="background:var(--bg);border-radius:var(--radius);padding:16px;text-align:left">
           <div style="font-size:11px;color:var(--text-sub)">送信先</div>
           <div style="font-weight:700;margin-bottom:8px;font-family:var(--mono)">customer@bizpato.com</div>
-          <div style="font-size:11px;color:var(--text-sub)">物件名</div>
-          <div style="font-weight:700;margin-bottom:8px">${p.name}</div>
+          <div style="font-size:11px;color:var(--text-sub)">ご契約者</div>
+          <div style="font-weight:700;margin-bottom:8px">${p.owner||''}</div>
+          <div style="font-size:11px;color:var(--text-sub)">物件番号${isMulti?'（'+numUnits+'室）':''}</div>
+          <div style="font-weight:700;margin-bottom:8px;font-family:var(--mono)">${subjectNumbers}</div>
           <div style="font-size:11px;color:var(--text-sub)">合計金額（目安）</div>
           <div style="font-size:24px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(total)}</div>
         </div>
@@ -2595,7 +2867,7 @@ function itemCardHTML(id, forceReq) {
         <div class="item-name" style="flex:1;min-width:0">${item.name}</div>
         <div style="flex-shrink:0;text-align:right"><span class="item-price">${fmt(item.price)}</span><span class="item-price-sub"> / ${item.unit}</span></div>
       </div>
-      <div class="item-brand">${item.brand}</div>
+      <div class="item-brand">${item.brand}${(item.min && item.min > 1) ? '<span style="display:inline-block;margin-left:6px;padding:1px 8px;background:#fef3c7;border:1px solid #fde68a;border-radius:99px;font-size:10px;font-weight:800;color:#92400e">最小発注 '+item.min+(item.unit||'個')+'</span>' : ''}</div>
       ${hostToggle}
       ${!isHost?`<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(item.price*(qty>0?qty:item.min)).toLocaleString()}</div>`:''}
     </div>
@@ -2608,9 +2880,22 @@ function itemCardHTML(id, forceReq) {
         } else {
           for(let i=1;i<=20;i++) opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
         }
+        const _ROOM_LINK_IDS = [
+          // STEP1-1
+          'S0031','S0092','S0179','S0183','B0140','B0212',
+          // STEP1-2 調理器具
+          'B0017','B0018','B0019','B0020','B0021','B0024','B0025','B0027','B0028',
+          // STEP1-2 カトラリーケース
+          'B0073',
+          // STEP1-2 トイレ掃除道具（ラバーカップ）
+          'B0100',
+        ];
+        const _numUnits = (state.property && state.property.units && state.property.units.length) || 1;
         const _autoSub = ['B0079','B0081','B0082','B0083','B0074','B0084','B0196'].includes(id) ? '<span class="qty-row-label-sub">人数連動</span>'
-          : id==='B0101' ? '<span class="qty-row-label-sub">トイレ数連動</span>' : '';
-        return '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span>'+_autoSub+'</div><select class="qty-select" onchange="setQtyDirect(\'' + id + '\',this.value)">' + opts + '</select></div>';
+          : id==='B0101' ? '<span class="qty-row-label-sub">トイレ数連動</span>'
+          : (_ROOM_LINK_IDS.includes(id) && _numUnits > 1) ? '<span class="qty-row-label-sub">室数連動</span>' : '';
+        const _minLabel = (item.min && item.min > 1) ? '<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:3px;text-align:right">最小発注 '+item.min+(item.unit||'個')+'</div>' : '';
+        return '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span>'+_autoSub+'</div><select class="qty-select" onchange="setQtyDirect(\'' + id + '\',this.value)">' + opts + '</select></div>'+_minLabel;
       })()}
       ${(()=>{
         const hcVal = state.hostChoice[id];
@@ -2728,7 +3013,7 @@ function setCardHTML(key) {
           ${(()=>{let o='';for(let i=1;i<=20;i++)o+='<option value="'+i+'"'+(sRQty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setSetRefillQtyDirect(\''+key+'\',this.value)">'+o+'</select>';})()}</div>
       ` : `
         <div class="qty-row">
-          <div class="qty-row-label"><span class="qty-row-label-main">数量</span></div>
+          <div class="qty-row-label"><span class="qty-row-label-main">数量</span>${(['kitchen_bleach','corocoro','bath_magic'].includes(key) && ((state.property && state.property.units && state.property.units.length) || 1) > 1) ? '<span class="qty-row-label-sub">室数連動</span>' : ''}</div>
           ${(()=>{let o='';for(let i=1;i<=20;i++)o+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setSetQtyDirect(\''+key+'\',this.value)">'+o+'</select>';})()}</div>
       `}
       ${(()=>{
@@ -2882,7 +3167,12 @@ function choiceCardHTML(key) {
     } else {
       for(let i=1;i<=20;i++) _qtyOpts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
     }
-    const _autoSub = (key==='slipper' && sel==='vinyl') ? '<span class="qty-row-label-sub">人数連動</span>' : (key==='toilet_sheet' || key==='toilet_deodor') ? '<span class="qty-row-label-sub">トイレ数連動</span>' : '';
+    const _CHOICE_ROOM_LINK = ['mizukiri','toothbrush','dishsoap','laundry','softener','tissue','room_deodor','gomibag45','sanitary_bag'];
+    const _choiceNumUnits = (state.property && state.property.units && state.property.units.length) || 1;
+    const _autoSub = (key==='slipper' && sel==='vinyl') ? '<span class="qty-row-label-sub">人数連動</span>'
+      : (key==='toilet_sheet' || key==='toilet_deodor') ? '<span class="qty-row-label-sub">トイレ数連動</span>'
+      : (_CHOICE_ROOM_LINK.includes(key) && _choiceNumUnits > 1) ? '<span class="qty-row-label-sub">室数連動</span>'
+      : '';
     const _rightCol = `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()"><div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span>${_autoSub}</div><select class="qty-select" onchange="setChoiceQtyDirect('${key}',this.value)">${_qtyOpts}</select></div>${_cartBtn}</div>`;
 
     detailHTML = `<div style="display:flex;align-items:flex-start;gap:8px;padding:12px;background:#fff;border-radius:12px;margin-top:10px"><div style="flex:1;min-width:0">${innerHTML}</div>${_rightCol}</div>`;
@@ -3008,10 +3298,13 @@ function refillCardHTML(key) {
       const _kidsRefillQty = (state.setRefillQty||{})[key] ?? 1;
       let refillOpts2 = '';
       for (let i = 1; i <= 20; i++) refillOpts2 += '<option value="'+i+'"'+(_kidsRefillQty===i?' selected':'')+'>'+i+'</option>';
-      detailHTML += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">本体数量</span><span class="qty-row-label-sub">バス数連動</span></div><select class="qty-select" onchange="changeRefillQtyDirect(\''+key+'\',this.value)">'+qtyOpts2+'</select></div>';
+      detailHTML += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">本体数量</span><span class="qty-row-label-sub">ファミリーバス数連動</span></div><select class="qty-select" onchange="changeRefillQtyDirect(\''+key+'\',this.value)">'+qtyOpts2+'</select></div>';
       detailHTML += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">詰替数量</span></div><select class="qty-select" onchange="setSetRefillQtyDirect(\''+key+'\',this.value)">'+refillOpts2+'</select></div>';
     } else {
-      detailHTML += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span></div><select class="qty-select" onchange="changeRefillQtyDirect(\''+key+'\',this.value)">'+qtyOpts2+'</select></div>';
+      const _REFILL_ROOM_LINK = ['quickle','kabikiller','toilet_magic'];
+      const _refillNumUnits = (state.property && state.property.units && state.property.units.length) || 1;
+      const _refillSub = (_REFILL_ROOM_LINK.includes(key) && _refillNumUnits > 1) ? '<span class="qty-row-label-sub">室数連動</span>' : '';
+      detailHTML += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span>'+_refillSub+'</div><select class="qty-select" onchange="changeRefillQtyDirect(\''+key+'\',this.value)">'+qtyOpts2+'</select></div>';
     }
     const _confirmedSelR = (state.confirmedSelections||{})['refill_'+key];
     const _confirmedQtyR = (state.confirmedRefillQty||{})[key];
@@ -3202,18 +3495,25 @@ function gradeGroupHTML(g) {
           const _confirmedQtyG = (state.confirmedGradeQty||{})[g.id];
           const _selChangedG = _addedG && _confirmedSelG !== undefined && sel !== _confirmedSelG;
           const _qtyChangedG = _addedG && _confirmedQtyG !== undefined && (qty !== _confirmedQtyG || _rQty !== _confirmedRQty);
+          // ハンドソープは室数連動、shampoo/conditioner/bodysoapはバス数連動
+          const _gradeNumUnits = (state.property && state.property.units && state.property.units.length) || 1;
+          const _gradeIsHandsoap = g.id === 'handsoap';
+          // バス数連動バッジ
+          const _bodySubLabelBath = isAutoGrade ? '<span class="qty-row-label-sub">バス数連動</span>' : '';
+          // 室数連動バッジ（handsoapのみ、1室時は非表示）
+          const _bodySubLabelRoom = (_gradeIsHandsoap && _gradeNumUnits > 1) ? '<span class="qty-row-label-sub">室数連動</span>' : '';
           let html2 = '';
           if (bodyItems.length > 0 && subItems.length > 0) {
             // 本体＋詰替 両方ある場合
             let bodyOpts=''; for(let i=1;i<=20;i++) bodyOpts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
-            const bodySubLabel = isAutoGrade ? '<span class="qty-row-label-sub">バス数連動</span>' : '';
+            const bodySubLabel = _bodySubLabelBath || _bodySubLabelRoom;
             html2 += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">本体数量</span>'+bodySubLabel+'</div><select class="qty-select" onchange="setGradeQtyDirect(\''+g.id+'\',this.value)">'+bodyOpts+'</select></div>';
             let refillOpts=''; for(let i=1;i<=20;i++) refillOpts+='<option value="'+i+'"'+(_rQty===i?' selected':'')+'>'+i+'</option>';
             html2 += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">詰替数量</span></div><select class="qty-select" onchange="setGradeRefillQtyDirect(\''+g.id+'\',this.value)">'+refillOpts+'</select></div>';
           } else if (bodyItems.length > 0 && subItems.length === 0) {
             // 本体のみ
             let bodyOpts=''; for(let i=1;i<=20;i++) bodyOpts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
-            const bodySubLabel = isAutoGrade ? '<span class="qty-row-label-sub">バス数連動</span>' : '';
+            const bodySubLabel = _bodySubLabelBath || _bodySubLabelRoom;
             html2 += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">本体数量</span>'+bodySubLabel+'</div><select class="qty-select" onchange="setGradeQtyDirect(\''+g.id+'\',this.value)">'+bodyOpts+'</select></div>';
           } else if (!bodyItems.length && subItems.length > 0) {
             // 詰替のみ（パンテーン等）
@@ -3344,25 +3644,31 @@ function renderDashboard() {
   let html = '<div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px"><button class="btn-reset" onclick="showResetDialog()">🗑️ すべてリセット</button></div>';
 
   // ── 物件情報カード（ダッシュボード最上部）──
+  const _propUnits = (state.property.units || []);
+  const _propMultiple = _propUnits.length > 1;
+  const _famCount = state.property.familyUnitCount || 0;
+  // 概要：合算サマリーまたは単一物件の値
+  const _propSummaryRows = propComplete ? `<div style="display:grid;grid-template-columns:repeat(${_propMultiple?5:5},1fr);gap:12px">
+    ${[
+      [_propMultiple ? '契約室数' : '物件番号', _propMultiple ? _propUnits.length + '室' : (_propUnits[0]?.number || '—')],
+      ['最大宿泊人数', state.property.maxGuests ? state.property.maxGuests+'名'+(_propMultiple?'（合計）':'') : '—'],
+      ['バスルーム', state.property.bathrooms ? state.property.bathrooms+'室'+(_propMultiple?'（合計）':'') : '—'],
+      ['トイレ', state.property.toilets ? state.property.toilets+'室'+(_propMultiple?'（合計）':'') : '—'],
+      ['ファミリー', _propMultiple ? (_famCount > 0 ? _famCount+'室' : 'なし') : (state.property.isFamily===true ? 'はい' : state.property.isFamily===false ? 'いいえ' : '—')],
+    ].map(([label, val]) => `<div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:12px;text-align:center"><div style="font-size:10px;font-weight:900;color:#94a3b8;letter-spacing:.1em;margin-bottom:6px">${label}</div><div style="font-size:14px;font-weight:900;color:var(--brand)">${val}</div></div>`).join('')}
+  </div>` : '';
+
   html += `<div style="background:${propComplete?'#f0f9ff':'#fff'};border:1.5px solid ${propComplete?'#bfdbfe':'#fca5a5'};border-radius:28px;overflow:hidden;margin-bottom:24px;box-shadow:0 1px 6px rgba(0,0,0,0.04)">
     <div style="background:#f8fafc;padding:18px 24px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center">
       <div style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:900;color:#475569">
         <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        物件情報
+        物件情報${_propMultiple ? `<span style="font-size:11px;font-weight:700;color:#fff;background:var(--brand);border-radius:99px;padding:2px 10px;margin-left:4px">${_propUnits.length}室契約</span>` : ''}
       </div>
       <button onclick="openStep('propInfo')" style="font-size:11px;font-weight:900;color:var(--brand);background:none;border:1px solid #bfdbfe;border-radius:99px;padding:4px 12px;cursor:pointer">編集</button>
     </div>
     <div style="padding:18px 24px">
       ${propComplete
-        ? `<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
-            ${[
-              ['物件番号', state.property.number||'—'],
-              ['最大宿泊人数', state.property.maxGuests ? state.property.maxGuests+'名' : '—'],
-              ['バスルーム', state.property.bathrooms ? state.property.bathrooms+'室' : '—'],
-              ['トイレ', state.property.toilets ? state.property.toilets+'室' : '—'],
-              ['ファミリー', state.property.isFamily===true ? 'はい' : state.property.isFamily===false ? 'いいえ' : '—'],
-            ].map(([label, val]) => `<div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:12px;text-align:center"><div style="font-size:10px;font-weight:900;color:#94a3b8;letter-spacing:.1em;margin-bottom:6px">${label}</div><div style="font-size:14px;font-weight:900;color:var(--brand)">${val}</div></div>`).join('')}
-          </div>`
+        ? _propSummaryRows
         : `<div class="alert-box alert-danger" style="margin:0;border-radius:14px;border-left-width:4px">
             <div class="alert-icon">!</div>
             <div style="flex:1;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -3773,82 +4079,134 @@ function initDefaults() {
   }
 }
 
-function renderPropertyInfo() {
-  return `${pageHeader('','','物件情報','発注する物件の情報を入力してください。')}
-  <div class="form-card">
-    <div class="form-card-header"><div class="form-card-title">🏠 物件基本情報</div><div class="form-card-badge">REQUIRED</div></div>
-    <div style="padding:20px 24px">
-      <div class="form-group"><label class="form-label">物件名 <span class="req">*</span></label><input class="form-input" type="text" value="${state.property.name}" oninput="state.property.name=this.value" placeholder="例：マリンバイラ 101号室" style="border-style:solid;border-color:#e2e8f0"></div>
-      <div class="form-group"><label class="form-label">物件番号 <span class="req">*</span></label><input class="form-input" type="text" value="${state.property.number}" oninput="state.property.number=this.value" placeholder="例：0240（4桁の半角数字）" style="border-style:solid;border-color:#e2e8f0"></div>
-      <div class="form-group"><label class="form-label">最大宿泊人数</label><input class="form-input" type="number" min="1" max="50" value="${state.property.maxGuests||''}" oninput="state.property.maxGuests=parseInt(this.value)||0;render()" placeholder="例：6" style="border-style:solid;border-color:#e2e8f0"></div>
-      <div class="form-group"><label class="form-label">担当者名</label><input class="form-input" type="text" value="${state.property.contact}" oninput="state.property.contact=this.value" placeholder="例：山田 太郎" style="border-style:solid;border-color:#e2e8f0"></div>
-      <div class="form-group"><label class="form-label">連絡先メールアドレス <span class="req">*</span></label><input class="form-input" type="email" value="${state.property.email||''}" oninput="state.property.email=this.value" placeholder="例：host@example.com" style="border-style:solid;border-color:#e2e8f0"></div>
-    </div>
-  </div>
-  <button onclick="completeStep('info',false)" class="btn-submit">✓ 物件情報を確定して戻る</button>`;
-}
-
-function renderStep0() {
-  return renderPropertyInfo();
-}
-
 function renderPropInfo() {
   const p = state.property;
+  // 室数・units初期化保証
+  if (!Array.isArray(p.units) || p.units.length === 0) p.units = [{number:'',maxGuests:0,bathrooms:0,toilets:0,isFamily:null}];
+  if (!p.numUnits || p.numUnits < 1) p.numUnits = p.units.length;
+  if (p.numUnits !== p.units.length) {
+    while (p.units.length < p.numUnits) p.units.push({number:'',maxGuests:0,bathrooms:0,toilets:0,isFamily:null});
+    p.units.length = p.numUnits;
+  }
+  // 既存unitに isFamily が無い場合は補完
+  p.units.forEach(u => { if (u.isFamily === undefined) u.isFamily = null; });
   const valid = isPropInfoValid();
-  const familyBtns = `
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button onclick="state.property.isFamily=true;updatePropInfoBtn();render()"
-        style="flex:1;padding:14px;border-radius:14px;border:2px solid ${p.isFamily===true?'var(--brand)':'#e2e8f0'};background:${p.isFamily===true?'var(--brand-base)':'#fff'};font-size:14px;font-weight:900;color:${p.isFamily===true?'var(--brand)':'#64748b'};cursor:pointer">
-        はい
-      </button>
-      <button onclick="state.property.isFamily=false;updatePropInfoBtn();render()"
-        style="flex:1;padding:14px;border-radius:14px;border:2px solid ${p.isFamily===false?'var(--brand)':'#e2e8f0'};background:${p.isFamily===false?'var(--brand-base)':'#fff'};font-size:14px;font-weight:900;color:${p.isFamily===false?'var(--brand)':'#64748b'};cursor:pointer">
-        いいえ
-      </button>
-    </div>
-    ${p.isFamily===true ? '<div style="margin-top:8px;font-size:11px;color:#0e7490;font-weight:700;background:#ecfeff;border:1px solid #a5f3fc;border-radius:8px;padding:8px 12px">子供向け食器・シャンプー・歯ブラシ等のファミリー向け品目が発注ステップに追加されます。</div>' : ''}
-    ${p.isFamily===false ? '<div style="margin-top:8px;font-size:11px;color:#64748b;font-weight:700;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px">ファミリー向け品目は発注ステップから除外されます。</div>' : ''}`;
 
-  const numberInvalid = p.number && !/^[0-9]{4}$/.test(p.number);
   const emailInvalid = p.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email);
 
-  // 物件情報カード
+  // 室数選択コントロール
+  const numUnitsOpts = [];
+  for (let i = 1; i <= 20; i++) numUnitsOpts.push(`<option value="${i}"${p.numUnits===i?' selected':''}>${i}室</option>`);
+  const unitsControl = `
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;background:#f0f9ff;border:1.5px solid #bfdbfe;border-radius:14px;margin-bottom:18px">
+      <div style="font-size:13px;font-weight:800;color:var(--brand);flex-shrink:0">契約室数 <span style="color:var(--danger)">*</span></div>
+      <select onchange="setNumUnits(this.value)" style="padding:8px 14px;font-size:14px;font-weight:700;border-radius:10px;border:1.5px solid #bfdbfe;background:#fff;cursor:pointer;font-family:var(--mono);color:var(--brand)">
+        ${numUnitsOpts.join('')}
+      </select>
+      <div style="font-size:12px;color:#475569;font-weight:500;flex:1;min-width:200px">
+        全物件で<strong>同じ発注内容</strong>の場合のみ、室数を増やしてまとめて発注できます。物件ごとに内容が異なる場合は、物件ごとに別々のフォームをご送信ください。
+      </div>
+    </div>`;
+
+  // 重複している物件番号のインデックス集合
+  const _dupIdx = getDuplicateNumberIndices();
+
+  // 各物件ブロック生成
+  function unitBlock(idx) {
+    const u = p.units[idx];
+    const numberInvalid = u.number && !/^[0-9]{4}$/.test(u.number);
+    const isDup = _dupIdx.has(idx);
+    const numberHasError = numberInvalid || isDup;
+    const headerLabel = p.numUnits > 1 ? `物件 #${idx+1}` : '物件情報';
+    // ステッパー生成ヘルパー
+    function stepper(field, value, min, max) {
+      const atMin = (parseInt(value)||0) <= min;
+      const atMax = (parseInt(value)||0) >= max;
+      const invalid = !value;
+      return `<div class="num-stepper${invalid?' invalid':''}">
+        <button type="button" class="num-stepper-btn minus" ${atMin?'disabled':''} onclick="stepUnitField(${idx},'${field}',-1,${min},${max})">−</button>
+        <input class="num-stepper-input" type="number" inputmode="numeric" min="${min}" max="${max}" value="${value||''}" placeholder="—"
+          oninput="setUnitField(${idx},'${field}',this.value,${min},${max})"
+          onchange="autoSetPropertyQty();render()">
+        <button type="button" class="num-stepper-btn plus" ${atMax?'disabled':''} onclick="stepUnitField(${idx},'${field}',1,${min},${max})">+</button>
+      </div>`;
+    }
+    // ファミリー判定ボタン（物件ごと）
+    const famYes = u.isFamily === true;
+    const famNo = u.isFamily === false;
+    const familyHTML = `
+      <div style="display:flex;gap:8px">
+        <button type="button" onclick="setUnitFamily(${idx},true)"
+          style="flex:1;padding:11px;border-radius:12px;border:2px solid ${famYes?'var(--brand)':'#e2e8f0'};background:${famYes?'var(--brand-base)':'#fff'};font-size:13px;font-weight:900;color:${famYes?'var(--brand)':'#64748b'};cursor:pointer">
+          はい（ファミリー対応）
+        </button>
+        <button type="button" onclick="setUnitFamily(${idx},false)"
+          style="flex:1;padding:11px;border-radius:12px;border:2px solid ${famNo?'var(--brand)':'#e2e8f0'};background:${famNo?'var(--brand-base)':'#fff'};font-size:13px;font-weight:900;color:${famNo?'var(--brand)':'#64748b'};cursor:pointer">
+          いいえ
+        </button>
+      </div>`;
+    return `
+    <div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:18px;padding:18px 20px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <div style="font-size:13px;font-weight:900;color:var(--brand);letter-spacing:.02em">${headerLabel}</div>
+        ${p.numUnits > 1 ? `<div style="font-size:11px;font-weight:700;color:#94a3b8;background:#f8fafc;border-radius:99px;padding:2px 10px">${idx+1} / ${p.numUnits}</div>` : ''}
+        ${u.isFamily === true ? '<div style="font-size:10px;font-weight:900;color:#7e22ce;background:#fdf4ff;border:1px solid #e9d5ff;border-radius:99px;padding:2px 10px;letter-spacing:.05em">ファミリー</div>' : ''}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="grid-column:1/-1">
+          <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">物件番号（4桁の半角数字） <span style="color:var(--danger)">*</span></div>
+          <input class="form-input" type="text" inputmode="numeric" maxlength="4" placeholder="例：0240" value="${u.number||''}"
+            oninput="state.property.units[${idx}].number=this.value.replace(/[^0-9]/g,'');this.value=state.property.units[${idx}].number;updatePropInfoBtn();updateDuplicateWarnings()" style="width:100%;border-style:solid;border-color:${u.number && !numberHasError?'#e2e8f0':'#fca5a5'}">
+          ${numberInvalid ? '<div class="prop-number-error" data-idx="'+idx+'" style="font-size:11px;font-weight:700;color:var(--danger);margin-top:6px">4桁の半角数字で入力してください</div>' : isDup ? '<div class="prop-number-error" data-idx="'+idx+'" style="font-size:11px;font-weight:700;color:var(--danger);margin-top:6px">この物件番号は他の物件と重複しています</div>' : '<div class="prop-number-error" data-idx="'+idx+'" style="display:none"></div>'}
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">最大宿泊人数 <span style="color:var(--danger)">*</span></div>
+          ${stepper('maxGuests', u.maxGuests, 1, 50)}
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">バスルームの数 <span style="color:var(--danger)">*</span></div>
+          ${stepper('bathrooms', u.bathrooms, 1, 20)}
+        </div>
+        <div style="grid-column:1/-1">
+          <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">トイレの数 <span style="color:var(--danger)">*</span></div>
+          ${stepper('toilets', u.toilets, 1, 20)}
+        </div>
+        <div style="grid-column:1/-1;border-top:1px dashed #e2e8f0;padding-top:14px;margin-top:4px">
+          <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:4px">ファミリー物件 <span style="color:var(--danger)">*</span></div>
+          <div style="font-size:12px;color:#64748b;margin-bottom:10px;font-weight:500">この物件はお子様連れのご利用を想定していますか？</div>
+          ${familyHTML}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // 物件情報カード（複数室対応）
+  let unitsHTML = '';
+  for (let i = 0; i < p.numUnits; i++) unitsHTML += unitBlock(i);
+
+  // 合算サマリー（複数室のみ）
+  const sumGuests = p.maxGuests;
+  const sumBaths = p.bathrooms;
+  const sumWcs = p.toilets;
+  const famCount = p.familyUnitCount;
+  const summaryHTML = p.numUnits > 1 ? `
+    <div style="background:#fdf4ff;border:1.5px solid #e9d5ff;border-radius:14px;padding:14px 18px;margin-bottom:18px">
+      <div style="font-size:11px;font-weight:900;color:#7e22ce;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">合算（全${p.numUnits}室）</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;font-weight:700;color:#581c87">
+        <div>最大宿泊人数：<span style="font-family:var(--mono);font-weight:900">${sumGuests}名</span></div>
+        <div>バスルーム：<span style="font-family:var(--mono);font-weight:900">${sumBaths}室</span></div>
+        <div>トイレ：<span style="font-family:var(--mono);font-weight:900">${sumWcs}室</span></div>
+        <div>ファミリー：<span style="font-family:var(--mono);font-weight:900">${famCount}室</span></div>
+      </div>
+      <div style="font-size:11px;color:#7e22ce;margin-top:8px;font-weight:500">この合算値をもとに、各品目の数量が自動設定されます。ファミリー品目はファミリー対応室数分だけ自動設定されます。</div>
+    </div>` : '';
+
   const propertyCard = `
   <div class="page-header" style="margin-bottom:16px">
-    <div style="font-size:15px;font-weight:900;color:var(--brand);letter-spacing:.02em;margin-bottom:16px">🏠 物件情報</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-      <div>
-        <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">物件番号（4桁の半角数字） <span style="color:var(--danger)">*</span></div>
-        <input class="form-input" type="text" inputmode="numeric" maxlength="4" placeholder="例：0240" value="${p.number||''}"
-          oninput="state.property.number=this.value.replace(/[^0-9]/g,'');this.value=state.property.number;updatePropInfoBtn()" onchange="autoSetPropertyQty();render()" style="width:100%;border-style:solid;border-color:${p.number && !numberInvalid?'#e2e8f0':'#fca5a5'}">
-        ${numberInvalid ? '<div style="font-size:11px;font-weight:700;color:var(--danger);margin-top:6px">4桁の半角数字で入力してください</div>' : ''}
-      </div>
-      <div>
-        <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">物件屋号 <span style="color:var(--danger)">*</span></div>
-        <input class="form-input" type="text" placeholder="例：〇〇ヴィラ" value="${p.name||''}"
-          oninput="state.property.name=this.value;updatePropInfoBtn()" style="width:100%;border-style:solid;border-color:${p.name?'#e2e8f0':'#fca5a5'}">
-      </div>
-      <div>
-        <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">最大宿泊人数 <span style="color:var(--danger)">*</span></div>
-        <input class="form-input" type="number" min="1" max="50" placeholder="例：6" value="${p.maxGuests||''}"
-          oninput="state.property.maxGuests=parseInt(this.value)||0;autoSetSlipperQty();updatePropInfoBtn()" onchange="autoSetPropertyQty();render()" style="width:100%;border-style:solid;border-color:${p.maxGuests?'#e2e8f0':'#fca5a5'}">
-      </div>
-      <div>
-        <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">バスルームの数 <span style="color:var(--danger)">*</span></div>
-        <input class="form-input" type="number" min="1" max="20" placeholder="例：2" value="${p.bathrooms||''}"
-          oninput="state.property.bathrooms=parseInt(this.value)||0;updatePropInfoBtn()" onchange="autoSetPropertyQty();render()" style="width:100%;border-style:solid;border-color:${p.bathrooms?'#e2e8f0':'#fca5a5'}">
-      </div>
-      <div>
-        <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">トイレの数 <span style="color:var(--danger)">*</span></div>
-        <input class="form-input" type="number" min="1" max="20" placeholder="例：2" value="${p.toilets||''}"
-          oninput="state.property.toilets=parseInt(this.value)||0;updatePropInfoBtn()" onchange="autoSetPropertyQty();render()" style="width:100%;border-style:solid;border-color:${p.toilets?'#e2e8f0':'#fca5a5'}">
-      </div>
-      <div style="grid-column:1/-1">
-        <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">ファミリー物件 <span style="color:var(--danger)">*</span></div>
-        <div style="font-size:13px;color:#64748b;margin-bottom:10px;font-weight:500">お子様連れのご利用を想定した物件ですか？</div>
-        ${familyBtns}
-      </div>
-    </div>
+    <div style="font-size:15px;font-weight:900;color:var(--brand);letter-spacing:.02em;margin-bottom:14px">🏠 物件情報</div>
+    ${unitsControl}
+    ${unitsHTML}
+    ${summaryHTML}
   </div>`;
 
   // 契約者・担当者情報カード
@@ -3872,7 +4230,7 @@ function renderPropInfo() {
       ${!p.contactSameAsOwner ? `
       <div>
         <div style="font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;margin-bottom:8px">ご担当者名 <span style="color:var(--danger)">*</span></div>
-        <input class="form-input" type="text" placeholder="例：田中 花子" value="${p.contact||''}"
+        <input class="form-input" type="text" placeholder="例:田中 花子" value="${p.contact||''}"
           oninput="state.property.contact=this.value;updatePropInfoBtn()" style="width:100%;border-style:solid;border-color:${p.contact?'#e2e8f0':'#fca5a5'}">
       </div>
       ` : ''}
@@ -3885,19 +4243,56 @@ function renderPropInfo() {
     </div>
   </div>`;
 
-  return `${pageHeader('step1','STEP 0','物件・ご契約者情報の入力','発注に必要な情報をご入力ください。最大宿泊人数・バスルーム数・トイレ数は、品目の数量自動設定に使用されます。')}
+  return `${pageHeader('step1','STEP 0','物件・ご契約者情報の入力','発注に必要な情報をご入力ください。同じ発注内容で複数の物件へまとめて発注したい場合は、契約室数を増やして各物件の情報をご入力ください。物件ごとに発注内容が異なる場合は、物件ごとに別々のフォームを送信してください。')}
   ${propertyCard}
   ${contactCard}
-  ${!valid ? '<div class="alert-box alert-warn" style="display:flex;align-items:center;margin-top:16px"><div class="alert-icon">!</div><div style="flex:1"><div class="alert-title">未入力の項目があります</div><div class="alert-text">全項目を入力・選択後に「次へ」が有効になります。</div></div></div>' : ''}`;
+  ${(()=>{
+    if (valid) return '';
+    const dupCount = _dupIdx.size;
+    if (dupCount > 0) {
+      return '<div class="alert-box alert-danger" style="display:flex;align-items:center;margin-top:16px"><div class="alert-icon">!</div><div style="flex:1"><div class="alert-title">物件番号が重複しています</div><div class="alert-text">同じ物件番号を複数の物件に設定することはできません。重複箇所を修正してください。</div></div></div>';
+    }
+    return '<div class="alert-box alert-warn" style="display:flex;align-items:center;margin-top:16px"><div class="alert-icon">!</div><div style="flex:1"><div class="alert-title">未入力の項目があります</div><div class="alert-text">全項目を入力・選択後に「次へ」が有効になります。</div></div></div>';
+  })()}`;
 }
 
 // 物件情報の入力完了判定（バリデーション含む）
 function isPropInfoValid() {
   const p = state.property;
-  const numberOk = p.number && /^[0-9]{4}$/.test(p.number);
+  if (!Array.isArray(p.units) || p.units.length === 0) return false;
+  // 各物件の入力チェック
+  const numbers = [];
+  for (const u of p.units) {
+    if (!u.number || !/^[0-9]{4}$/.test(u.number)) return false;
+    if (!(u.maxGuests > 0)) return false;
+    if (!(u.bathrooms > 0)) return false;
+    if (!(u.toilets > 0)) return false;
+    if (u.isFamily !== true && u.isFamily !== false) return false;
+    numbers.push(u.number);
+  }
+  // 物件番号の重複チェック
+  if (new Set(numbers).size !== numbers.length) return false;
+  // 契約者情報
   const emailOk = p.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email);
   const contactOk = p.contactSameAsOwner ? !!p.owner : (!!p.owner && !!p.contact);
-  return !!(numberOk && p.name && emailOk && contactOk && p.maxGuests > 0 && p.bathrooms > 0 && p.toilets > 0 && p.isFamily !== null);
+  return !!(p.owner && emailOk && contactOk);
+}
+
+// 重複している物件番号のインデックスを取得（重複している場合のみ）
+function getDuplicateNumberIndices() {
+  const p = state.property;
+  if (!p || !p.units) return new Set();
+  const counts = {};
+  p.units.forEach(u => {
+    const n = (u.number||'').trim();
+    if (n && /^[0-9]{4}$/.test(n)) counts[n] = (counts[n]||0) + 1;
+  });
+  const dupSet = new Set();
+  p.units.forEach((u, i) => {
+    const n = (u.number||'').trim();
+    if (n && counts[n] > 1) dupSet.add(i);
+  });
+  return dupSet;
 }
 
 function renderStep1() {
@@ -4308,8 +4703,8 @@ function confirmDelete(type, key) {
 // ─── 初期化 ───
 loadState();
 initDefaults();
-// 物件情報が入力済みの場合は自動設定を適用（localStorage復元後）
-if (state.property && state.property.maxGuests > 0) autoSetPropertyQty();
+// 物件情報の自動設定を適用（室数連動は常に動かす）
+autoSetPropertyQty();
 state.view = 'dashboard';
 render();
 
