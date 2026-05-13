@@ -2469,7 +2469,11 @@ async function sendOrderEmail() {
   }
   // n8n APIでもチェック（別端末からの重複送信対策）
   try {
-    const dupRes = await fetch(N8N_DUPCHECK_WEBHOOK + '?numbers=' + encodeURIComponent(allNumbers.join(',')), { method: 'GET' });
+    const dupRes = await fetch(N8N_DUPCHECK_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ propertyNumbers: allNumbers })
+    });
     if (dupRes.ok) {
       const dupData = await dupRes.json();
       if (dupData.isDuplicate) {
@@ -2607,7 +2611,7 @@ async function sendOrderEmail() {
   const payload = {
     propertyNumbers: allNumbers,
     contractorName: p.owner || '',
-    contactName: contactName,
+    staffName: contactName,
     email: p.email || '',
     phone: p.phone || '',
     roomCount: numUnits,
@@ -2615,7 +2619,7 @@ async function sendOrderEmail() {
     totalBath: p.bathrooms || '',
     totalToilet: p.toilets || '',
     isFamily: (p.familyUnitCount||0) > 0,
-    familyUnitCount: p.familyUnitCount || 0,
+    familyRoomCount: p.familyUnitCount || 0,
     units: units,
     mandatoryItems,
     optionalItems,
