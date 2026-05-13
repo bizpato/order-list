@@ -290,7 +290,55 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .mandatory-banner-sub{font-size:11px;color:#5b21b6}
 .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
-@media(max-width:480px){.choice-opts{flex-direction:column}.main{padding:12px}}
+@media(max-width:480px){
+  .choice-opts{flex-direction:column}
+  .main{padding:12px}
+  /* ヘッダーをコンパクトに */
+  .header-inner{padding:12px 12px;gap:8px;flex-wrap:nowrap}
+  .header-logo{gap:8px;flex:1;min-width:0}
+  .logo-icon{padding:7px;border-radius:12px}
+  .logo-icon svg{width:18px;height:18px}
+  .logo-title{font-size:14px;letter-spacing:-.3px;line-height:1.25}
+  .logo-sub{font-size:10px;margin-top:1px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #btn-top{font-size:10px !important;padding:6px 10px !important;flex-shrink:0}
+  #btn-top-label{display:inline}
+  /* item-card: 縦並びレイアウト */
+  .item-card{flex-direction:column;padding:14px;gap:10px;border-radius:18px}
+  .item-card > .item-img{align-self:flex-start}
+  .item-img{width:56px;height:56px}
+  /* item-bodyの後ろに付いていた「右列」を独立行に */
+  .item-card > div:last-child{align-self:stretch !important;flex-direction:row !important;justify-content:space-between !important;align-items:center !important;border-top:1px solid #f1f5f9;padding-top:10px}
+  /* set-card */
+  .set-card{padding:14px;border-radius:18px}
+  .set-card [style*="display:flex"][style*="flex-direction:column"][style*="align-items:flex-end"]{align-self:stretch !important;flex-direction:row !important;justify-content:space-between !important;align-items:center !important;border-top:1px solid #f1f5f9;padding-top:10px;margin-top:10px}
+  /* page-header */
+  .page-header{padding:18px;border-radius:20px}
+  .page-header-title{font-size:18px;line-height:1.4}
+  .page-header-desc{font-size:12px;line-height:1.6}
+  /* nav-btns */
+  .nav-btns{flex-wrap:wrap;gap:6px}
+  .nav-btns button{font-size:12px;padding:10px 12px}
+  /* qty-row */
+  .qty-row{min-height:auto}
+  /* refill/choice/grade card */
+  .choice-card-wrap{padding:14px;border-radius:18px}
+  .grade-card{padding:14px;border-radius:18px}
+  /* page-header-step */
+  .page-header-step{font-size:9px;padding:5px 10px}
+}
+/* 超狭いスマホ向け（iPhone 13 mini など） */
+@media(max-width:380px){
+  .logo-title{font-size:13px}
+  .logo-sub{font-size:9px}
+  #btn-top{font-size:10px !important;padding:5px 8px !important}
+  #btn-top-label{font-size:10px}
+  /* TOPボタンの「保存して」を非表示にしてスペース節約 */
+  #btn-top-label::before{content:"TOPへ"}
+  #btn-top-label{font-size:0}
+  #btn-top-label::before{font-size:10px;font-weight:900}
+  .main{padding:10px}
+  .page-header-title{font-size:16px}
+}
 
 /* ── 数量プルダウン ── */
 .qty-select{height:34px;padding:0 22px 0 8px;border:1.5px solid var(--border);border-radius:8px;background:#fff;font-size:14px;font-weight:700;font-family:var(--mono);color:var(--text);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;min-width:60px}
@@ -383,14 +431,14 @@ const ITEMS = {
   'S0145':{id:'S0145',name:"ミレニアム ハンドソープ詰替 1000ml",brand:"ホテルアメニティ",price:1750,min:1,unit:"個",cat:"手洗いミレニアム",img:""},
   'S0150':{id:'S0150',name:"カネヨ5L 無添加泡石鹸",brand:"カネヨ",price:2150,min:1,unit:"個",cat:"バスアメニティ",img:"https://c.superdeal.com/img/large/B07RQTRBJB.jpg"},
   'B0149':{id:'B0149',name:"ミレニアムボトル ハンドソープ 500ml",brand:"ホテルアメニティ",price:650,min:1,unit:"個",cat:"手洗いミレニアム",hostPrep:true,img:"https://essenza.co.jp/?mode=grp&gid=2519021"},
-  'S0001':{id:'S0001',name:"水切りネット 兼用",brand:"ダストマン",price:250,min:2,unit:"個",cat:"キッチン消耗品",req:"必須",img:"https://m.media-amazon.com/images/I/51JT5dol53L._AC_SY300_SX300_QL70_ML2_.jpg"},
+  'S0001':{id:'S0001',name:"水切りネット 兼用 30枚",brand:"ダストマン",price:250,min:2,unit:"個",cat:"キッチン消耗品",req:"必須",img:"https://m.media-amazon.com/images/I/51JT5dol53L._AC_SY300_SX300_QL70_ML2_.jpg"},
   'S0065':{id:'S0065',name:"水切りゴミ袋 浅型 100枚",brand:"-",price:520,min:1,unit:"個",cat:"キッチン消耗品",req:"必須",img:""},
   'S0188':{id:'S0188',name:"ティッシュペーパー BOX 5箱",brand:"クリネックス",price:730,min:1,unit:"個",cat:"紙製品",req:"必須",img:"https://m.media-amazon.com/images/I/71Xhy-r7+CL._AC_SL1000_.jpg"},
   'S0203':{id:'S0203',name:"ティッシュペーパー ソフト 5パック",brand:"コアレックス",price:75,min:1,unit:"個",cat:"紙製品",req:"必須",img:"https://m.media-amazon.com/images/I/81uKlGF2c7L._AC_SL1500_.jpg"},
   'S0090':{id:'S0090',name:"トイレ消臭スプレー 上位モデル 280ml",brand:"小林製薬",price:450,min:1,unit:"個",cat:"トイレ消臭",req:"必須",img:"https://m.media-amazon.com/images/I/31JbXkKmDsL._AC_PIbundle-24,TopRight,0,0_SH20_.jpg"},
   'S0096':{id:'S0096',name:"トイレの消臭力スプレー 無香料",brand:"エステー",price:380,min:1,unit:"個",cat:"トイレ消臭",req:"必須",img:"https://m.media-amazon.com/images/I/71hmtvdm6vL._AC_SL1500_.jpg"},
   'S0091':{id:'S0091',name:"サニタリー用ゴミ袋 30枚",brand:"セイケツネットワーク",price:320,min:1,unit:"個",cat:"トイレ用消耗品",req:"必須",img:"https://m.media-amazon.com/images/I/71kXVVl9UpL._AC_SL1500_.jpg"},
-  'S0095':{id:'S0095',name:"サニタリー用ゴミ袋",brand:"ホテルアメニティ",price:4,min:100,unit:"個",cat:"トイレ用消耗品",req:"必須",img:""},
+  'S0095':{id:'S0095',name:"サニタリー用ゴミ袋 100枚",brand:"ホテルアメニティ",price:4,min:100,unit:"個",cat:"トイレ用消耗品",req:"必須",img:""},
   'B0208':{id:'B0208',name:"ファブリーズ本体 370ml",brand:"ファブリーズ",price:600,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/71BYhPXQPGL._AC_SL1500_.jpg"},
   'S0211':{id:'S0211',name:"ファブリーズ詰替 1600ml",brand:"ファブリーズ",price:2580,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/81BwiZbmH3L._AC_SL1500_.jpg"},
   'B0234':{id:'B0234',name:"清水香ボトル",brand:"清水香",price:300,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/81LZrvMy4sL._AC_SL1500_.jpg"},
@@ -401,8 +449,8 @@ const ITEMS = {
   'S0033':{id:'S0033',name:"食器洗剤本体 キュキュット ポンプ 480ml",brand:"キュキュット",price:500,min:1,unit:"個",cat:"食器洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/41HoQN9MqRL._AC_.jpg"},
   'S0014':{id:'S0014',name:"キュキュット 業務用 4.5L",brand:"花王",price:3180,min:1,unit:"個",cat:"食器洗剤",req:"必須",img:""},
   'S0032':{id:'S0032',name:"ステンレスソープディスペンサー",brand:"HAMILO",price:2400,min:1,unit:"個",cat:"食器洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/61yHUrq13lL._AC_SL1280_.jpg"},
-  'S0124':{id:'S0124',name:"歯ブラシ スタンダード マットシリーズ",brand:"ホテルアメニティ",price:23,min:100,unit:"個",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg#tp"},
-  'S0125':{id:'S0125',name:"歯ブラシ プレミアム リーフシリーズ",brand:"ホテルアメニティ",price:43,min:100,unit:"個",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg#tp"},
+  'S0124':{id:'S0124',name:"歯ブラシ マットシリーズ",brand:"ホテルアメニティ",price:23,min:100,unit:"個",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg#tp"},
+  'S0125':{id:'S0125',name:"歯ブラシ リーフシリーズ",brand:"ホテルアメニティ",price:43,min:100,unit:"個",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg#tp"},
   'S0038':{id:'S0038',name:"とって付きポリ袋 45L 50枚",brand:"日本サニパック",price:650,min:1,unit:"個",cat:"ゴミ袋",req:"必須",img:"https://m.media-amazon.com/images/I/71JLcf-yIsL._AC_SL1500_.jpg"},
   'S0063':{id:'S0063',name:"ごみ袋 シャカシャカ 45L 200枚",brand:"-",price:2180,min:1,unit:"個",cat:"ゴミ袋",req:"必須",img:""},
   'B0103':{id:'B0103',name:"トイレクイックル本体 30枚",brand:"花王",price:400,min:1,unit:"個",cat:"トイレ清掃シート",req:"必須",img:"https://m.media-amazon.com/images/I/81XL5d0-TIL._SL1500_.jpg"},
@@ -694,15 +742,15 @@ const CHOICE_DEFS = {
   mizukiri:{
     title:'水切りネット', req:true, reqLabel:'必須',
     opts:[
-      {key:'net', label:'水切りネット 兼用 30枚',          ids:['S0001'], img:'https://m.media-amazon.com/images/I/51JT5dol53L._AC_SY300_SX300_QL70_ML2_.jpg', price:500, priceNote:'(¥250×2個)'},
-      {key:'bag', label:'水切りゴミ袋 浅型 100枚', ids:['S0065'], img:'', price:520},
+      {key:'net', label:'水切りネット 兼用',          ids:['S0001'], img:'https://m.media-amazon.com/images/I/51JT5dol53L._AC_SY300_SX300_QL70_ML2_.jpg', price:250},
+      {key:'bag', label:'水切りゴミ袋 浅型', ids:['S0065'], img:'', price:520},
     ]
   },
   tissue:{
     title:'ティッシュペーパー', req:true, reqLabel:'必須 — どちらか選択',
     opts:[
-      {key:'soft', label:'ソフトパック 5パック', ids:['S0203'], img:'https://m.media-amazon.com/images/I/81uKlGF2c7L._AC_SL1500_.jpg', price:375, priceNote:'(¥75×5)'},
-      {key:'box',  label:'BOXタイプ 5箱',       ids:['S0188'], img:'https://m.media-amazon.com/images/I/71Xhy-r7+CL._AC_SL1000_.jpg', price:730},
+      {key:'soft', label:'ソフトパック', ids:['S0203'], img:'https://m.media-amazon.com/images/I/81uKlGF2c7L._AC_SL1500_.jpg', price:75},
+      {key:'box',  label:'BOXタイプ',       ids:['S0188'], img:'https://m.media-amazon.com/images/I/71Xhy-r7+CL._AC_SL1000_.jpg', price:730},
     ]
   },
   toilet_deodor:{
@@ -716,7 +764,7 @@ const CHOICE_DEFS = {
     title:'サニタリー用ゴミ袋', req:true, reqLabel:'必須 — どちらか選択',
     opts:[
       {key:'s1', label:'30枚',  ids:['S0091'], img:'https://m.media-amazon.com/images/I/71kXVVl9UpL._AC_SL1500_.jpg', price:320},
-      {key:'s2', label:'100枚', ids:['S0095'], img:'', price:400, priceNote:'(¥4×100枚)'},
+      {key:'s2', label:'100枚', ids:['S0095'], img:'', price:4},
     ]
   },
   room_deodor:{
@@ -732,8 +780,8 @@ const CHOICE_DEFS = {
     title:'スリッパ', req:true, reqLabel:'必須 — どれか選択',
     opts:[
       {key:'vinyl',    label:'ビニールスリッパ',        ids:['B0273'], img:'https://m.media-amazon.com/images/I/51BMlJH7MnL._AC_SY500_.jpg', price:1100, note:'物件情報の最大宿泊人数に合わせて数量が自動設定されます'},
-      {key:'dark',     label:'使い捨て ダークグレー',   ids:['S0190'], img:'https://www.sintoworld.jp/prod/images/prod_img/60452.jpg#tp', price:5500, priceNote:'(¥55×100足)'},
-      {key:'superior', label:'使い捨て スーペリア白',   ids:['S0191'], img:'https://www.sintoworld.jp/prod/images/prod_img/60033.jpg#tp', price:13000, priceNote:'(¥130×100足)'},
+      {key:'dark',     label:'使い捨て ダークグレー',   ids:['S0190'], img:'https://www.sintoworld.jp/prod/images/prod_img/60452.jpg#tp', price:55},
+      {key:'superior', label:'使い捨て スーペリア白',   ids:['S0191'], img:'https://www.sintoworld.jp/prod/images/prod_img/60033.jpg#tp', price:130},
     ]
   },
   laundry:{
@@ -756,29 +804,29 @@ const CHOICE_DEFS = {
   paper_cup:{
     title:'紙コップ', req:false, reqLabel:'任意 — どちらか選択',
     opts:[
-      {key:'large', label:'紙コップ柄付き 205ml 50個', ids:['S0227'], img:'', price:380},
-      {key:'small', label:'紙コップ 150ml 100個',    ids:['S0011'], img:'https://m.media-amazon.com/images/I/810GHCfnjcL._AC_SL1500_.jpg', price:500},
+      {key:'large', label:'紙コップ柄付き 205ml', ids:['S0227'], img:'', price:380},
+      {key:'small', label:'紙コップ 150ml',    ids:['S0011'], img:'https://m.media-amazon.com/images/I/810GHCfnjcL._AC_SL1500_.jpg', price:500},
     ]
   },
   toilet_sheet:{
     title:'トイレ清掃シート', req:true, reqLabel:'必須 — どちらか選択',
     opts:[
-      {key:'soujisheat', label:'トイレ用そうじシート 20枚',   ids:['S0105'],         img:'https://m.media-amazon.com/images/I/71o-y2jcyVS._AC_SL1500_.jpg', price:650},
+      {key:'soujisheat', label:'トイレ用そうじシート',   ids:['S0105'],         img:'https://m.media-amazon.com/images/I/71o-y2jcyVS._AC_SL1500_.jpg', price:650},
       {key:'quickle',    label:'トイレクイックル本体＋詰替', ids:['B0103','S0107'], img:'https://m.media-amazon.com/images/I/81XL5d0-TIL._SL1500_.jpg', price:730,  desc:'本体 30枚（B0103）＋ 詰替 20枚（S0107）'},
     ]
   },
   toothbrush:{
     title:'歯ブラシ', req:true, reqLabel:'必須 — どちらか選択',
     opts:[
-      {key:'standard', label:'マットシリーズ 100本', ids:['S0124'], img:'https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg', price:2300, priceNote:'(¥23×100本)', unit:'セット'},
-      {key:'premium',  label:'リーフシリーズ 100本', ids:['S0125'], img:'https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg',  price:4300, priceNote:'(¥43×100本)', unit:'セット'},
+      {key:'standard', label:'マットシリーズ', ids:['S0124'], img:'https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg', price:23, unit:'セット'},
+      {key:'premium',  label:'リーフシリーズ', ids:['S0125'], img:'https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg', price:43, unit:'セット'},
     ]
   },
   gomibag45:{
     title:'ゴミ袋 45L', req:true, reqLabel:'必須 — どちらか選択',
     opts:[
-      {key:'smart', label:'とって付きポリ袋 45L 50枚',    ids:['S0038'], img:'https://m.media-amazon.com/images/I/71JLcf-yIsL._AC_SL1500_.jpg', price:650},
-      {key:'shaka', label:'ごみ袋 シャカシャカ 45L 200枚', ids:['S0063'], img:'', price:2180},
+      {key:'smart', label:'とって付きポリ袋 45L',    ids:['S0038'], img:'https://m.media-amazon.com/images/I/71JLcf-yIsL._AC_SL1500_.jpg', price:650},
+      {key:'shaka', label:'シャカシャカ 45L', ids:['S0063'], img:'', price:2180},
     ]
   },
   softener:{
@@ -2000,14 +2048,30 @@ function autoSetPropertyQty() {
       state.confirmedGradeQty['handsoap'] = numUnits;
     }
     // STEP1-3 choice（必須）：自動連動がない品目を室数に
+    // 選択中のオプションの単品 min が >1 の場合は min の倍数に切り上げる
     if (!state.choiceQty) state.choiceQty = {};
     if (!state.confirmedChoiceQty) state.confirmedChoiceQty = {};
     [
       'mizukiri','toothbrush','dishsoap','laundry','softener','tissue',
       'room_deodor','gomibag45','sanitary_bag'
     ].forEach(function(k){
-      state.choiceQty[k] = numUnits;
-      state.confirmedChoiceQty[k] = numUnits;
+      let _q = numUnits;
+      // 現在選択中の opt から min を取得
+      const _selKey = state.choiceSelections && state.choiceSelections[k];
+      const _def = CHOICE_DEFS && CHOICE_DEFS[k];
+      const _selOpt = _def && _def.opts && _selKey ? _def.opts.find(o => o.key === _selKey) : null;
+      const _ids = (_selOpt && _selOpt.ids) || [];
+      if (_ids.length === 1) {
+        const _item = ITEMS[_ids[0]];
+        const _min = _item && _item.min && _item.min > 1 ? _item.min : 1;
+        if (_min > 1) {
+          // numUnits を min の倍数に切り上げ
+          _q = Math.ceil(numUnits / _min) * _min;
+          if (_q < _min) _q = _min;
+        }
+      }
+      state.choiceQty[k] = _q;
+      state.confirmedChoiceQty[k] = _q;
     });
   }
 
@@ -2766,15 +2830,30 @@ function selectChoice(key, optKey) {
   }
 
   if (opt) {
+    // 単品オプションの最小発注数を取得
+    const _singleId = (opt.ids && opt.ids.length === 1) ? opt.ids[0] : null;
+    const _itemMin = _singleId && ITEMS[_singleId] && ITEMS[_singleId].min > 1 ? ITEMS[_singleId].min : 1;
     if (key !== 'slipper') {
-      // スリッパ以外のデフォルト数量セット
-      if (!isReqItem) {
-        if (!(state.choiceQty[key] > 0)) state.choiceQty[key] = 1;
+      // 室数連動対象のchoice
+      const _ROOM_LINK = ['mizukiri','toothbrush','dishsoap','laundry','softener','tissue','room_deodor','gomibag45','sanitary_bag'];
+      const _numUnits = (state.property && state.property.units && state.property.units.length) || 1;
+      if (_ROOM_LINK.includes(key)) {
+        // 室数を min の倍数に切り上げ
+        let _q = _numUnits;
+        if (_itemMin > 1) _q = Math.ceil(_numUnits / _itemMin) * _itemMin;
+        if (_q < _itemMin) _q = _itemMin;
+        state.choiceQty[key] = _q;
+      } else if (!isReqItem) {
+        // 任意品目：最小発注数を初期値に
+        if (!(state.choiceQty[key] > 0)) state.choiceQty[key] = _itemMin;
       } else if (opt.min) {
-        if (!(state.choiceQty[key] > 0)) state.choiceQty[key] = opt.min;
+        if (!(state.choiceQty[key] > 0)) state.choiceQty[key] = Math.max(opt.min, _itemMin);
       } else {
-        if (!(state.choiceQty[key] > 0)) state.choiceQty[key] = 1;
+        if (!(state.choiceQty[key] > 0)) state.choiceQty[key] = _itemMin;
       }
+      // 切り替え時のconfirmedをリセットして「変更する」ボタンを出す
+      if (!state.confirmedChoiceQty) state.confirmedChoiceQty = {};
+      state.confirmedChoiceQty[key] = state.choiceQty[key];
     }
     // 紐付くIDの数量を同期
     opt.ids.forEach(id => {
@@ -3225,7 +3304,7 @@ function choiceCardHTML(key) {
         innerHTML += `<div style="font-size:12px;font-weight:700;flex:1;min-width:0;line-height:1.4">${singleItem.name||selOpt.label}</div>`;
         innerHTML += `<div style="flex-shrink:0;font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(selOpt.price)}<span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / ${unit}</span></div>`;
         innerHTML += `</div>`;
-        innerHTML += singleItem.brand ? `<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:1px">${singleItem.brand}</div>` : "";
+        innerHTML += singleItem.brand ? `<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:1px">${singleItem.brand}${(singleItem.min && singleItem.min > 1) ? '<span style="display:inline-block;margin-left:6px;padding:1px 8px;background:#fef3c7;border:1px solid #fde68a;border-radius:99px;font-size:9px;font-weight:800;color:#92400e">最小発注 '+singleItem.min+(singleItem.unit||'個')+'</span>' : ''}</div>` : "";
         if (selOpt.note) innerHTML += `<div style="font-size:10px;color:var(--amber);margin-top:2px">${selOpt.note}</div>`;
         innerHTML += `</div></div>`;
       }
@@ -3254,7 +3333,22 @@ function choiceCardHTML(key) {
       const _curQ = state.choiceQty['slipper'] || (_maxG > 0 ? _maxG : 1);
       for (let i=1; i<=_max; i++) _qtyOpts += '<option value="'+i+'"'+(_curQ===i?' selected':'')+'>'+i+'</option>';
     } else {
-      for(let i=1;i<=20;i++) _qtyOpts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
+      // 選択された単品の最小発注数を考慮
+      const _selIds = (selOpt && selOpt.ids) || [];
+      const _selSingleId = _selIds.length === 1 ? _selIds[0] : null;
+      const _selItem = _selSingleId ? ITEMS[_selSingleId] : null;
+      const _minV = (_selItem && _selItem.min && _selItem.min > 1) ? _selItem.min : 1;
+      if (_minV > 1) {
+        // 現在の qty を min の倍数に丸める
+        let _curQ = qty || _minV;
+        if (_curQ < _minV) _curQ = _minV;
+        for (let i=1; i<=20; i++) {
+          const v = i * _minV;
+          _qtyOpts += '<option value="'+v+'"'+(_curQ===v?' selected':'')+'>'+v+'</option>';
+        }
+      } else {
+        for(let i=1;i<=20;i++) _qtyOpts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
+      }
     }
     const _CHOICE_ROOM_LINK = ['mizukiri','toothbrush','dishsoap','laundry','softener','tissue','room_deodor','gomibag45','sanitary_bag'];
     const _choiceNumUnits = (state.property && state.property.units && state.property.units.length) || 1;
