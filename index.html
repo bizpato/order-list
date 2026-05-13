@@ -2438,7 +2438,11 @@ function showDuplicateSubmitScreen(p, units) {
   if (btnArea) btnArea.innerHTML = '';
 }
 
-function sendOrderEmail() {
+// n8n Webhook URLs
+const N8N_ORDER_WEBHOOK = 'https://bizpato.app.n8n.cloud/webhook/order-form';
+const N8N_DUPCHECK_WEBHOOK = 'https://bizpato.app.n8n.cloud/webhook/check-submitted';
+
+async function sendOrderEmail() {
   // 物件情報の必須項目チェック（未入力ならpropInfo画面へ）
   if (!isPropInfoValid()) {
     showToast('物件・ご契約者情報を入力してください');
@@ -2456,11 +2460,26 @@ function sendOrderEmail() {
   const units = (p.units || []);
   const numUnits = units.length;
 
-  // ── 送信済みチェック（1物件番号1回制限） ──
+  // ── 送信済みチェック（n8n API経由） ──
   const allNumbers = units.map(u => u.number||'').filter(Boolean);
+  // まずlocalStorageでチェック（オフライン対応）
   if (isAlreadySubmitted(allNumbers)) {
     showDuplicateSubmitScreen(p, units);
     return;
+  }
+  // n8n APIでもチェック（別端末からの重複送信対策）
+  try {
+    const dupRes = await fetch(N8N_DUPCHECK_WEBHOOK + '?numbers=' + encodeURIComponent(allNumbers.join(',')), { method: 'GET' });
+    if (dupRes.ok) {
+      const dupData = await dupRes.json();
+      if (dupData.isDuplicate) {
+        showDuplicateSubmitScreen(p, units);
+        return;
+      }
+    }
+  } catch(e) {
+    // ネットワークエラー時はlocalStorageの結果のみで判定（フォールバック）
+    console.warn('重複チェックAPI接続エラー:', e);
   }
   const isMulti = numUnits > 1;
 
@@ -2545,27 +2564,88 @@ function sendOrderEmail() {
   body += '\n============================\n';
   body += '送信日時：' + new Date().toLocaleString('ja-JP') + '\n';
 
-  // 件名：複数物件の場合は「物件番号一覧（N室）」、単一なら「物件番号」のみ
+  // 件名・物件番号文字列
   const subjectNumbers = units.map(u => u.number||'').filter(Boolean).join('・');
   const subjectLabel = isMulti ? (subjectNumbers + '（' + numUnits + '室）') : subjectNumbers;
-  const subject = encodeURIComponent('【発注】' + (p.owner||'') + ' / ' + subjectLabel + ' 初回セット・補充備品');
-  const bodyEnc = encodeURIComponent(body);
-  const mailto = 'mailto:customer@bizpato.com?cc=' + encodeURIComponent(p.email) + '&subject=' + subject + '&body=' + bodyEnc;
-  // 送信済みとして物件番号を記録
-  markAsSubmitted(allNumbers);
 
-  window.location.href = mailto;
+  // ── n8n Webhookにfetchで送信 ──
+  // 品目を構造化配列に変換
+  const mandatoryItems = [];
+  const optionalItems = [];
+  const recommendItems = [];
 
-  // 送信完了画面へ
-  setTimeout(function() {
+  // グレードグループ（初回必須）
+  for (const g of GRADE_GROUPS) {
+    const sel = state.gradeSelections[g.id];
+    const qty = state.gradeQty[g.id]||0;
+    if (sel && qty>0) {
+      const opt = g.options.find(o=>o.grade===sel);
+      if (opt) opt.items.forEach(i=>mandatoryItems.push({id:i.id,name:i.name,qty,price:i.price,category:g.name,grade:sel}));
+    }
+  }
+  // セット（初回必須）
+  for (const [k,def] of Object.entries(SET_DEFS)) {
+    const qty = state.setQty[k]||0;
+    if (qty>0) def.items.forEach(i=>mandatoryItems.push({id:i.id,name:i.name,qty,price:i.price,category:def.title,setKey:k,hostChoice:state.hostChoice[i.id]||'us'}));
+  }
+  // 選択カード（任意追加）
+  for (const [k,def] of Object.entries(CHOICE_DEFS)) {
+    const sel = state.choiceSelections[k];
+    const qty = state.choiceQty[k]||0;
+    if (sel && qty>0) {
+      const opt = def.opts.find(o=>o.key===sel);
+      if (opt) opt.ids.forEach(id=>{ const item=ITEMS[id]; if(item) optionalItems.push({id,name:item.name,qty,price:item.price,category:def.title,choice:sel}); });
+    }
+  }
+  // 通常品目（推奨品目含む）
+  for (const [id,qty] of Object.entries(state.quantities)) {
+    if (qty<=0) continue;
+    const item = ITEMS[id];
+    if (item) recommendItems.push({id,name:item.name,qty,unit:item.unit,price:item.price,hostChoice:state.hostChoice[id]||'us'});
+  }
+
+  const payload = {
+    propertyNumbers: allNumbers,
+    contractorName: p.owner || '',
+    contactName: contactName,
+    email: p.email || '',
+    phone: p.phone || '',
+    roomCount: numUnits,
+    totalPeople: p.maxGuests || '',
+    totalBath: p.bathrooms || '',
+    totalToilet: p.toilets || '',
+    isFamily: (p.familyUnitCount||0) > 0,
+    familyUnitCount: p.familyUnitCount || 0,
+    units: units,
+    mandatoryItems,
+    optionalItems,
+    recommendItems,
+    totalPrice: total,
+    notes: '',
+    sourceUrl: window.location.href,
+    submittedAt: new Date().toISOString()
+  };
+
+  // 送信ボタンをローディング状態に
+  const submitBtn = document.querySelector('[onclick*="sendOrderEmail"]');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '送信中…'; }
+
+  try {
+    const res = await fetch(N8N_ORDER_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    // 送信済みとして物件番号を記録（localStorageにも保存）
+    markAsSubmitted(allNumbers);
+    // 送信完了画面
     document.getElementById('main-content').innerHTML = `
       <div style="text-align:center;padding:40px 20px">
-        <div style="font-size:48px;margin-bottom:16px">📧</div>
-        <div style="font-size:22px;font-weight:800;margin-bottom:8px">メールアプリが起動しました</div>
-        <div style="color:var(--text-sub);font-size:13px;margin-bottom:24px">内容を確認して送信してください</div>
+        <div style="font-size:48px;margin-bottom:16px">📦</div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:8px">発注が完了しました！</div>
+        <div style="color:var(--text-sub);font-size:13px;margin-bottom:24px">BizPatoより確認のご連絡をいたします</div>
         <div style="background:var(--bg);border-radius:var(--radius);padding:16px;text-align:left">
-          <div style="font-size:11px;color:var(--text-sub)">送信先</div>
-          <div style="font-weight:700;margin-bottom:8px;font-family:var(--mono)">customer@bizpato.com</div>
           <div style="font-size:11px;color:var(--text-sub)">ご契約者</div>
           <div style="font-weight:700;margin-bottom:8px">${p.owner||''}</div>
           <div style="font-size:11px;color:var(--text-sub)">物件番号${isMulti?'（'+numUnits+'室）':''}</div>
@@ -2576,7 +2656,11 @@ function sendOrderEmail() {
       </div>`;
     const btnArea = document.getElementById('nav-btns-area');
     if (btnArea) btnArea.innerHTML = '';
-  }, 800);
+  } catch(e) {
+    console.error('送信エラー:', e);
+    showToast('送信エラーが発生しました。時間をおいて再度お試しください。');
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '📦 この内容で発注する'; }
+  }
 }
 
 async function submitOrder() {
