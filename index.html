@@ -98,10 +98,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .badge-family{background:#ecfdf5;color:#065f46}
 .badge-auto{background:#ecfeff;color:#0e7490;border:1px solid #a5f3fc}
 .badge-host{background:var(--brand-base);color:var(--brand)}
-.item-name{font-size:15px;font-weight:800;line-height:1.4;margin-bottom:3px}
-.item-brand{font-size:12px;color:var(--text-sub);margin-bottom:6px;font-weight:500}
-.item-price{font-size:15px;font-weight:900;font-family:var(--mono);color:var(--brand)}
-.item-price-sub{font-size:11px;color:var(--text-sub)}
+.item-name{font-size:12px;font-weight:700;line-height:1.4;margin-bottom:2px}
+.item-brand{font-size:10px;color:#94a3b8;margin-bottom:4px;font-weight:600}
+.item-price{font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)}
+.item-price-sub{font-size:10px;color:var(--text-sub)}
 
 /* ── ホストトグル ── */
 .host-toggle-wrap{margin-top:8px}
@@ -436,26 +436,26 @@ const ITEMS = {
   'S0145':{id:'S0145',name:"ミレニアム ハンドソープ詰替 1000ml",brand:"ホテルアメニティ",price:1750,min:1,unit:"個",cat:"手洗いミレニアム",img:""},
   'S0150':{id:'S0150',name:"カネヨ5L 無添加泡石鹸",brand:"カネヨ",price:2150,min:1,unit:"個",cat:"バスアメニティ",img:"https://c.superdeal.com/img/large/B07RQTRBJB.jpg"},
   'B0149':{id:'B0149',name:"ミレニアムボトル ハンドソープ 500ml",brand:"ホテルアメニティ",price:650,min:1,unit:"個",cat:"手洗いミレニアム",hostPrep:true,img:"https://essenza.co.jp/?mode=grp&gid=2519021"},
-  'S0001':{id:'S0001',name:"水切りネット 兼用 30枚",brand:"ダストマン",price:250,min:2,unit:"個",cat:"キッチン消耗品",req:"必須",img:"https://m.media-amazon.com/images/I/51JT5dol53L._AC_SY300_SX300_QL70_ML2_.jpg"},
+  'S0001':{id:'S0001',name:"水切りネット 兼用",brand:"ダストマン",price:250,min:2,unit:"個",unitDesc:"30枚入",cat:"キッチン消耗品",req:"必須",img:"https://m.media-amazon.com/images/I/51JT5dol53L._AC_SY300_SX300_QL70_ML2_.jpg"},
   'S0065':{id:'S0065',name:"水切りゴミ袋 浅型 100枚",brand:"-",price:520,min:1,unit:"個",cat:"キッチン消耗品",req:"必須",img:""},
   'S0188':{id:'S0188',name:"ティッシュペーパー BOX 5箱",brand:"クリネックス",price:730,min:1,unit:"個",cat:"紙製品",req:"必須",img:"https://m.media-amazon.com/images/I/71Xhy-r7+CL._AC_SL1000_.jpg"},
   'S0203':{id:'S0203',name:"ティッシュペーパー ソフト 5パック",brand:"コアレックス",price:75,min:1,unit:"個",cat:"紙製品",req:"必須",img:"https://m.media-amazon.com/images/I/81uKlGF2c7L._AC_SL1500_.jpg"},
   'S0090':{id:'S0090',name:"トイレ消臭スプレー 上位モデル 280ml",brand:"小林製薬",price:450,min:1,unit:"個",cat:"トイレ消臭",req:"必須",img:"https://m.media-amazon.com/images/I/31JbXkKmDsL._AC_PIbundle-24,TopRight,0,0_SH20_.jpg"},
   'S0096':{id:'S0096',name:"トイレの消臭力スプレー 無香料",brand:"エステー",price:380,min:1,unit:"個",cat:"トイレ消臭",req:"必須",img:"https://m.media-amazon.com/images/I/71hmtvdm6vL._AC_SL1500_.jpg"},
   'S0091':{id:'S0091',name:"サニタリー用ゴミ袋 30枚",brand:"セイケツネットワーク",price:320,min:1,unit:"個",cat:"トイレ用消耗品",req:"必須",img:"https://m.media-amazon.com/images/I/71kXVVl9UpL._AC_SL1500_.jpg"},
-  'S0095':{id:'S0095',name:"サニタリー用ゴミ袋 100枚",brand:"ホテルアメニティ",price:4,min:100,unit:"個",cat:"トイレ用消耗品",req:"必須",img:""},
+  'S0095':{id:'S0095',name:"サニタリー用ゴミ袋",brand:"ホテルアメニティ",price:4,min:100,unit:"枚",cat:"トイレ用消耗品",req:"必須",img:""},
   'B0208':{id:'B0208',name:"ファブリーズ本体 370ml",brand:"ファブリーズ",price:600,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/71BYhPXQPGL._AC_SL1500_.jpg"},
   'S0211':{id:'S0211',name:"ファブリーズ詰替 1600ml",brand:"ファブリーズ",price:2580,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/81BwiZbmH3L._AC_SL1500_.jpg"},
   'B0234':{id:'B0234',name:"清水香ボトル",brand:"清水香",price:300,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/81LZrvMy4sL._AC_SL1500_.jpg"},
   'S0200':{id:'S0200',name:"清水香消臭スプレー詰替 1L",brand:"清水香",price:1400,min:1,unit:"個",cat:"除菌消臭",req:"必須",img:"https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg"},
   'B0273':{id:'B0273',name:"ビニールスリッパ",brand:"カインズ",price:1100,min:1,unit:"足",cat:"その他",img:"https://m.media-amazon.com/images/I/51BMlJH7MnL._AC_SY500_.jpg"},
-  'S0190':{id:'S0190',name:"使い捨てスリッパ EPE ダークグレー",brand:"ホテルアメニティ",price:55,min:100,unit:"袋",cat:"履物",img:"https://www.sintoworld.jp/prod/images/prod_img/60452.jpg#tp"},
-  'S0191':{id:'S0191',name:"使い捨てスリッパ PS スーペリア白",brand:"ホテルアメニティ",price:130,min:100,unit:"袋",cat:"履物",img:"https://www.sintoworld.jp/prod/images/prod_img/60033.jpg#tp"},
+  'S0190':{id:'S0190',name:"使い捨てスリッパ EPE ダークグレー",brand:"ホテルアメニティ",price:55,min:100,unit:"足",cat:"履物",img:"https://www.sintoworld.jp/prod/images/prod_img/60452.jpg#tp"},
+  'S0191':{id:'S0191',name:"使い捨てスリッパ PS スーペリア白",brand:"ホテルアメニティ",price:130,min:100,unit:"足",cat:"履物",img:"https://www.sintoworld.jp/prod/images/prod_img/60033.jpg#tp"},
   'S0033':{id:'S0033',name:"食器洗剤本体 キュキュット ポンプ 480ml",brand:"キュキュット",price:500,min:1,unit:"個",cat:"食器洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/41HoQN9MqRL._AC_.jpg"},
   'S0014':{id:'S0014',name:"キュキュット 業務用 4.5L",brand:"花王",price:3180,min:1,unit:"個",cat:"食器洗剤",req:"必須",img:""},
   'S0032':{id:'S0032',name:"ステンレスソープディスペンサー",brand:"HAMILO",price:2400,min:1,unit:"個",cat:"食器洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/61yHUrq13lL._AC_SL1280_.jpg"},
-  'S0124':{id:'S0124',name:"歯ブラシ マットシリーズ",brand:"ホテルアメニティ",price:23,min:100,unit:"個",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg#tp"},
-  'S0125':{id:'S0125',name:"歯ブラシ リーフシリーズ",brand:"ホテルアメニティ",price:43,min:100,unit:"個",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg#tp"},
+  'S0124':{id:'S0124',name:"歯ブラシ マットシリーズ",brand:"ホテルアメニティ",price:23,min:100,unit:"本",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/8007102.jpg#tp"},
+  'S0125':{id:'S0125',name:"歯ブラシ リーフシリーズ",brand:"ホテルアメニティ",price:43,min:100,unit:"本",cat:"洗面アメニティ",req:"必須",img:"https://www.sintoworld.jp/prod/images/prod_img/ECOB02.jpg#tp"},
   'S0038':{id:'S0038',name:"とって付きポリ袋 45L 50枚",brand:"日本サニパック",price:650,min:1,unit:"個",cat:"ゴミ袋",req:"必須",img:"https://m.media-amazon.com/images/I/71JLcf-yIsL._AC_SL1500_.jpg"},
   'S0063':{id:'S0063',name:"ごみ袋 シャカシャカ 45L 200枚",brand:"-",price:2180,min:1,unit:"個",cat:"ゴミ袋",req:"必須",img:""},
   'B0103':{id:'B0103',name:"トイレクイックル本体 30枚",brand:"花王",price:400,min:1,unit:"個",cat:"トイレ清掃シート",req:"必須",img:"https://m.media-amazon.com/images/I/81XL5d0-TIL._SL1500_.jpg"},
@@ -536,7 +536,7 @@ const ITEMS = {
   'S0005':{id:'S0005',name:"哺乳瓶洗浄剤 Milton 36錠",brand:"Milton",price:1680,min:1,unit:"個",cat:"子供ベビー衛生",img:"https://m.media-amazon.com/images/I/61URVzwOYzL._AC_SL1000_.jpg"},
   'B0007':{id:'B0007',name:"哺乳びん洗い泡スプレー本体 270ml",brand:"PIGEON",price:780,min:1,unit:"個",cat:"子供ベビー衛生",img:"https://m.media-amazon.com/images/I/51lD9-3OZlL._AC_SL1000_.jpg"},
   'S0006':{id:'S0006',name:"哺乳びん洗い泡スプレー詰替 250ml",brand:"PIGEON",price:680,min:1,unit:"個",cat:"子供ベビー衛生",img:"https://m.media-amazon.com/images/I/51eHts4B9xL._AC_SL1000_.jpg"},
-  'S0041':{id:'S0041',name:"赤ちゃん用純水 500ml",brand:"ピジョン",price:146,min:24,unit:"個",cat:"子供ベビー衛生",img:"https://m.media-amazon.com/images/I/71TFwav6bGL._AC_SL1500_.jpg"},
+  'S0041':{id:'S0041',name:"赤ちゃん用純水 500ml",brand:"ピジョン",price:146,min:24,unit:"本",cat:"子供ベビー衛生",img:"https://m.media-amazon.com/images/I/71TFwav6bGL._AC_SL1500_.jpg"},
   'S0130':{id:'S0130',name:"子供用アメニティセット",brand:"ホテルアメニティ",price:220,min:100,unit:"個",cat:"洗面アメニティ子供用",img:"https://www.sintoworld.jp/prod/images/prod_img/JK-SET12.jpg#tp"},
   'S0132':{id:'S0132',name:"子供用ボディスポンジ アヒル",brand:"ホテルアメニティ",price:27,min:100,unit:"個",cat:"洗面アメニティ子供用",img:""},
   'S0133':{id:'S0133',name:"子供用歯ブラシ イエロー",brand:"ミスターフレンドリー",price:55,min:100,unit:"個",cat:"洗面アメニティ子供用",img:"https://prospe.net/uploads/product/aa8fd3df526adebee5eb8d4fe3ecd0bf.jpg"},
@@ -776,9 +776,9 @@ const CHOICE_DEFS = {
     title:'室内消臭スプレー', req:true, reqLabel:'必須 — どれか選択',
     opts:[
       {key:'shi_set',  label:'清水香ボトル＋詰替',   ids:['B0234','S0200'], img:'https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg', price:1700, desc:'ボトル（B0234）＋ 詰替 1L（S0200）'},
-      {key:'fab_set',  label:'ファブリーズ 本体＋詰替', ids:['B0208','S0211'], img:'https://m.media-amazon.com/images/I/71BYhPXQPGL._AC_SL1500_.jpg', price:3180, desc:'本体 370ml（B0208）＋ 詰替 1600ml（S0211）'},
+      {key:'fab_set',  label:'ファブリーズ本体＋詰替', ids:['B0208','S0211'], img:'https://m.media-amazon.com/images/I/71BYhPXQPGL._AC_SL1500_.jpg', price:3180, desc:'本体 370ml（B0208）＋ 詰替 1600ml（S0211）'},
       {key:'shi_only', label:'清水香詰替のみ',          ids:['S0200'],         img:'https://m.media-amazon.com/images/I/91aUyxmuZFL._AC_SL1500_.jpg', price:1400, desc:'詰替 1L（S0200）', note:'⚠️ ボトルはホスト様ご準備'},
-      {key:'fab_only', label:'ファブリーズ 詰替のみ',   ids:['S0211'],         img:'https://m.media-amazon.com/images/I/81BwiZbmH3L._AC_SL1500_.jpg', price:2580, desc:'詰替 1600ml（S0211）', note:'⚠️ 本体ボトルはホスト様ご準備'},
+      {key:'fab_only', label:'ファブリーズ詰替のみ',   ids:['S0211'],         img:'https://m.media-amazon.com/images/I/81BwiZbmH3L._AC_SL1500_.jpg', price:2580, desc:'詰替 1600ml（S0211）', note:'⚠️ 本体ボトルはホスト様ご準備'},
     ]
   },
   slipper:{
@@ -3040,9 +3040,9 @@ function itemCardHTML(id, forceReq) {
         <div class="item-name" style="flex:1;min-width:0">${item.name}</div>
         <div style="flex-shrink:0;text-align:right"><span class="item-price">${fmt(item.price)}</span><span class="item-price-sub"> / ${item.unit}</span></div>
       </div>
-      <div class="item-brand">${item.brand}${(item.min && item.min > 1) ? '<span style="display:inline-block;margin-left:6px;padding:1px 8px;background:#fef3c7;border:1px solid #fde68a;border-radius:99px;font-size:10px;font-weight:800;color:#92400e">最小発注 '+item.min+(item.unit||'個')+'</span>' : ''}</div>
+      <div class="item-brand">${item.brand}${item.unitDesc ? '<span style="display:inline-block;margin-left:6px;padding:1px 7px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:99px;font-size:9px;font-weight:700;color:#64748b">'+item.unitDesc+'</span>' : ''}${(item.min && item.min > 1) ? '<span style="display:inline-block;margin-left:6px;padding:1px 7px;background:#fef3c7;border:1px solid #fde68a;border-radius:99px;font-size:9px;font-weight:800;color:#92400e">最小発注 '+item.min+(item.unit||'個')+'</span>' : ''}</div>
       ${hostToggle}
-      ${!isHost?`<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(item.price*(qty>0?qty:item.min)).toLocaleString()}</div>`:''}
+      ${!isHost?`<div style="font-size:14px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:10px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(item.price*(qty>0?qty:item.min)).toLocaleString()}</div>`:''}
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0" onclick="event.stopPropagation()">
       ${(()=>{
@@ -3309,7 +3309,7 @@ function choiceCardHTML(key) {
         innerHTML += `<div style="font-size:12px;font-weight:700;flex:1;min-width:0;line-height:1.4">${singleItem.name||selOpt.label}</div>`;
         innerHTML += `<div style="flex-shrink:0;font-size:13px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(selOpt.price)}<span style="font-size:10px;font-weight:500;color:var(--text-sub)"> / ${unit}</span></div>`;
         innerHTML += `</div>`;
-        innerHTML += singleItem.brand ? `<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:1px">${singleItem.brand}${(singleItem.min && singleItem.min > 1) ? '<span style="display:inline-block;margin-left:6px;padding:1px 8px;background:#fef3c7;border:1px solid #fde68a;border-radius:99px;font-size:9px;font-weight:800;color:#92400e">最小発注 '+singleItem.min+(singleItem.unit||'個')+'</span>' : ''}</div>` : "";
+        innerHTML += singleItem.brand ? `<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:1px">${singleItem.brand}${singleItem.unitDesc ? '<span style="display:inline-block;margin-left:6px;padding:1px 7px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:99px;font-size:9px;font-weight:700;color:#64748b">'+singleItem.unitDesc+'</span>' : ''}${(singleItem.min && singleItem.min > 1) ? '<span style="display:inline-block;margin-left:6px;padding:1px 8px;background:#fef3c7;border:1px solid #fde68a;border-radius:99px;font-size:9px;font-weight:800;color:#92400e">最小発注 '+singleItem.min+(singleItem.unit||'個')+'</span>' : ''}</div>` : "";
         if (selOpt.note) innerHTML += `<div style="font-size:10px;color:var(--amber);margin-top:2px">${selOpt.note}</div>`;
         innerHTML += `</div></div>`;
       }
