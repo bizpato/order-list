@@ -310,7 +310,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   .item-card > div:last-child{align-self:stretch !important;flex-direction:row !important;justify-content:space-between !important;align-items:center !important;border-top:1px solid #f1f5f9;padding-top:10px}
   /* set-card */
   .set-card{padding:14px;border-radius:18px}
-  .set-card [style*="display:flex"][style*="flex-direction:column"][style*="align-items:flex-end"]{align-self:stretch !important;flex-direction:row !important;justify-content:space-between !important;align-items:center !important;border-top:1px solid #f1f5f9;padding-top:10px;margin-top:10px}
   /* page-header */
   .page-header{padding:18px;border-radius:20px}
   .page-header-title{font-size:18px;line-height:1.4}
@@ -325,6 +324,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   .grade-card{padding:14px;border-radius:18px}
   /* page-header-step */
   .page-header-step{font-size:9px;padding:5px 10px}
+  /* セット/チョイス/リフィル/グレード内部を縦並びに */
+  .set-inner,.choice-inner,.refill-inner,.grade-inner{flex-direction:column !important;gap:10px !important;padding:10px !important}
+  .set-inner-right,.choice-inner-right,.refill-inner-right,.grade-inner-right{align-self:stretch !important;flex-direction:row !important;justify-content:space-between !important;align-items:center !important;flex-wrap:wrap !important;gap:8px !important;border-top:1px solid #f1f5f9;padding-top:10px}
+  .set-inner-right .qty-row,.choice-inner-right .qty-row,.refill-inner-right .qty-row,.grade-inner-right .qty-row{flex:0 0 auto}
+  /* itemRow（セット内の本体/詰替行）も画像を小さくして文字領域を確保 */
+  .set-inner-left > div > img,.refill-inner-left > div > img,.grade-inner-left > div > img,.choice-inner-left > div > img{width:44px !important;height:44px !important}
 }
 /* 超狭いスマホ向け（iPhone 13 mini など） */
 @media(max-width:380px){
@@ -466,7 +471,7 @@ const ITEMS = {
   'S0104':{id:'S0104',name:"トイレマジックリンパワフル消臭ストロング業務用 4.5L",brand:"花王",price:2800,min:1,unit:"個",cat:"トイレ洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/71H1tXkfj2L._AC_SL1500_.jpg"},
   'B0205':{id:'B0205',name:"クイックルワイパー本体",brand:"3M スコッチブライト",price:2000,min:1,unit:"個",cat:"床掃除",req:"必須",hostPrep:true,img:"https://jp.images-monotaro.com/Monotaro3/pi/full/mono11749562-170407-02.jpg"},
   'S0192':{id:'S0192',name:"クイックルワイパーウエットシート 20枚",brand:"レック",price:390,min:1,unit:"個",cat:"床掃除",req:"必須",img:"https://m.media-amazon.com/images/I/81Yzevrr8BL._AC_SL1500_.jpg"},
-  'S0154':{id:'S0154',name:"アタックZERO 本体 580ml",brand:"アタック",price:790,min:1,unit:"個",cat:"衣類用洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/81oDXh5sL5L._AC_SL1500_.jpg"},
+  'S0154':{id:'S0154',name:"アタックZERO 本体 580ml",brand:"アタック",price:790,min:1,unit:"個",cat:"衣類用洗剤",req:"必須",img:""},
   'S0246':{id:'S0246',name:"アタックZERO 詰替 2000ml",brand:"アタック",price:2380,min:1,unit:"個",cat:"衣類用洗剤",req:"必須",img:"https://m.media-amazon.com/images/I/81oDXh5sL5L._AC_SL1500_.jpg"},
   'B0247':{id:'B0247',name:"洗濯洗剤容器 1000ml チャコールグレー",brand:"サラサデザイン",price:1120,min:1,unit:"個",cat:"衣類用洗剤ボトル",img:"https://m.media-amazon.com/images/I/41-u1qTKgwS._AC_SL1500_.jpg"},
   'S0249':{id:'S0249',name:"ボールドジェルボール 詰替 100個",brand:"-",price:3480,min:1,unit:"個",cat:"キッチン消耗品",req:"推奨",img:""},
@@ -3159,8 +3164,8 @@ function setCardHTML(key) {
     : def.items.reduce((s,i)=>s+(state.hostChoice[i.id]==='host'?0:i.price),0) * qty;
 
   // setCardHTML: 数量コントロールを右端縦配置、合計価格を枠内下部に表示
-  const setDetailHTML = `<div style="display:flex;align-items:flex-start;gap:10px;padding:12px;background:#fff;border-radius:12px;margin-bottom:0">
-    <div style="flex:1;min-width:0">
+  const setDetailHTML = `<div class="set-inner" style="display:flex;align-items:flex-start;gap:10px;padding:12px;background:#fff;border-radius:12px;margin-bottom:0">
+    <div class="set-inner-left" style="flex:1;min-width:0">
       ${mainHTML}
       ${subHTML}
       ${def.hostNote?`<div class="host-note" style="margin-top:6px">${def.hostNote}</div>`:''}
@@ -3168,7 +3173,7 @@ function setCardHTML(key) {
         <span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(calcSetTotal)}</span>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
+    <div class="set-inner-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
       ${isAutoSet && subItems.length > 0 ? `
         <div class="qty-row">
           <div class="qty-row-label">
@@ -3356,9 +3361,9 @@ function choiceCardHTML(key) {
       : (key==='toilet_sheet' || key==='toilet_deodor') ? '<span class="qty-row-label-sub">トイレ数連動</span>'
       : (_CHOICE_ROOM_LINK.includes(key) && _choiceNumUnits > 1) ? '<span class="qty-row-label-sub">室数連動</span>'
       : '';
-    const _rightCol = `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()"><div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span>${_autoSub}</div><select class="qty-select" onchange="setChoiceQtyDirect('${key}',this.value)">${_qtyOpts}</select></div>${_cartBtn}</div>`;
+    const _rightCol = `<div class="choice-inner-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()"><div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span>${_autoSub}</div><select class="qty-select" onchange="setChoiceQtyDirect('${key}',this.value)">${_qtyOpts}</select></div>${_cartBtn}</div>`;
 
-    detailHTML = `<div style="display:flex;align-items:flex-start;gap:8px;padding:12px;background:#fff;border-radius:12px;margin-top:10px"><div style="flex:1;min-width:0">${innerHTML}</div>${_rightCol}</div>`;
+    detailHTML = `<div class="choice-inner" style="display:flex;align-items:flex-start;gap:8px;padding:12px;background:#fff;border-radius:12px;margin-top:10px"><div class="choice-inner-left" style="flex:1;min-width:0">${innerHTML}</div>${_rightCol}</div>`;
   }
 
   // 合計価格（枠内左下・単位なし）
@@ -3420,9 +3425,9 @@ function refillCardHTML(key) {
     const optTotal = _isSheetOnly ? optExtra : def.base.price + optExtra;
     if (selOpt.extraId) {
       // 本体行（大）
-      detailHTML += '<div style="display:flex;align-items:flex-start;gap:8px;padding:12px;background:#fff;border-radius:12px;margin-top:10px">';
+      detailHTML += '<div class="refill-inner" style="display:flex;align-items:flex-start;gap:8px;padding:12px;background:#fff;border-radius:12px;margin-top:10px">';
       // 左：商品情報
-      detailHTML += '<div style="flex:1;min-width:0">';
+      detailHTML += '<div class="refill-inner-left" style="flex:1;min-width:0">';
       if (!_isSheetOnly) {
         // 本体行（大）
         detailHTML += '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border-radius:10px;margin-bottom:6px">';
@@ -3512,7 +3517,7 @@ function refillCardHTML(key) {
     detailHTML += '<div style="padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">'+fmt(_totalCalc)+'</span></div>';
     detailHTML += '</div>';
     // 右：数量セレクト＋カートボタン
-    detailHTML += '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">';
+    detailHTML += '<div class="refill-inner-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">';
     let qtyOpts2 = '';
     for (let i = 1; i <= 20; i++) qtyOpts2 += '<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
 
@@ -3701,14 +3706,14 @@ function gradeGroupHTML(g) {
     <div class="badge-row" style="margin-bottom:6px">${reqBadgeG}</div>
     <div class="grade-name">${g.name}</div>
     <div class="grade-options">${btns}</div>
-    <div style="display:flex;align-items:flex-start;gap:8px;margin-top:10px">
-      <div style="flex:1;min-width:0">
+    <div class="grade-inner" style="display:flex;align-items:flex-start;gap:8px;margin-top:10px">
+      <div class="grade-inner-left" style="flex:1;min-width:0">
         ${mainHTML}
         ${subHTML}
         ${opt.hostNote?`<div class="host-note" style="margin-top:6px">${opt.hostNote}</div>`:''}
         <div style="padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP)}</span></div>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
+      <div class="grade-inner-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
         ${(()=>{
           // 本体セレクト（bodyItemsがある場合のみ）
           const _rQty = (state.gradeRefillQty||{})[g.id] ?? 1;
