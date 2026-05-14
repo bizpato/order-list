@@ -1465,6 +1465,10 @@ function loadState() {
         if (v > minV * 1000) {
           state.quantities[id] = minV;
         }
+        // min未満の正の値を補正（過去のaddToCartバグでqty=1が入ったmin=100品目など）
+        else if (v > 0 && minV > 1 && v < minV) {
+          state.quantities[id] = minV;
+        }
       });
     }
     // choiceQty の異常値補正
@@ -1805,7 +1809,7 @@ function renderStep12() {
       <button class="btn-submit" style="width:100%;padding:18px;font-size:16px;opacity:.4;cursor:not-allowed" disabled>📦 この内容で発注する</button>
     ` : `
       <button onclick="checkBeforeOrder()" class="btn-submit" style="width:100%;padding:18px;font-size:16px">📦 この内容で発注する</button>
-      <div style="text-align:center;font-size:12px;color:var(--text-sub);margin-top:10px;font-weight:500">発注後はメールアプリが開きます</div>
+
     `}
   </div>`;
   return html;
@@ -2481,6 +2485,32 @@ const N8N_ORDER_WEBHOOK = 'https://bizpato.app.n8n.cloud/webhook/order-form';
 const N8N_DUPCHECK_WEBHOOK = 'https://bizpato.app.n8n.cloud/webhook/check-submitted';
 
 async function sendOrderEmail() {
+  // ── 多重送信防止（連続クリック対策）──
+  if (window._isSubmittingOrder) {
+    console.log('[sendOrderEmail] 既に送信処理中のためスキップ');
+    return;
+  }
+  window._isSubmittingOrder = true;
+  // 全ての送信ボタンを即座に無効化
+  try {
+    document.querySelectorAll('[onclick*="sendOrderEmail"]').forEach(btn => {
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+      btn.style.pointerEvents = 'none';
+    });
+  } catch(e) {}
+
+  try {
+    await _sendOrderEmailInner();
+  } finally {
+    // 送信完了後は少し遅延してフラグを解除（完了画面遷移後にユーザーが戻った場合用）
+    setTimeout(() => {
+      window._isSubmittingOrder = false;
+    }, 3000);
+  }
+}
+
+async function _sendOrderEmailInner() {
   // 物件情報の必須項目チェック（未入力ならpropInfo画面へ）
   if (!isPropInfoValid()) {
     showToast('物件・ご契約者情報を入力してください');
@@ -2637,9 +2667,14 @@ async function sendOrderEmail() {
     const qty = state.setQty[k]||0;
     if (qty>0) def.items.forEach(i=>{
       mandatoryItems.push({id:i.id,name:i.name,qty,price:i.price,category:def.title,setKey:k,hostChoice:state.hostChoice[i.id]||'us'});
-      // ホスト準備品目は除外
-      if (state.hostChoice[i.id] !== 'host') {
-        allItemsMap[i.id] = (allItemsMap[i.id]||0) + qty;
+      // ホスト準備品目は数量を「ホスト準備」マーカーで、弊社準備は数値で集約
+      if (state.hostChoice[i.id] === 'host') {
+        allItemsMap[i.id] = 'ホスト準備';
+      } else {
+        // 既にホスト準備マーカーが入っている場合は上書きしない
+        if (allItemsMap[i.id] !== 'ホスト準備') {
+          allItemsMap[i.id] = (typeof allItemsMap[i.id] === 'number' ? allItemsMap[i.id] : 0) + qty;
+        }
       }
     });
   }
@@ -2653,7 +2688,9 @@ async function sendOrderEmail() {
         const item=ITEMS[id];
         if(item){
           optionalItems.push({id,name:item.name,qty,price:item.price,category:def.title,choice:sel});
-          allItemsMap[id] = (allItemsMap[id]||0) + qty;
+          if (allItemsMap[id] !== 'ホスト準備') {
+            allItemsMap[id] = (typeof allItemsMap[id] === 'number' ? allItemsMap[id] : 0) + qty;
+          }
         }
       });
     }
@@ -2664,8 +2701,13 @@ async function sendOrderEmail() {
     const item = ITEMS[id];
     if (item) {
       recommendItems.push({id,name:item.name,qty,unit:item.unit,price:item.price,hostChoice:state.hostChoice[id]||'us'});
-      if (state.hostChoice[id] !== 'host') {
-        allItemsMap[id] = (allItemsMap[id]||0) + qty;
+      // ホスト準備品目は「ホスト準備」マーカー、弊社準備は数値で集約
+      if (state.hostChoice[id] === 'host') {
+        allItemsMap[id] = 'ホスト準備';
+      } else {
+        if (allItemsMap[id] !== 'ホスト準備') {
+          allItemsMap[id] = (typeof allItemsMap[id] === 'number' ? allItemsMap[id] : 0) + qty;
+        }
       }
     }
   }
@@ -2695,12 +2737,18 @@ async function sendOrderEmail() {
       '担当者名': isRep ? contactName : '',
       'メール': isRep ? (p.email || '') : ''
     };
-    // items: 代表物件には数量を集約、他物件は「●」
+    // items: 代表物件には数量を集約、他物件は「●」、ホスト準備品目は全物件「ホスト準備」
     const items = {};
     Object.keys(allItemsMap).forEach(function(itemId){
-      if (isRep) {
-        items[itemId] = allItemsMap[itemId];
+      const val = allItemsMap[itemId];
+      if (val === 'ホスト準備') {
+        // ホスト準備品目は全物件に「ホスト準備」マーク
+        items[itemId] = 'ホスト準備';
+      } else if (isRep) {
+        // 代表物件は集約された数値
+        items[itemId] = val;
       } else {
+        // 他物件は「●」
         items[itemId] = '●';
       }
     });
@@ -2764,7 +2812,7 @@ async function sendOrderEmail() {
       <div style="text-align:center;padding:40px 20px">
         <div style="font-size:48px;margin-bottom:16px">📦</div>
         <div style="font-size:22px;font-weight:800;margin-bottom:8px">発注が完了しました！</div>
-        <div style="color:var(--text-sub);font-size:13px;margin-bottom:24px">BizPatoより確認のご連絡をいたします</div>
+
         <div style="background:var(--bg);border-radius:var(--radius);padding:16px;text-align:left">
           <div style="font-size:11px;color:var(--text-sub)">ご契約者</div>
           <div style="font-weight:700;margin-bottom:8px">${p.owner||''}</div>
@@ -2893,7 +2941,15 @@ function changeRefillQtyDirect(key, val) {
   render();
 }
 function addToCart(type, key, qty) {
-  const q = parseInt(qty, 10) || 1;
+  let q = parseInt(qty, 10);
+  if (!q || q <= 0) {
+    if (type === 'item') {
+      const _item = ITEMS[key];
+      q = (_item && _item.min) ? _item.min : 1;
+    } else {
+      q = 1;
+    }
+  }
   if (!state.cartAdded) state.cartAdded = {};
   if (!state.confirmedSelections) state.confirmedSelections = {};
   if (!state.confirmedQty) state.confirmedQty = {};
