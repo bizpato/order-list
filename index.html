@@ -2611,10 +2611,14 @@ async function sendOrderEmail() {
   const subjectLabel = isMulti ? (subjectNumbers + '（' + numUnits + '室）') : subjectNumbers;
 
   // ── n8n Webhookにfetchで送信 ──
-  // 品目を構造化配列に変換
+  // 品目を構造化配列に変換（従来形式：互換性のため残す）
   const mandatoryItems = [];
   const optionalItems = [];
   const recommendItems = [];
+
+  // 全品目の数量を集約するマップ（key: itemId → totalQty）
+  // 代表物件にこの数量を集約、他物件は「●」マーク
+  const allItemsMap = {};
 
   // グレードグループ（初回必須）
   for (const g of GRADE_GROUPS) {
@@ -2622,13 +2626,22 @@ async function sendOrderEmail() {
     const qty = state.gradeQty[g.id]||0;
     if (sel && qty>0) {
       const opt = g.options.find(o=>o.grade===sel);
-      if (opt) opt.items.forEach(i=>mandatoryItems.push({id:i.id,name:i.name,qty,price:i.price,category:g.name,grade:sel}));
+      if (opt) opt.items.forEach(i=>{
+        mandatoryItems.push({id:i.id,name:i.name,qty,price:i.price,category:g.name,grade:sel});
+        allItemsMap[i.id] = (allItemsMap[i.id]||0) + qty;
+      });
     }
   }
   // セット（初回必須）
   for (const [k,def] of Object.entries(SET_DEFS)) {
     const qty = state.setQty[k]||0;
-    if (qty>0) def.items.forEach(i=>mandatoryItems.push({id:i.id,name:i.name,qty,price:i.price,category:def.title,setKey:k,hostChoice:state.hostChoice[i.id]||'us'}));
+    if (qty>0) def.items.forEach(i=>{
+      mandatoryItems.push({id:i.id,name:i.name,qty,price:i.price,category:def.title,setKey:k,hostChoice:state.hostChoice[i.id]||'us'});
+      // ホスト準備品目は除外
+      if (state.hostChoice[i.id] !== 'host') {
+        allItemsMap[i.id] = (allItemsMap[i.id]||0) + qty;
+      }
+    });
   }
   // 選択カード（任意追加）
   for (const [k,def] of Object.entries(CHOICE_DEFS)) {
@@ -2636,36 +2649,101 @@ async function sendOrderEmail() {
     const qty = state.choiceQty[k]||0;
     if (sel && qty>0) {
       const opt = def.opts.find(o=>o.key===sel);
-      if (opt) opt.ids.forEach(id=>{ const item=ITEMS[id]; if(item) optionalItems.push({id,name:item.name,qty,price:item.price,category:def.title,choice:sel}); });
+      if (opt) opt.ids.forEach(id=>{
+        const item=ITEMS[id];
+        if(item){
+          optionalItems.push({id,name:item.name,qty,price:item.price,category:def.title,choice:sel});
+          allItemsMap[id] = (allItemsMap[id]||0) + qty;
+        }
+      });
     }
   }
   // 通常品目（推奨品目含む）
   for (const [id,qty] of Object.entries(state.quantities)) {
     if (qty<=0) continue;
     const item = ITEMS[id];
-    if (item) recommendItems.push({id,name:item.name,qty,unit:item.unit,price:item.price,hostChoice:state.hostChoice[id]||'us'});
+    if (item) {
+      recommendItems.push({id,name:item.name,qty,unit:item.unit,price:item.price,hostChoice:state.hostChoice[id]||'us'});
+      if (state.hostChoice[id] !== 'host') {
+        allItemsMap[id] = (allItemsMap[id]||0) + qty;
+      }
+    }
   }
 
+  // ── orderId 生成（送信日時から） ──
+  const _now = new Date();
+  const _pad = function(n){return String(n).padStart(2,'0');};
+  const orderId = 'order_' + _now.getFullYear() + _pad(_now.getMonth()+1) + _pad(_now.getDate())
+                + '_' + _pad(_now.getHours()) + _pad(_now.getMinutes()) + _pad(_now.getSeconds());
+
+  // ── 代表物件番号 ──
+  const representativeUnitNumber = units[0] ? (units[0].number||'') : '';
+
+  // ── GAS用 units 配列（info + items を物件ごとに展開）──
+  const unitsForGas = units.map(function(u, idx){
+    const isRep = (idx === 0);
+    // info: 代表物件のみに契約室数・代表物件番号・契約者情報を記入、他物件は ""
+    const info = {
+      '契約室数': isRep ? numUnits : '',
+      '代表物件番号': isRep ? representativeUnitNumber : '',
+      '物件番号': u.number || '',
+      '最大宿泊人数': u.maxGuests || 0,
+      'バスルーム数': u.bathrooms || 0,
+      'トイレ数': u.toilets || 0,
+      'ファミリー物件': u.isFamily === true ? '◯' : '',
+      '契約者名': isRep ? (p.owner || '') : '',
+      '担当者名': isRep ? contactName : '',
+      'メール': isRep ? (p.email || '') : ''
+    };
+    // items: 代表物件には数量を集約、他物件は「●」
+    const items = {};
+    Object.keys(allItemsMap).forEach(function(itemId){
+      if (isRep) {
+        items[itemId] = allItemsMap[itemId];
+      } else {
+        items[itemId] = '●';
+      }
+    });
+    return {
+      unitNum: u.number || '',
+      unitIndex: idx,
+      isRepresentative: isRep,
+      info: info,
+      items: items
+    };
+  });
+
   const payload = {
-    propertyNumbers: allNumbers,
+    // ── GAS連携用の必須フィールド ──
+    orderId: orderId,
+    units: unitsForGas,
+    // ── メタ情報（n8n / Slack / 従来処理で使用）──
+    submittedAt: _now.toISOString(),
+    representativeUnitNumber: representativeUnitNumber,
+    numUnits: numUnits,
+    owner: p.owner || '',
     contractorName: p.owner || '',
+    contactName: contactName,
     staffName: contactName,
     email: p.email || '',
     phone: p.phone || '',
+    propertyNumbers: allNumbers,
     roomCount: numUnits,
     totalPeople: p.maxGuests || '',
     totalBath: p.bathrooms || '',
     totalToilet: p.toilets || '',
     isFamily: (p.familyUnitCount||0) > 0,
     familyRoomCount: p.familyUnitCount || 0,
-    units: units,
-    mandatoryItems,
-    optionalItems,
-    recommendItems,
+    // ── 物件情報の元データ（互換性のため）──
+    unitsRaw: units,
+    // ── 従来の品目配列（互換性のため残す）──
+    mandatoryItems: mandatoryItems,
+    optionalItems: optionalItems,
+    recommendItems: recommendItems,
     totalPrice: total,
+    totalAmount: total,
     notes: '',
-    sourceUrl: window.location.href,
-    submittedAt: new Date().toISOString()
+    sourceUrl: window.location.href
   };
 
   // 送信ボタンをローディング状態に
