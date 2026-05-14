@@ -1601,6 +1601,9 @@ function renderStep12() {
 
   // 共通カード生成
   function ciCard(id, name, sub, qty, unit, price, type, key, canDelete, optSelectHTML, isRequired) {
+    // item型のmin値を取得（-ボタンのdisabled判定に使用）
+    const _ciItem = (type === 'item') ? ITEMS[key] : null;
+    const _ciMinV = (_ciItem && _ciItem.min && _ciItem.min > 1) ? _ciItem.min : 1;
     const idSpan = id ? `<div><span class="ci-card-id">${id}</span></div>` : '';
     const subSpan = sub ? `<div class="ci-card-sub">${sub}</div>` : '';
     const selectRow = optSelectHTML ? `<div style="margin-top:6px">${optSelectHTML}</div>` : '';
@@ -1615,7 +1618,7 @@ function renderStep12() {
       </div>
       <div class="ci-card-bottom">
         <div class="ci-qty-row">
-          <button class="ci-qty-btn" onclick="confirmQtyChange('${type}','${key}',-1)"${!canDelete && qty<=1?' disabled':''}>−</button>
+          <button class="ci-qty-btn" onclick="confirmQtyChange('${type}','${key}',-1)"${!canDelete && qty<=_ciMinV?' disabled':''}>−</button>
           <span class="ci-qty-num">${qty}</span>
           <span class="ci-qty-unit">${unit}</span>
           <button class="ci-qty-btn" onclick="confirmQtyChange('${type}','${key}',1)">+</button>
@@ -5209,9 +5212,14 @@ function confirmQtyChange(type, key, delta) {
   } else if (type === 'item') {
     const item = ITEMS[key];
     const isMandatory = item && item.req === '必須';
+    const minV = (item && item.min && item.min > 1) ? item.min : 1;
     const cur = state.quantities[key] || 0;
-    const next = cur + delta;
-    if (isMandatory && next < 1) { showToast('必須項目は1以上必要です'); return; }
+    // min単位で増減（deltaは+1または-1の符号のみ使用）
+    const step = delta > 0 ? minV : -minV;
+    let next = cur + step;
+    if (isMandatory && next < minV) { showToast('必須項目は ' + minV + ' 以上必要です'); return; }
+    // 任意品目でもmin未満になる場合はminに固定（削除したい場合は削除ボタンを使用）
+    if (next < minV && next > 0) next = minV;
     if (next < 0) return;
     state.quantities[key] = next;
     state.confirmedQty[key] = next; // 同期
