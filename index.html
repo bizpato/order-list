@@ -1485,6 +1485,16 @@ function loadState() {
         if (v > minV * 1000) {
           state.choiceQty[k] = minV;
         }
+        // 0より大きく min 未満の場合 → min に補正（過去のバグ対策）
+        else if (v > 0 && minV > 1 && v < minV) {
+          state.choiceQty[k] = minV;
+          // 連動する quantities も補正
+          if (opt && opt.ids) opt.ids.forEach(id => {
+            if (state.quantities && state.quantities[id] !== undefined) {
+              state.quantities[id] = minV;
+            }
+          });
+        }
       });
     }
   } catch(e) {}
@@ -3128,10 +3138,10 @@ function selectChoice(key, optKey) {
       if (!state.confirmedChoiceQty) state.confirmedChoiceQty = {};
       state.confirmedChoiceQty[key] = state.choiceQty[key];
     }
-    // 紐付くIDの数量を同期
+    // 紐付くIDの数量を同期（choiceQty は既に実発注数なのでそのまま）
     opt.ids.forEach(id => {
       if (ITEMS[id]) {
-        state.quantities[id] = state.choiceQty[key] * (ITEMS[id].min || 1);
+        state.quantities[id] = state.choiceQty[key];
       }
     });
     // 必須品目は選択後にcartAddedを自動セット
@@ -5208,7 +5218,7 @@ function confirmQtyChange(type, key, delta) {
     if (next < 0) return;
     state.choiceQty[key] = next;
     state.confirmedChoiceQty[key] = next; // 同期
-    if (selOpt) selOpt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = next * (ITEMS[id].min || 1); });
+    if (selOpt) selOpt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = next; });
   } else if (type === 'refill') {
     const def = REFILL_CHOICE_DEFS[key];
     const isMandatory = def && (def.req === '必須');
