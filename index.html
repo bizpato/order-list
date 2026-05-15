@@ -5090,7 +5090,7 @@ function renderPropInfo() {
       <div>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0">
           <input type="checkbox" ${p.contactSameAsOwner?'checked':''}
-            onchange="state.property.contactSameAsOwner=this.checked;if(this.checked){state.property.contact=state.property.owner}updatePropInfoBtn();render()"
+            onchange="state.property.contactSameAsOwner=this.checked;if(this.checked){state.property.contact=state.property.owner}saveState();render();setTimeout(updatePropInfoBtn,0)"
             style="width:18px;height:18px;cursor:pointer;accent-color:var(--brand)">
           <span style="font-size:14px;font-weight:700;color:var(--text)">ご担当者はご契約者と同じ</span>
         </label>
