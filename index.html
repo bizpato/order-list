@@ -2708,12 +2708,23 @@ async function _sendOrderEmailInner() {
       });
     }
   }
+  // choice型で使用中のID（二重加算防止）
+  const _choiceUsedIds = new Set();
+  for (const [k,def] of Object.entries(CHOICE_DEFS)) {
+    const sel = state.choiceSelections[k];
+    if (sel) {
+      const opt = def.opts.find(o=>o.key===sel);
+      if (opt) opt.ids.forEach(id => _choiceUsedIds.add(id));
+    }
+  }
   // 通常品目（推奨品目含む）
   for (const [id,qty] of Object.entries(state.quantities)) {
     if (qty<=0) continue;
     const item = ITEMS[id];
     if (item) {
       recommendItems.push({id,name:item.name,qty,unit:item.unit,price:item.price,hostChoice:state.hostChoice[id]||'us'});
+      // choice型で既にallItemsMapに加算済みのIDは二重加算しない
+      if (_choiceUsedIds.has(id)) continue;
       // ホスト準備品目は「ホスト準備」マーカー、弊社準備は数値で集約
       if (state.hostChoice[id] === 'host') {
         allItemsMap[id] = 'ホスト準備';
