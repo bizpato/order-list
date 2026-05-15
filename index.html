@@ -84,8 +84,76 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .subsection-title{font-size:10px;font-weight:900;color:var(--text-sub);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding-left:2px}
 
 /* ── アイテムカード ── */
-.item-card{background:var(--card);border:1px solid #e2e8f0;border-radius:28px;padding:18px 20px;margin-bottom:14px;display:flex;align-items:flex-start;gap:14px;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.item-card{background:var(--card);border:1px solid #e2e8f0;border-radius:28px;padding:18px 20px;margin-bottom:14px;display:flex;align-items:flex-start;gap:14px;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.03);position:relative}
 .item-card.has-qty{border-color:var(--brand)}
+
+/* ── タップ選択UI（推奨・任意品目用）── */
+.item-card.selectable,.set-card.selectable,.choice-card-wrap.selectable{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.item-card.selectable.selected,.set-card.selectable.selected,.choice-card-wrap.selectable.selected{
+  border-color:var(--brand);
+  border-width:2px;
+  background:linear-gradient(180deg,#fafdff 0%,#fff 60%);
+  box-shadow:0 4px 14px rgba(33,83,135,0.10);
+}
+/* selected時のpadding微調整（1px差吸収） */
+.item-card.selectable.selected{padding:17px 19px}
+.item-card.selectable:active,.set-card.selectable:active,.choice-card-wrap.selectable:active{transform:scale(.995);transition:transform .08s}
+.item-card.selectable.selected:active,.set-card.selectable.selected:active,.choice-card-wrap.selectable.selected:active{transform:scale(.995)}
+
+/* 「選択中」バッジ（右上に絶対配置） */
+.select-mark{
+  position:absolute;
+  top:14px;
+  right:14px;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 11px 5px 8px;
+  border-radius:99px;
+  background:#fff;
+  border:1.5px solid #e2e8f0;
+  color:#94a3b8;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.02em;
+  transition:all .15s ease;
+  flex-shrink:0;
+  white-space:nowrap;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  z-index:2;
+}
+.select-mark:active{transform:scale(.95)}
+.select-mark-icon{
+  display:inline-block;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  border:1.5px solid #cbd5e1;
+  background:#fff;
+  transition:all .15s ease;
+  flex-shrink:0;
+}
+.item-card.selectable.selected .select-mark,
+.set-card.selectable.selected .select-mark,
+.choice-card-wrap.selectable.selected .select-mark{
+  background:var(--brand);
+  border-color:var(--brand);
+  color:#fff;
+  box-shadow:0 2px 8px rgba(33,83,135,0.25);
+}
+.item-card.selectable.selected .select-mark-icon,
+.set-card.selectable.selected .select-mark-icon,
+.choice-card-wrap.selectable.selected .select-mark-icon{
+  border-color:#fff;
+  background:#fff;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='%23215387' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8.5 L7 12 L13 4.5'/></svg>");
+  background-size:10px;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+/* バッジ分の余白を確保 */
+.item-card.selectable .item-body{padding-right:90px}
 
 .item-card.host-mode .qty-control{opacity:.35;pointer-events:none}
 .item-img{width:64px;height:64px;border-radius:10px;object-fit:contain;background:#fff;border:1.5px solid var(--border);flex-shrink:0;padding:4px}
@@ -120,8 +188,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .qty-unit{font-size:10px;color:var(--text-sub)}
 
 /* ── セットカード ── */
-.set-card{background:var(--card);border:1px solid #e2e8f0;border-radius:28px;padding:20px 22px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.set-card{background:var(--card);border:1px solid #e2e8f0;border-radius:28px;padding:20px 22px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.03);position:relative;transition:all .2s}
 .set-card.has-qty{border-color:var(--brand)}
+.set-card.selectable.selected{padding:19px 21px}
 
 .set-title{font-size:15px;font-weight:800;margin-bottom:10px}
 .set-items{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
@@ -136,8 +205,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .set-total-sub{font-size:10px;color:var(--text-sub)}
 
 /* ── 選択カード（2択・3択） ── */
-.choice-card-wrap{background:var(--card);border:1px solid #e2e8f0;border-radius:28px;padding:20px 22px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.choice-card-wrap{background:var(--card);border:1px solid #e2e8f0;border-radius:28px;padding:20px 22px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.03);position:relative;transition:all .2s}
 .choice-card-wrap.has-sel{border-color:var(--brand)}
+.choice-card-wrap.selectable.selected{padding:19px 21px}
 .choice-label{font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:block}
 .choice-title{font-size:16px;font-weight:800;margin-bottom:14px}
 .choice-opts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -273,6 +343,54 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .ci-card-id{font-size:9px;font-family:var(--mono);color:#94a3b8;white-space:nowrap;margin-top:1px}
 .ci-card-name{font-size:13px;font-weight:700;flex:1;line-height:1.4}
 .ci-card-sub{font-size:10px;color:var(--text-sub);margin-top:2px}
+
+/* ── 確認画面：コンパクトな表形式（テーブル風） ── */
+.ci-table{display:flex;flex-direction:column;background:#fff;border:1px solid #e8edf2;border-radius:12px;overflow:hidden;margin-bottom:12px}
+.ci-table.ci-table-required{border-left:3px solid var(--brand)}
+.ci-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid #f1f5f9;min-height:40px}
+.ci-row:last-child{border-bottom:none}
+.ci-row-id{font-size:10px;font-family:var(--mono);color:#64748b;font-weight:600;flex-shrink:0;min-width:50px}
+.ci-row-id.ci-row-id-empty{color:#cbd5e1}
+.ci-row-name{font-size:12px;font-weight:600;flex:1;min-width:0;line-height:1.4;color:#1e293b}
+.ci-row-sub{font-size:10px;color:var(--text-sub);margin-top:1px}
+.ci-row-action{flex-shrink:0;display:flex;align-items:center;gap:6px}
+.ci-row-select{border:1px solid var(--border);border-radius:6px;font-size:11px;padding:3px 6px;background:#fff;color:var(--text);max-width:140px}
+.ci-row-del{padding:4px 10px;border-radius:6px;border:1px solid #fecaca;background:#fff;font-size:10px;font-weight:700;cursor:pointer;color:#ef4444;transition:all .1s;white-space:nowrap}
+.ci-row-del:hover{background:#fef2f2}
+
+/* ── セット品目用：独立カード（境界を明確に） ── */
+.ci-set-card{background:#fff;border:1.5px solid #d8e1ec;border-radius:12px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.ci-set-card.ci-set-required{border-left:3px solid var(--brand)}
+.ci-set-card-head{background:linear-gradient(180deg,#f0f6fc 0%,#fafcfe 100%);padding:10px 14px;border-bottom:1.5px solid #d8e1ec;display:flex;align-items:center;gap:8px}
+.ci-set-card-head-title{flex:1;min-width:0;font-size:13px;font-weight:800;color:#1e293b;letter-spacing:.01em}
+.ci-set-card-head-badge{font-size:9px;font-weight:800;color:#475569;background:#fff;border:1px solid #d8e1ec;border-radius:99px;padding:2px 8px;flex-shrink:0}
+.ci-set-card-body{padding:4px 0}
+.ci-set-card-body .ci-row{padding:8px 14px;border-bottom:1px solid #f1f5f9;min-height:36px}
+.ci-set-card-body .ci-row:last-child{border-bottom:none}
+.ci-set-card-body .ci-row-id{color:#94a3b8}
+.ci-set-card-control{background:#fafcfe;padding:8px 14px;border-bottom:1px solid #f1f5f9;font-size:10px;color:var(--text-sub)}
+.ci-set-card-control select{margin-top:4px}
+
+/* ── ホスト準備品目セクション（注意喚起トーン） ── */
+.ci-host-card{background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:14px;margin-bottom:14px}
+.ci-host-card-title{font-size:13px;font-weight:800;color:#92400e;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.ci-host-card-desc{font-size:11px;color:#78350f;line-height:1.6;margin-bottom:10px}
+.ci-host-list{background:#fff;border:1px solid #fde68a;border-radius:8px;overflow:hidden}
+.ci-host-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid #fef3c7;min-height:40px}
+.ci-host-row:last-child{border-bottom:none}
+.ci-host-row .ci-row-id{font-size:10px;font-family:var(--mono);color:#78350f;font-weight:600;flex-shrink:0;min-width:50px}
+.ci-host-row .ci-row-name{font-size:12px;font-weight:600;flex:1;min-width:0;line-height:1.4;color:#1e293b}
+.ci-host-revert-btn{padding:4px 10px;border-radius:6px;border:1.5px solid var(--brand);background:#fff;font-size:10px;font-weight:700;cursor:pointer;color:var(--brand);transition:all .1s;white-space:nowrap;flex-shrink:0}
+.ci-host-revert-btn:hover{background:var(--brand-base)}
+
+/* セット見出し行（旧スタイル：残置） */
+.ci-row-set-head{background:#f8fafc;padding:6px 12px 4px;font-size:11px;font-weight:800;color:#475569;border-bottom:1px solid #e8edf2;min-height:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ci-row-set-head .ci-row-set-title{flex:1;min-width:0}
+.ci-row-set-head .ci-set-badge{font-size:9px;font-weight:700;color:#64748b;background:#fff;border:1px solid #e2e8f0;border-radius:99px;padding:1px 7px;flex-shrink:0}
+/* セットの中身行はインデント */
+.ci-row-set-child{padding-left:24px;background:#fcfdff}
+.ci-row-set-child .ci-row-id{color:#94a3b8}
+
 .ci-card-bottom{display:flex;align-items:center;gap:8px}
 .ci-qty-row{display:flex;align-items:center;gap:6px;flex:1}
 .ci-qty-btn{width:28px;height:28px;border-radius:7px;border:1.5px solid var(--border);background:#fff;font-size:16px;font-weight:400;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s;color:var(--text);line-height:1;flex-shrink:0}
@@ -1050,6 +1168,14 @@ const REFILL_CHOICE_DEFS = {
   },
 };
 
+// ─── 自動追加品目（=旧 必須固定品目）の定義 ───
+// これらはフォームのページから外し、確認画面に「自動追加品目」として一覧表示する。
+// 数量削除・選択肢なしのため、フォーム上で操作する必要がない品目。
+const AUTO_ADD_ITEM_IDS = ['S0031','S0179','S0183','B0212','B0140','S0092'];        // 単品（必須固定）
+const AUTO_ADD_SET_KEYS = ['kitchen_bleach','corocoro','bath_magic','toilet_fab'];  // セット（必須固定）
+// 注：ファミリー必須品目（B0085-B0088）は hostPrep:true でホスト準備切替が必要なため、
+// 「自動追加品目」ではなく renderFamily ページで操作可能なまま残す。
+
 // ─── 状態 ───
 
 
@@ -1292,11 +1418,11 @@ function showStepResetDialog(stepKey, stepLabel) {
 function doStepReset(stepKey) {
   document.querySelectorAll('.reset-dialog-overlay').forEach(el=>el.remove());
   if (stepKey === 'step1') {
-    // 固定品目：数量を初期値にリセット
-    const step1Ids = ['S0031','S0179','S0183','B0212','B0140','S0092'];
+    // 自動追加品目（旧 必須固定品目）：数量を初期値にリセット ※フォームから操作はできないが、内部状態として保持
+    const step1Ids = AUTO_ADD_ITEM_IDS;
     step1Ids.forEach(function(id){ const item=ITEMS[id]; state.quantities[id] = item ? item.min : 1; });
-    // セット品目：数量を1にリセット
-    ['kitchen_bleach','corocoro','bath_magic','toilet_fab'].forEach(function(k){ state.setQty[k] = 1; });
+    // 自動追加セット品目：数量を1にリセット
+    AUTO_ADD_SET_KEYS.forEach(function(k){ state.setQty[k] = 1; });
     // hostPrep品目リセット
     const step2HostIds = ['B0017','B0018','B0019','B0020','B0021','B0024','B0025','B0027','B0028','B0079','B0081','B0082','B0083','B0073','B0074','B0084','B0100','B0101','B0196'];
     step2HostIds.forEach(function(id){ state.hostChoice[id] = 'us'; });
@@ -1321,10 +1447,10 @@ function doStepReset(stepKey) {
       if(state.confirmedSelections) delete state.confirmedSelections['refill_'+k];
       if(state.confirmedRefillQty) delete state.confirmedRefillQty[k];
     });
-    // ファミリー品目リセット
+    // ファミリー必須品目リセット（ホスト準備切替可能なため renderFamily ページで操作可能）
     ['B0085','B0086','B0087','B0088'].forEach(function(id){ state.quantities[id] = 0; if(state.cartAdded) delete state.cartAdded[id]; });
-    // 全サブステップのcompletedStepsをリセット
-    ['fixed','select1','select2','family','family_opt'].forEach(function(k){ delete state.completedSteps[k]; });
+    // 全サブステップのcompletedStepsをリセット（'fixed'は廃止のため除外）
+    ['select1','select2','family','family_opt'].forEach(function(k){ delete state.completedSteps[k]; });
     // confirmedQtyもリセット
     if(state.confirmedQty) { step1Ids.forEach(function(id){ delete state.confirmedQty[id]; }); }
     // リセット後にデフォルト値を再設定
@@ -1502,8 +1628,8 @@ function loadState() {
 
 // ── ナビゲーション定義（関数参照は使用時に解決）──
 const PROP_INFO_STEP = {key:'propInfo', label:'物件情報', fn:function(){return renderPropInfo();}};
+// 必須固定品目（'fixed'）は廃止。確認画面に「自動追加品目」として一覧表示する。
 const REQUIRED_STEPS = [
-  {key:'fixed',   label:'初回必須品目 — 数量確認',                    fn:function(){return renderStep1();}},
   {key:'select1', label:'初回必須品目 — 担当設定',  fn:function(){return renderStep2a();}},
   {key:'select2', label:'初回必須品目 — 品目・メーカー選択', fn:function(){return renderStep2b();}},
 ];
@@ -1605,41 +1731,99 @@ const OPT_CATS = [
 ];
 
 function renderStep12() {
-  const total = calcTotal();
   const step2Done = state.completedSteps['recommend'];
   const step3Done = OPT_CATS.some(s => state.completedSteps[s.key]);
 
-  // 共通カード生成
-  function ciCard(id, name, sub, qty, unit, price, type, key, canDelete, optSelectHTML, isRequired) {
-    // item型のmin値を取得（-ボタンのdisabled判定に使用）
-    const _ciItem = (type === 'item') ? ITEMS[key] : null;
-    const _ciMinV = (_ciItem && _ciItem.min && _ciItem.min > 1) ? _ciItem.min : 1;
-    const idSpan = id ? `<div><span class="ci-card-id">${id}</span></div>` : '';
-    const subSpan = sub ? `<div class="ci-card-sub">${sub}</div>` : '';
-    const selectRow = optSelectHTML ? `<div style="margin-top:6px">${optSelectHTML}</div>` : '';
-    return `<div class="ci-card${isRequired ? ' ci-required' : ''}">
-      <div class="ci-card-top">
-        <div style="flex:1;min-width:0">
-          ${idSpan}
-          <div class="ci-card-name">${name}</div>
-          ${subSpan}
-          ${selectRow}
-        </div>
-      </div>
-      <div class="ci-card-bottom">
-        <div class="ci-qty-row">
-          <button class="ci-qty-btn" onclick="confirmQtyChange('${type}','${key}',-1)"${!canDelete && qty<=_ciMinV?' disabled':''}>−</button>
-          <span class="ci-qty-num">${qty}</span>
-          <span class="ci-qty-unit">${unit}</span>
-          <button class="ci-qty-btn" onclick="confirmQtyChange('${type}','${key}',1)">+</button>
-        </div>
-        <span class="ci-price">${fmt(price)}</span>
-        ${canDelete ? `<button class="ci-del-btn" onclick="confirmDelete('${type}','${key}')">削除</button>` : `<div style="width:28px"></div>`}
-      </div>
+  // ─── セット/grade/refill/choice に含まれる品番を全て集める（通常品目ループでの重複防止用）───
+  const _idsInSets = new Set();
+  // 全SET（自動追加含む）の中身
+  for (const [k, def] of Object.entries(SET_DEFS)) {
+    (def.items||[]).forEach(it => { if (it && it.id) _idsInSets.add(it.id); });
+  }
+  // 全GRADE_GROUPSの中身
+  for (const g of GRADE_GROUPS) {
+    (g.options||[]).forEach(opt => {
+      (opt.items||[]).forEach(it => { if (it && it.id) _idsInSets.add(it.id); });
+    });
+  }
+  // 全REFILL_CHOICE_DEFSの中身（base + 各opt の extraId/ids）
+  for (const [k, def] of Object.entries(REFILL_CHOICE_DEFS)) {
+    if (def.base && def.base.id) _idsInSets.add(def.base.id);
+    (def.opts||[]).forEach(opt => {
+      if (opt.extraId) _idsInSets.add(opt.extraId);
+      (opt.ids||[]).forEach(id => _idsInSets.add(id));
+    });
+  }
+  // 全CHOICE_DEFSの中身（各opt の ids）
+  for (const [k, def] of Object.entries(CHOICE_DEFS)) {
+    (def.opts||[]).forEach(opt => {
+      (opt.ids||[]).forEach(id => _idsInSets.add(id));
+    });
+  }
+
+  // ─── テーブル行生成ヘルパー ───
+  // 単品行：品番＋品目名（＋削除ボタン or 選択肢プルダウン）
+  function itemRow(id, name, sub, type, key, canDelete, optSelectHTML, childClass) {
+    const idCell = id
+      ? `<span class="ci-row-id">${id}</span>`
+      : `<span class="ci-row-id ci-row-id-empty">—</span>`;
+    const subSpan = sub ? `<div class="ci-row-sub">${sub}</div>` : '';
+    let action = '';
+    if (optSelectHTML) action += optSelectHTML;
+    if (canDelete) action += `<button class="ci-row-del" onclick="confirmDelete('${type}','${key}')">削除</button>`;
+    return `<div class="ci-row${childClass?' '+childClass:''}">
+      ${idCell}
+      <div class="ci-row-name">${name}${subSpan}</div>
+      ${action ? `<div class="ci-row-action">${action}</div>` : ''}
     </div>`;
   }
 
-  // セクションヘッダー
+  // セット見出し行＋中身行を生成（独立カード形式）
+  function setBlock(def, type, key, canDelete, optSelectHTML, isRequired) {
+    let html = `<div class="ci-set-card${isRequired?' ci-set-required':''}">
+      <div class="ci-set-card-head">
+        <div class="ci-set-card-head-title">${def.title}</div>
+        <span class="ci-set-card-head-badge">セット ${def.items.length}点</span>
+        ${canDelete ? `<button class="ci-row-del" onclick="confirmDelete('${type}','${key}')">削除</button>` : ''}
+      </div>`;
+    if (optSelectHTML) {
+      html += `<div class="ci-set-card-control">選択肢の変更${optSelectHTML}</div>`;
+    }
+    html += `<div class="ci-set-card-body">`;
+    // セット内の品目を全て表示
+    def.items.forEach(it => {
+      html += `<div class="ci-row">
+        <span class="ci-row-id">${it.id}</span>
+        <div class="ci-row-name">${it.name}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+    return html;
+  }
+
+  // 任意の品目リスト（id配列）からカード形式のブロックを生成（grade/refill/choiceのセット表示用）
+  function customSetBlock(title, badge, itemsArr, type, key, canDelete, optSelectHTML, isRequired) {
+    let html = `<div class="ci-set-card${isRequired?' ci-set-required':''}">
+      <div class="ci-set-card-head">
+        <div class="ci-set-card-head-title">${title}</div>
+        ${badge ? `<span class="ci-set-card-head-badge">${badge}</span>` : ''}
+        ${canDelete ? `<button class="ci-row-del" onclick="confirmDelete('${type}','${key}')">削除</button>` : ''}
+      </div>`;
+    if (optSelectHTML) {
+      html += `<div class="ci-set-card-control">選択肢の変更${optSelectHTML}</div>`;
+    }
+    html += `<div class="ci-set-card-body">`;
+    itemsArr.forEach(it => {
+      html += `<div class="ci-row">
+        <span class="ci-row-id">${it.id}</span>
+        <div class="ci-row-name">${it.name}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+    return html;
+  }
+
+  // セクション見出し
   function sectionHeader(label, note, isRequired) {
     const color = isRequired ? 'var(--brand)' : '#64748b';
     const border = isRequired ? '2px solid var(--brand)' : '1.5px solid #e2e8f0';
@@ -1649,7 +1833,7 @@ function renderStep12() {
     </div>`;
   }
 
-  let html = pageHeader('','','確認・送信','発注品目と数量をご確認ください。変更・削除もこの画面で行えます。');
+  let html = pageHeader('','','確認・送信','発注品目をご確認ください。選択肢の変更・品目の削除もこの画面で行えます。');
 
   // ── 変更検知バナー（スナップショットと比較して差分がある場合のみ表示）
   if (hasConfirmChanges()) {
@@ -1668,20 +1852,61 @@ function renderStep12() {
     </div>`;
   }
 
-  // ── 推奨・任意未確認バナーは発注ボタン押下時ポップアップに移動
+  // ─── ホスト準備品目セクション（最上部に表示）───
+  let hostPrepRows = '';
+  for (const [id, hostChoice] of Object.entries(state.hostChoice || {})) {
+    if (hostChoice !== 'host') continue;
+    const item = ITEMS[id];
+    if (!item) continue;
+    hostPrepRows += `<div class="ci-host-row">
+      <span class="ci-row-id">${id}</span>
+      <div class="ci-row-name">${item.name}</div>
+      <button class="ci-host-revert-btn" onclick="revertHostToUs('${id}')">弊社準備に戻す</button>
+    </div>`;
+  }
+  if (hostPrepRows) {
+    html += `<div class="ci-host-card">
+      <div class="ci-host-card-title">⚠️ ホスト様準備品目</div>
+      <div class="ci-host-card-desc">これらの品目はホスト様準備を選択されています。設置から補充まで全てホスト様にてご担当いただきます。弊社準備に変更する場合は、各品目の「弊社準備に戻す」ボタンをタップしてください。</div>
+      <div class="ci-host-list">${hostPrepRows}</div>
+    </div>`;
+  }
 
-  // ── 必須品目セクション
-  let requiredCards = '';
+  // ─── 自動追加品目セクション（旧 必須固定品目）───
+  let autoAddRows = '';   // 単品行
+  let autoAddSetCards = ''; // セット独立カード
+  // 単品（必須固定）
+  for (const id of AUTO_ADD_ITEM_IDS) {
+    const item = ITEMS[id];
+    if (!item) continue;
+    autoAddRows += itemRow(id, item.name, null, 'item', id, false, null, null);
+  }
+  // セット（必須固定）— 見出し＋中身を全て表示
+  for (const k of AUTO_ADD_SET_KEYS) {
+    const def = SET_DEFS[k];
+    if (!def) continue;
+    autoAddSetCards += setBlock(def, 'set', k, false, null, true);
+  }
+  if (autoAddRows || autoAddSetCards) {
+    html += sectionHeader('自動追加品目', '初回発注に必ず含まれる品目', true);
+    html += `<div style="font-size:11px;color:var(--text-sub);margin:-6px 4px 10px;line-height:1.6">これらは操作の必要がなく、自動で発注対象に含まれます。</div>`;
+    if (autoAddRows) html += `<div class="ci-table ci-table-required">${autoAddRows}</div>`;
+    if (autoAddSetCards) html += autoAddSetCards;
+  }
 
-  // SET_DEFS（必須）
+  // ─── 必須品目セクション（自動追加品目は除外）───
+  let requiredRows = '';      // 単品行
+  let requiredSetCards = '';  // セット独立カード
+
+  // SET_DEFS（必須）— 自動追加セットを除外
   for (const [k, def] of Object.entries(SET_DEFS)) {
     if (def.req !== '必須') continue;
+    if (AUTO_ADD_SET_KEYS.includes(k)) continue;
     const qty = state.setQty[k] || 0;
     if (qty <= 0) continue;
-    const p = def.items.reduce((s,item)=>s+(state.hostChoice[item.id]==='host'?0:item.price),0);
-    requiredCards += ciCard('', def.title, null, qty, 'セット', p*qty, 'set', k, false, null, true);
+    requiredSetCards += setBlock(def, 'set', k, false, null, true);
   }
-  // GRADE_GROUPS（必須）
+  // GRADE_GROUPS（必須）— 独立カードで表示
   for (const g of GRADE_GROUPS) {
     if (g.req !== '必須') continue;
     const sel = state.gradeSelections[g.id];
@@ -1689,11 +1914,10 @@ function renderStep12() {
     if (!sel || qty <= 0) continue;
     const opt = g.options.find(o=>o.grade===sel);
     if (!opt) continue;
-    const p = opt.items.reduce((s,i)=>s+i.price,0);
-    const optHTML = `<select class="ci-select" onchange="confirmChangeGrade('${g.id}',this.value)">${g.options.map(o=>`<option value="${o.grade}"${o.grade===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
-    requiredCards += ciCard('', g.name, null, qty, 'セット', p*qty, 'grade', g.id, false, optHTML, true);
+    const optHTML = `<select class="ci-row-select" onchange="confirmChangeGrade('${g.id}',this.value)">${g.options.map(o=>`<option value="${o.grade}"${o.grade===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
+    requiredSetCards += customSetBlock(g.name, opt.label, opt.items, 'grade', g.id, false, optHTML, true);
   }
-  // REFILL_CHOICE_DEFS（必須）
+  // REFILL_CHOICE_DEFS（必須・ファミリー必須）— 独立カードで表示
   for (const [k, def] of Object.entries(REFILL_CHOICE_DEFS)) {
     if (def.req !== '必須' && def.req !== 'ファミリー必須') continue;
     if (k === 'laundry_liquid' && state.laundryType !== 'liquid') continue;
@@ -1702,12 +1926,25 @@ function renderStep12() {
     if (!sel || qty <= 0) continue;
     const opt = def.opts.find(o=>o.key===sel);
     if (!opt) continue;
-    const ep = opt.extraId ? opt.extraPrice : 0;
-    const tp = (def.base.price + ep) * qty;
-    const optHTML = `<select class="ci-select" onchange="confirmChangeRefill('${k}',this.value)">${def.opts.map(o=>`<option value="${o.key}"${o.key===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
-    requiredCards += ciCard('', def.title, opt.label, qty, 'セット', tp, 'refill', k, false, optHTML, true);
+    const optHTML = `<select class="ci-row-select" onchange="confirmChangeRefill('${k}',this.value)">${def.opts.map(o=>`<option value="${o.key}"${o.key===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
+    // 中身の品目を集める：本体（baseId）＋詰替（extraId or ids）
+    const refillItems = [];
+    const baseItem = ITEMS[def.base.id] || def.base;
+    if (baseItem && baseItem.id && !opt.key.includes('only')) {
+      refillItems.push({id: baseItem.id, name: baseItem.name || ''});
+    }
+    if (opt.extraId) {
+      const extraItem = ITEMS[opt.extraId];
+      if (extraItem) refillItems.push({id: opt.extraId, name: extraItem.name});
+    } else if (opt.ids) {
+      opt.ids.forEach(rid => {
+        const ri = ITEMS[rid];
+        if (ri) refillItems.push({id: rid, name: ri.name});
+      });
+    }
+    requiredSetCards += customSetBlock(def.title, opt.label, refillItems, 'refill', k, false, optHTML, true);
   }
-  // CHOICE_DEFS（必須）
+  // CHOICE_DEFS（必須）— 単一品番なら行表示、複数なら独立カード
   for (const [k, def] of Object.entries(CHOICE_DEFS)) {
     if (def.req !== true && def.req !== '必須') continue;
     const sel = state.choiceSelections[k];
@@ -1715,33 +1952,50 @@ function renderStep12() {
     if (!sel || qty <= 0) continue;
     const opt = def.opts.find(o=>o.key===sel);
     if (!opt) continue;
-    const optHTML = `<select class="ci-select" onchange="confirmChangeChoice('${k}',this.value)">${def.opts.map(o=>`<option value="${o.key}"${o.key===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
-    requiredCards += ciCard('', def.title, opt.label, qty, opt.unit||'個', opt.price*qty, 'choice', k, false, optHTML, true);
+    const optHTML = `<select class="ci-row-select" onchange="confirmChangeChoice('${k}',this.value)">${def.opts.map(o=>`<option value="${o.key}"${o.key===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
+    const optIds = opt.ids || [];
+    if (optIds.length === 1) {
+      const _idStr = optIds[0] || '';
+      requiredRows += `<div class="ci-row">
+        <span class="ci-row-id">${_idStr}</span>
+        <div class="ci-row-name">${def.title} <span style="color:var(--text-sub);font-weight:500">— ${opt.label}</span></div>
+        <div class="ci-row-action">${optHTML}</div>
+      </div>`;
+    } else {
+      const choiceItems = optIds.map(rid => {
+        const ri = ITEMS[rid];
+        return ri ? {id: rid, name: ri.name} : null;
+      }).filter(Boolean);
+      requiredSetCards += customSetBlock(def.title, opt.label, choiceItems, 'choice', k, false, optHTML, true);
+    }
   }
-  // 通常品目（必須）
+  // 通常品目（必須・ファミリー必須）— 自動追加品目／セット等に含まれる品番／ホスト準備品目は除外
   for (const [id, qty] of Object.entries(state.quantities)) {
     if (qty <= 0) continue;
+    if (AUTO_ADD_ITEM_IDS.includes(id)) continue;
+    if (_idsInSets.has(id)) continue;
     const item = ITEMS[id];
     if (!item || (item.req !== '必須' && item.req !== 'ファミリー必須')) continue;
-    requiredCards += ciCard(id, item.name, null, qty, item.unit, item.price*qty, 'item', id, false, null, true);
+    if (state.hostChoice[id] === 'host') continue; // ホスト準備セクションに表示
+    requiredRows += itemRow(id, item.name, null, 'item', id, false, null, null);
   }
 
-  if (requiredCards) {
-    html += sectionHeader('必須品目', '削除不可 / 選択肢・数量は変更可', true);
-    html += requiredCards;
+  if (requiredRows || requiredSetCards) {
+    html += sectionHeader('必須品目', '選択肢の変更可', true);
+    if (requiredRows) html += `<div class="ci-table ci-table-required">${requiredRows}</div>`;
+    if (requiredSetCards) html += requiredSetCards;
   }
 
-  // ── 推奨・任意品目セクション
-  // ── 推奨・任意品目セクション（cartAddedがtrueのものだけ表示）
-  let optionalCards = '';
+  // ─── 推奨・任意品目セクション（cartAddedがtrueのものだけ表示）───
+  let optionalRows = '';
+  let optionalSetCards = '';
 
   // SET_DEFS（非必須）
   for (const [k, def] of Object.entries(SET_DEFS)) {
     if (def.req === '必須') continue;
     const qty = state.setQty[k] || 0;
     if (qty <= 0 || !(state.cartAdded||{})['set_'+k]) continue;
-    const p = def.items.reduce((s,item)=>s+(state.hostChoice[item.id]==='host'?0:item.price),0);
-    optionalCards += ciCard('', def.title, null, qty, 'セット', p*qty, 'set', k, true, null);
+    optionalSetCards += setBlock(def, 'set', k, true, null, false);
   }
   // GRADE_GROUPS（非必須）
   for (const g of GRADE_GROUPS) {
@@ -1752,9 +2006,8 @@ function renderStep12() {
     if (!sel || qty <= 0) continue;
     const opt = g.options.find(o=>o.grade===sel);
     if (!opt) continue;
-    const p = opt.items.reduce((s,i)=>s+i.price,0);
-    const optHTML = `<select class="ci-select" onchange="confirmChangeGrade('${g.id}',this.value)">${g.options.map(o=>`<option value="${o.grade}"${o.grade===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
-    optionalCards += ciCard('', g.name, null, qty, 'セット', p*qty, 'grade', g.id, true, optHTML);
+    const optHTML = `<select class="ci-row-select" onchange="confirmChangeGrade('${g.id}',this.value)">${g.options.map(o=>`<option value="${o.grade}"${o.grade===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
+    optionalSetCards += customSetBlock(g.name, opt.label, opt.items, 'grade', g.id, true, optHTML, false);
   }
   // REFILL_CHOICE_DEFS（非必須）
   for (const [k, def] of Object.entries(REFILL_CHOICE_DEFS)) {
@@ -1766,10 +2019,22 @@ function renderStep12() {
     if (!sel || qty <= 0) continue;
     const opt = def.opts.find(o=>o.key===sel);
     if (!opt) continue;
-    const ep = opt.extraId ? opt.extraPrice : 0;
-    const tp = (def.base.price + ep) * qty;
-    const optHTML = `<select class="ci-select" onchange="confirmChangeRefill('${k}',this.value)">${def.opts.map(o=>`<option value="${o.key}"${o.key===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
-    optionalCards += ciCard('', def.title, opt.label, qty, 'セット', tp, 'refill', k, true, optHTML);
+    const optHTML = `<select class="ci-row-select" onchange="confirmChangeRefill('${k}',this.value)">${def.opts.map(o=>`<option value="${o.key}"${o.key===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
+    const refillItems = [];
+    const baseItem = ITEMS[def.base.id] || def.base;
+    if (baseItem && baseItem.id && !opt.key.includes('only')) {
+      refillItems.push({id: baseItem.id, name: baseItem.name || ''});
+    }
+    if (opt.extraId) {
+      const extraItem = ITEMS[opt.extraId];
+      if (extraItem) refillItems.push({id: opt.extraId, name: extraItem.name});
+    } else if (opt.ids) {
+      opt.ids.forEach(rid => {
+        const ri = ITEMS[rid];
+        if (ri) refillItems.push({id: rid, name: ri.name});
+      });
+    }
+    optionalSetCards += customSetBlock(def.title, opt.label, refillItems, 'refill', k, true, optHTML, false);
   }
   // CHOICE_DEFS（非必須）
   for (const [k, def] of Object.entries(CHOICE_DEFS)) {
@@ -1780,34 +2045,46 @@ function renderStep12() {
     if (!sel || qty <= 0) continue;
     const opt = def.opts.find(o=>o.key===sel);
     if (!opt) continue;
-    const optHTML = `<select class="ci-select" onchange="confirmChangeChoice('${k}',this.value)">${def.opts.map(o=>`<option value="${o.key}"${o.key===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
-    optionalCards += ciCard('', def.title, opt.label, qty, opt.unit||'個', opt.price*qty, 'choice', k, true, optHTML);
+    const optHTML = `<select class="ci-row-select" onchange="confirmChangeChoice('${k}',this.value)">${def.opts.map(o=>`<option value="${o.key}"${o.key===sel?' selected':''}>${o.label}</option>`).join('')}</select>`;
+    const optIds = opt.ids || [];
+    if (optIds.length === 1) {
+      const _idStr = optIds[0] || '';
+      optionalRows += `<div class="ci-row">
+        <span class="ci-row-id">${_idStr}</span>
+        <div class="ci-row-name">${def.title} <span style="color:var(--text-sub);font-weight:500">— ${opt.label}</span></div>
+        <div class="ci-row-action">${optHTML}<button class="ci-row-del" onclick="confirmDelete('choice','${k}')">削除</button></div>
+      </div>`;
+    } else {
+      const choiceItems = optIds.map(rid => {
+        const ri = ITEMS[rid];
+        return ri ? {id: rid, name: ri.name} : null;
+      }).filter(Boolean);
+      optionalSetCards += customSetBlock(def.title, opt.label, choiceItems, 'choice', k, true, optHTML, false);
+    }
   }
-  // 通常品目（非必須）
+  // 通常品目（非必須）— セット等に含まれる品番はスキップ
   for (const [id, qty] of Object.entries(state.quantities)) {
     if (qty <= 0) continue;
+    if (_idsInSets.has(id)) continue;
     const item = ITEMS[id];
     if (!item || item.req === '必須' || item.req === 'ファミリー必須') continue;
     if (!(state.cartAdded||{})[id]) continue;
-    optionalCards += ciCard(id, item.name, null, qty, item.unit, item.price*qty, 'item', id, true, null);
+    optionalRows += itemRow(id, item.name, null, 'item', id, true, null, null);
   }
 
-  if (optionalCards) {
-    html += sectionHeader('推奨・任意品目', '削除・選択肢・数量の変更可', false);
-    html += optionalCards;
+  if (optionalRows || optionalSetCards) {
+    html += sectionHeader('推奨・任意品目', '削除・選択肢の変更可', false);
+    if (optionalRows) html += `<div class="ci-table">${optionalRows}</div>`;
+    if (optionalSetCards) html += optionalSetCards;
   }
 
-  if (!requiredCards && !optionalCards) {
+  if (!requiredRows && !requiredSetCards && !optionalRows && !optionalSetCards && !autoAddRows && !autoAddSetCards) {
     html += `<div style="text-align:center;padding:32px;color:var(--text-sub);font-size:13px">選択された品目がありません</div>`;
   }
 
-  // ── 合計金額 + 発注ボタン
+  // ── 発注ボタン（合計金額表示は廃止）
   const _hasChangeFooter = hasConfirmChanges();
   html += `<div style="margin-top:24px;border-top:1.5px solid #e2e8f0;padding-top:16px;padding-bottom:80px">
-    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;padding:0 4px">
-      <span style="font-size:13px;font-weight:700;color:var(--text-sub)">合計金額（目安）</span>
-      <span style="font-size:22px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(total)}</span>
-    </div>
     ${_hasChangeFooter ? `
       <div class="alert-box alert-warn" style="display:flex;align-items:center;margin-bottom:12px">
         <div class="alert-icon">!</div>
@@ -1853,7 +2130,7 @@ function render(scrollToTop) {
     (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-      setTimeout(function(){const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft){ft.style.display='';ft.classList.add('with-total-bar');}const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
+      setTimeout(function(){const ft=document.querySelector('.footer');if(ft){ft.style.display='';}const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
   } else if (v === 'step') {
     const stepDef = [...REQUIRED_STEPS, RECOMMEND_STEP, FAMILY_STEP, FAMILY_OPT_STEP, PROP_INFO_STEP].find(s => s.key === state.currentStepKey);
     if (stepDef) {
@@ -1863,14 +2140,14 @@ function render(scrollToTop) {
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-    setTimeout(function(){const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft){ft.style.display='';ft.classList.add('with-total-bar');}const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
+    setTimeout(function(){const ft=document.querySelector('.footer');if(ft){ft.style.display='';}const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
   } else if (v === 'optList') {
     html = renderOptionalList();
     (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='任意追加品目';})();
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-    setTimeout(function(){const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft){ft.style.display='';ft.classList.add('with-total-bar');}const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
+    setTimeout(function(){const ft=document.querySelector('.footer');if(ft){ft.style.display='';}const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
   } else if (v === 'optCat') {
     const cat = OPT_CATS.find(c => c.key === state.currentOptCat);
     if (cat) {
@@ -1883,18 +2160,16 @@ function render(scrollToTop) {
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-    setTimeout(function(){const tb=document.getElementById('total-bar');if(tb)tb.classList.add('visible');const ft=document.querySelector('.footer');if(ft){ft.style.display='';ft.classList.add('with-total-bar');}const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
+    setTimeout(function(){const ft=document.querySelector('.footer');if(ft){ft.style.display='';}const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='inline-flex';},10);
   } else if (v === 'confirm') {
     html = renderStep12();
     (function(){const _sl=document.getElementById('step-label');if(_sl)_sl.textContent='確認・送信';})();
     (function(){const _tb=document.getElementById('tabs');if(_tb)_tb.innerHTML='';})();
     (function(){const _b=document.getElementById('btn-back');if(_b)_b.style.display='none';})();
     (function(){const _b=document.getElementById('btn-next');if(_b)_b.style.display='none';})();
-    // 確認画面ではフッター・stickybar・totalbar全て非表示
+    // 確認画面ではフッターも非表示
     setTimeout(function(){
-      
-      const tb=document.getElementById('total-bar');if(tb)tb.classList.remove('visible');
-      const ft=document.querySelector('.footer');if(ft){ft.classList.remove('with-total-bar');ft.style.display='none';}
+      const ft=document.querySelector('.footer');if(ft){ft.style.display='none';}
       const rb=document.getElementById('btn-reset-footer');if(rb)rb.style.display='none';
     },10);
   } else if (v === 'info') {
@@ -1913,9 +2188,7 @@ function render(scrollToTop) {
     setTimeout(function(){const ft=document.querySelector('.footer');if(ft)ft.style.display='';},10);
   }
   mc.innerHTML = html;
-  const tdEl = document.getElementById('total-display'); if(tdEl) tdEl.textContent = fmt(calcTotal());
-  // total-barの金額も更新
-  setTimeout(function(){const tb2=document.getElementById('total-display');if(tb2)tb2.textContent=fmt(calcTotal());},20);
+  // 合計金額バー（total-bar）は廃止のため、金額更新処理は削除
 
   // TOPボタン：ダッシュボード以外で表示。確認画面ではラベルを「TOPへ」に変更
   const topBtn = document.getElementById('btn-top');
@@ -1932,7 +2205,7 @@ function render(scrollToTop) {
     if (state.view === 'dashboard') {
       btnArea.innerHTML = '';
     } else if (state.view === 'step') {
-      // STEP1ウィザード：propInfo→fixed→select1→select2→family→(family_opt) の順次進行
+      // STEP1ウィザード：propInfo→select1→select2→family→(family_opt) の順次進行（'fixed'は廃止）
       const k = state.currentStepKey;
       if (k === 'propInfo') {
         const _propValid = isPropInfoValid();
@@ -1940,12 +2213,16 @@ function render(scrollToTop) {
           ? '<button class="btn-next" onclick="nextWizardStep(\'propInfo\')">次へ →</button>'
           : '<button class="btn-next" onclick="nextWizardStep(\'propInfo\')" style="opacity:.4;cursor:not-allowed" disabled>次へ →</button>';
         btnArea.innerHTML = _nextBtn;
-      } else if (k === 'fixed') {
-        btnArea.innerHTML = TOP_BTN + '<button class="btn-back" onclick="openStep(\'propInfo\')">← 戻る</button>' + '<button class="btn-next" onclick="nextWizardStep(\'fixed\')">次へ →</button>';
       } else if (k === 'select1') {
-        btnArea.innerHTML = TOP_BTN + '<button class="btn-back" onclick="openStep(\'fixed\')">← 戻る</button>' + '<button class="btn-next" onclick="nextWizardStep(\'select1\')">次へ →</button>';
+        // 旧: 戻り先は 'fixed' → 現在は 'propInfo'
+        btnArea.innerHTML = TOP_BTN + '<button class="btn-back" onclick="openStep(\'propInfo\')">← 戻る</button>' + '<button class="btn-next" onclick="nextWizardStep(\'select1\')">次へ →</button>';
       } else if (k === 'select2') {
-        btnArea.innerHTML = TOP_BTN + '<button class="btn-back" onclick="openStep(\'select1\')">← 戻る</button>' + '<button class="btn-next" onclick="nextWizardStep(\'select2\')">次へ →</button>';
+        // ファミリー物件の場合は「次へ」（→ family ページへ）、そうでなければ「確定」（→ ダッシュボードへ）
+        const _isFamily = state.property.isFamily === true;
+        const _select2NextBtn = _isFamily
+          ? '<button class="btn-next" onclick="nextWizardStep(\'select2\')">次へ →</button>'
+          : '<button class="btn-next" onclick="nextWizardStep(\'select2\')">確定 ✓</button>';
+        btnArea.innerHTML = TOP_BTN + '<button class="btn-back" onclick="openStep(\'select1\')">← 戻る</button>' + _select2NextBtn;
       } else if (k === 'family') {
         // 物件情報でファミリー確定済みなので常に「次へ」表示
         btnArea.innerHTML = TOP_BTN + '<button class="btn-back" onclick="openStep(\'select2\')">← 戻る</button>' + '<button class="btn-next" onclick="nextWizardStep(\'family\')">次へ →</button>';
@@ -2049,6 +2326,9 @@ function completeStep(key, validate) {
   render(true);
 }
 
+// ─── 数量自動連動ロジック（Phase A-4: UIから数量UIを削除済み） ───
+// 内部状態（state.quantities など）を維持するため当面残置。
+// Phase E（送信処理改修）で数量フィールドが不要になったら一括削除する。
 function autoSetSlipperQty() {
   const maxG = parseInt(state.property && state.property.maxGuests) || 0;
   if (maxG > 0 && state.choiceSelections['slipper'] === 'vinyl') {
@@ -2061,6 +2341,7 @@ function autoSetSlipperQty() {
 }
 
 function autoSetPropertyQty() {
+  // Phase A-4: 数量UI廃止後も内部状態として保持。Phase E で削除予定。
   const maxG  = parseInt(state.property && state.property.maxGuests)  || 0;
   const baths = parseInt(state.property && state.property.bathrooms)  || 0;
   const wcs   = parseInt(state.property && state.property.toilets)    || 0;
@@ -2391,11 +2672,7 @@ function nextWizardStep(key) {
     if (!state.property.number || !state.property.maxGuests || !state.property.bathrooms || !state.property.toilets) return;
     state.completedSteps['propInfo'] = true;
     autoSetPropertyQty();
-    state.currentStepKey = 'fixed';
-    state.view = 'step';
-    render(true);
-  } else if (key === 'fixed') {
-    state.completedSteps['fixed'] = true;
+    // 旧: 'fixed'（必須固定品目ページ）→ 廃止のため select1 へ直接遷移
     state.currentStepKey = 'select1';
     state.view = 'step';
     render(true);
@@ -2406,8 +2683,13 @@ function nextWizardStep(key) {
     render(true);
   } else if (key === 'select2') {
     state.completedSteps['select2'] = true;
-    state.currentStepKey = 'family';
-    state.view = 'step';
+    // ファミリー物件の場合のみファミリー必須品目ページへ。それ以外はダッシュボードへ戻る。
+    if (state.property.isFamily === true) {
+      state.currentStepKey = 'family';
+      state.view = 'step';
+    } else {
+      state.view = 'dashboard';
+    }
     render(true);
   } else if (key === 'family') {
     // ファミリー必須品目確認済み → 任意品目ページへ
@@ -2568,7 +2850,7 @@ async function _sendOrderEmailInner() {
   }
   const isMulti = numUnits > 1;
 
-  const total = calcTotal();
+  // 合計金額は廃止
   const famCountEmail = p.familyUnitCount;
   let body = '【初回セット・補充備品発注】\n';
   body += '============================\n';
@@ -2597,8 +2879,6 @@ async function _sendOrderEmailInner() {
     body += '  ファミリー対応：' + famCountEmail + '室\n';
   }
   body += '============================\n';
-  body += '合計金額（目安）：' + fmt(total) + '\n';
-  body += '============================\n\n';
   body += '※ 発注品目は全' + numUnits + '室分の合算数量です。\n\n';
   body += '【発注品目】\n';
 
@@ -2654,84 +2934,115 @@ async function _sendOrderEmailInner() {
   const subjectLabel = isMulti ? (subjectNumbers + '（' + numUnits + '室）') : subjectNumbers;
 
   // ── n8n Webhookにfetchで送信 ──
-  // 品目を構造化配列に変換（従来形式：互換性のため残す）
+  // 品目を構造化配列に変換（従来形式：互換性のため残す。数量フィールドは廃止）
   const mandatoryItems = [];
   const optionalItems = [];
   const recommendItems = [];
 
-  // 全品目の数量を集約するマップ（key: itemId → totalQty）
-  // 代表物件にこの数量を集約、他物件は「●」マーク
+  // 全品目の発注フラグマップ（key: itemId → '●' または 'ホスト準備'）
+  // 数量概念を廃止：発注対象なら '●'、ホスト準備品目なら 'ホスト準備'
   const allItemsMap = {};
+  function markOrder(id, isHost) {
+    if (isHost) {
+      allItemsMap[id] = 'ホスト準備';
+    } else if (allItemsMap[id] !== 'ホスト準備') {
+      allItemsMap[id] = '●';
+    }
+  }
+
+  // ─── 自動追加品目（旧 必須固定品目）── 内部状態に関わらず常に発注対象
+  AUTO_ADD_ITEM_IDS.forEach(function(id){
+    if (ITEMS[id]) markOrder(id, false);
+  });
+  AUTO_ADD_SET_KEYS.forEach(function(k){
+    const def = SET_DEFS[k];
+    if (def) def.items.forEach(function(i){ markOrder(i.id, false); });
+  });
 
   // グレードグループ（初回必須）
   for (const g of GRADE_GROUPS) {
     const sel = state.gradeSelections[g.id];
-    const qty = state.gradeQty[g.id]||0;
-    if (sel && qty>0) {
+    if (sel) {
       const opt = g.options.find(o=>o.grade===sel);
       if (opt) opt.items.forEach(i=>{
-        mandatoryItems.push({id:i.id,name:i.name,qty,price:i.price,category:g.name,grade:sel});
-        allItemsMap[i.id] = (allItemsMap[i.id]||0) + qty;
+        mandatoryItems.push({id:i.id,name:i.name,category:g.name,grade:sel});
+        markOrder(i.id, false);
       });
     }
   }
-  // セット（初回必須）
+  // セット（自動追加以外）
   for (const [k,def] of Object.entries(SET_DEFS)) {
-    const qty = state.setQty[k]||0;
-    if (qty>0) def.items.forEach(i=>{
-      mandatoryItems.push({id:i.id,name:i.name,qty,price:i.price,category:def.title,setKey:k,hostChoice:state.hostChoice[i.id]||'us'});
-      // ホスト準備品目は数量を「ホスト準備」マーカーで、弊社準備は数値で集約
-      if (state.hostChoice[i.id] === 'host') {
-        allItemsMap[i.id] = 'ホスト準備';
-      } else {
-        // 既にホスト準備マーカーが入っている場合は上書きしない
-        if (allItemsMap[i.id] !== 'ホスト準備') {
-          allItemsMap[i.id] = (typeof allItemsMap[i.id] === 'number' ? allItemsMap[i.id] : 0) + qty;
-        }
+    if (AUTO_ADD_SET_KEYS.includes(k)) continue; // 自動追加は既に処理済み
+    const isReq = def.req === '必須' || def.req === 'ファミリー必須';
+    const isSelected = isReq || (state.cartAdded||{})['set_'+k];
+    if (!isSelected) continue;
+    def.items.forEach(i=>{
+      mandatoryItems.push({id:i.id,name:i.name,category:def.title,setKey:k,hostChoice:state.hostChoice[i.id]||'us'});
+      markOrder(i.id, state.hostChoice[i.id] === 'host');
+    });
+  }
+  // 選択カード
+  for (const [k,def] of Object.entries(CHOICE_DEFS)) {
+    const sel = state.choiceSelections[k];
+    if (!sel) continue;
+    const isReq = (def.req===true || def.req==='必須' || def.req==='ファミリー必須');
+    const isSelected = isReq || (state.cartAdded||{})['choice_'+k];
+    if (!isSelected) continue;
+    const opt = def.opts.find(o=>o.key===sel);
+    if (opt) opt.ids.forEach(id=>{
+      const item=ITEMS[id];
+      if(item){
+        optionalItems.push({id,name:item.name,category:def.title,choice:sel});
+        markOrder(id, false);
       }
     });
   }
-  // 選択カード（任意追加）
-  for (const [k,def] of Object.entries(CHOICE_DEFS)) {
-    const sel = state.choiceSelections[k];
-    const qty = state.choiceQty[k]||0;
-    if (sel && qty>0) {
-      const opt = def.opts.find(o=>o.key===sel);
-      if (opt) opt.ids.forEach(id=>{
+  // Refill選択カード
+  for (const [k,def] of Object.entries(REFILL_CHOICE_DEFS)) {
+    const sel = state.refillChoices[k];
+    if (!sel) continue;
+    const isReq = (def.req === '必須' || def.req === 'ファミリー必須');
+    const isSelected = isReq || (state.cartAdded||{})['refill_'+k];
+    if (!isSelected) continue;
+    const opt = def.opts.find(o=>o.key===sel);
+    if (!opt) continue;
+    // 本体（baseId）— sheet_only等の場合は本体不要
+    if (def.base && def.base.id && !opt.key.includes('only')) {
+      mandatoryItems.push({id:def.base.id,name:def.base.name||'',category:def.title});
+      markOrder(def.base.id, false);
+    }
+    // 詰替
+    if (opt.extraId) {
+      const exi = ITEMS[opt.extraId];
+      if (exi) {
+        mandatoryItems.push({id:opt.extraId,name:exi.name,category:def.title,refill:sel});
+        markOrder(opt.extraId, false);
+      }
+    } else if (opt.ids) {
+      opt.ids.forEach(id=>{
         const item=ITEMS[id];
         if(item){
-          optionalItems.push({id,name:item.name,qty,price:item.price,category:def.title,choice:sel});
-          if (allItemsMap[id] !== 'ホスト準備') {
-            allItemsMap[id] = (typeof allItemsMap[id] === 'number' ? allItemsMap[id] : 0) + qty;
-          }
+          mandatoryItems.push({id,name:item.name,category:def.title,refill:sel});
+          markOrder(id, false);
         }
       });
     }
   }
-  // choice型で使用中のID（二重加算防止）
-  const _choiceUsedIds = new Set();
-  for (const [k,def] of Object.entries(CHOICE_DEFS)) {
-    const sel = state.choiceSelections[k];
-    if (sel) {
-      const opt = def.opts.find(o=>o.key===sel);
-      if (opt) opt.ids.forEach(id => _choiceUsedIds.add(id));
-    }
-  }
-  // 通常品目（推奨品目含む）
-  for (const [id,qty] of Object.entries(state.quantities)) {
-    if (qty<=0) continue;
-    const item = ITEMS[id];
-    if (item) {
-      recommendItems.push({id,name:item.name,qty,unit:item.unit,price:item.price,hostChoice:state.hostChoice[id]||'us'});
-      // choice型で既にallItemsMapに加算済みのIDは二重加算しない
-      if (_choiceUsedIds.has(id)) continue;
-      // ホスト準備品目は「ホスト準備」マーカー、弊社準備は数値で集約
-      if (state.hostChoice[id] === 'host') {
-        allItemsMap[id] = 'ホスト準備';
-      } else {
-        if (allItemsMap[id] !== 'ホスト準備') {
-          allItemsMap[id] = (typeof allItemsMap[id] === 'number' ? allItemsMap[id] : 0) + qty;
-        }
+  // 通常品目（必須・推奨・任意）
+  for (const [id, item] of Object.entries(ITEMS)) {
+    if (!item) continue;
+    if (AUTO_ADD_ITEM_IDS.includes(id)) continue;
+    const isReq = item.req === '必須' || item.req === 'ファミリー必須';
+    if (isReq) {
+      // 必須品目は常に発注対象（hostChoice で振り分け）
+      const isHost = state.hostChoice[id] === 'host';
+      recommendItems.push({id,name:item.name,unit:item.unit,hostChoice:state.hostChoice[id]||'us'});
+      markOrder(id, isHost);
+    } else {
+      // 推奨・任意品目は cartAdded で発注対象判定
+      if ((state.cartAdded||{})[id]) {
+        recommendItems.push({id,name:item.name,unit:item.unit});
+        markOrder(id, false);
       }
     }
   }
@@ -2761,20 +3072,11 @@ async function _sendOrderEmailInner() {
       '担当者名': isRep ? contactName : '',
       'メール': isRep ? (p.email || '') : ''
     };
-    // items: 代表物件には数量を集約、他物件は「●」、ホスト準備品目は全物件「ホスト準備」
+    // items: 全物件で同じ値（'●' または 'ホスト準備'）
+    // 数量概念を廃止したため、代表物件と他物件の区別は不要
     const items = {};
     Object.keys(allItemsMap).forEach(function(itemId){
-      const val = allItemsMap[itemId];
-      if (val === 'ホスト準備') {
-        // ホスト準備品目は全物件に「ホスト準備」マーク
-        items[itemId] = 'ホスト準備';
-      } else if (isRep) {
-        // 代表物件は集約された数値
-        items[itemId] = val;
-      } else {
-        // 他物件は「●」
-        items[itemId] = '●';
-      }
+      items[itemId] = allItemsMap[itemId]; // '●' または 'ホスト準備'
     });
     return {
       unitNum: u.number || '',
@@ -2808,12 +3110,11 @@ async function _sendOrderEmailInner() {
     familyRoomCount: p.familyUnitCount || 0,
     // ── 物件情報の元データ（互換性のため）──
     unitsRaw: units,
-    // ── 従来の品目配列（互換性のため残す）──
+    // ── 従来の品目配列（互換性のため残す。数量・価格フィールドは廃止）──
     mandatoryItems: mandatoryItems,
     optionalItems: optionalItems,
     recommendItems: recommendItems,
-    totalPrice: total,
-    totalAmount: total,
+    // 合計金額（totalPrice/totalAmount）は廃止
     notes: '',
     sourceUrl: window.location.href
   };
@@ -2836,14 +3137,20 @@ async function _sendOrderEmailInner() {
       <div style="text-align:center;padding:40px 20px">
         <div style="font-size:48px;margin-bottom:16px">📦</div>
         <div style="font-size:22px;font-weight:800;margin-bottom:8px">発注が完了しました！</div>
+        <div style="color:var(--text-sub);font-size:13px;margin-bottom:20px;line-height:1.7">
+          ご入力のメールアドレス宛に確認メールをお送りしました。<br>
+          内容確認のうえ、改めて担当者よりご連絡いたします。
+        </div>
 
-        <div style="background:var(--bg);border-radius:var(--radius);padding:16px;text-align:left">
+        <div style="background:var(--bg);border-radius:var(--radius);padding:16px;text-align:left;margin-bottom:14px">
           <div style="font-size:11px;color:var(--text-sub)">ご契約者</div>
           <div style="font-weight:700;margin-bottom:8px">${p.owner||''}</div>
           <div style="font-size:11px;color:var(--text-sub)">物件番号${isMulti?'（'+numUnits+'室）':''}</div>
-          <div style="font-weight:700;margin-bottom:8px;font-family:var(--mono)">${subjectNumbers}</div>
-          <div style="font-size:11px;color:var(--text-sub)">合計金額（目安）</div>
-          <div style="font-size:24px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(total)}</div>
+          <div style="font-weight:700;font-family:var(--mono)">${subjectNumbers}</div>
+        </div>
+
+        <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:12px 16px;font-size:12px;color:#78350f;line-height:1.7;text-align:left">
+          ※ 金額については内容確認後、別途ご案内いたします。
         </div>
       </div>`;
     const btnArea = document.getElementById('nav-btns-area');
@@ -2891,18 +3198,16 @@ async function submitOrder() {
     const item = ITEMS[id];
     if (item) items.push({id,name:item.name,qty,unit:item.unit,price:item.price,hostChoice:state.hostChoice[id]||'us'});
   }
-  const payload = {submittedAt:new Date().toISOString(),property:state.property,totalAmount:calcTotal(),items,gradeSelections:state.gradeSelections,choiceSelections:state.choiceSelections};
+  const payload = {submittedAt:new Date().toISOString(),property:state.property,items,gradeSelections:state.gradeSelections,choiceSelections:state.choiceSelections};
   try {
     await fetch(state.webhookUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     document.getElementById('main-content').innerHTML = `<div style="text-align:center;padding:40px 20px">
       <div style="font-size:48px;margin-bottom:16px">📦</div>
       <div style="font-size:22px;font-weight:800;margin-bottom:8px">発注完了しました！</div>
-      <div style="color:var(--text-sub);font-size:13px;margin-bottom:24px">Slackに通知が届きます</div>
+      <div style="color:var(--text-sub);font-size:13px;margin-bottom:24px;line-height:1.7">ご入力のメールアドレス宛に<br>確認メールをお送りしました</div>
       <div style="background:var(--bg);border-radius:var(--radius);padding:16px;text-align:left">
         <div style="font-size:11px;color:var(--text-sub)">物件名</div>
-        <div style="font-weight:700;margin-bottom:8px">${state.property.name}</div>
-        <div style="font-size:11px;color:var(--text-sub)">合計金額（目安）</div>
-        <div style="font-size:24px;font-weight:900;font-family:var(--mono);color:var(--accent)">${fmt(calcTotal())}</div>
+        <div style="font-weight:700">${state.property.name}</div>
       </div>
     </div>`;
     document.getElementById('btn-submit').remove();
@@ -3172,6 +3477,11 @@ function changeChoiceQty(key, delta) {
   opt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = newQty; });
   render();
 }
+// 確認画面からホスト準備品目を弊社準備に戻す
+function revertHostToUs(id) {
+  setHostChoice(id, 'us');
+}
+
 function setHostChoice(id, val) {
   state.hostChoice[id] = val;
   const item = ITEMS[id];
@@ -3310,9 +3620,29 @@ function itemCardHTML(id, forceReq) {
     reqVal==='推奨'?'<span class="badge badge-recommend">推奨</span>':
     reqVal==='ファミリー必須'?'<span class="badge badge-family">ファミリー必須</span>':'';
   const src = item.img || NO_IMG;
-  // 必須項目のみホスト準備トグルを表示
+  const isReqItem = reqVal==='必須' || reqVal==='ファミリー必須';
+
+  // ─── 推奨・任意品目：新UI（カード全体タップでON/OFF） ───
+  if (!isReqItem) {
+    const isSelected = !!(state.cartAdded||{})[id];
+    const labelText = isSelected ? '選択中' : '選択する';
+    return `<div class="item-card selectable${isSelected?' selected':''}" data-itemid="${id}" onclick="toggleItemSelect('${id}')">
+      <div class="select-mark" onclick="badgeToggleItem(event,'${id}')"><span class="select-mark-icon"></span><span class="select-mark-label">${labelText}</span></div>
+      <img class="item-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy" alt="${item.name}">
+      <div class="item-body">
+        <div class="badge-row">${reqBadge}<span class="badge badge-id">${id}</span></div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">
+          <div class="item-name" style="flex:1;min-width:0">${item.name}</div>
+          <div style="flex-shrink:0;text-align:right"><span class="item-price">${fmt(item.price)}</span><span class="item-price-sub"> / ${item.unit}</span></div>
+        </div>
+        <div class="item-brand">${item.brand}${item.unitDesc ? '<span style="display:inline-block;margin-left:6px;padding:1px 7px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:99px;font-size:9px;font-weight:700;color:#64748b">'+item.unitDesc+'</span>' : ''}${(item.min && item.min > 1) ? '<span style="display:inline-block;margin-left:6px;padding:1px 7px;background:#fef3c7;border:1px solid #fde68a;border-radius:99px;font-size:9px;font-weight:800;color:#92400e">最小発注 '+item.min+(item.unit||'個')+'</span>' : ''}</div>
+      </div>
+    </div>`;
+  }
+
+  // ─── 必須・ファミリー必須品目：従来UI（ホスト準備切替＋反映済み表示） ───
   let hostToggle = '';
-  if (item.hostPrep && (reqVal==='必須' || reqVal==='ファミリー必須')) {
+  if (item.hostPrep) {
     hostToggle = `<div class="host-toggle-wrap">
       <div class="host-toggle">
         <div class="host-toggle-btn ${!isHost?'active-us':''}" onclick="setHostChoice('${id}','us')">弊社が自動補充</div>
@@ -3320,7 +3650,7 @@ function itemCardHTML(id, forceReq) {
       </div>
     </div>`;
   }
-  const forceShow = item.hostPrep && (reqVal==='必須' || reqVal==='ファミリー必須');
+  const forceShow = item.hostPrep;
   return `<div class="item-card ${(qty>0||forceShow)?'has-qty':''} ${isHost?'host-mode':''}">
     <img class="item-img" src="${src}" onerror="this.onerror=null;this.src='${NO_IMG}'" referrerpolicy="no-referrer" loading="lazy" alt="${item.name}">
     <div class="item-body">
@@ -3331,66 +3661,36 @@ function itemCardHTML(id, forceReq) {
       </div>
       <div class="item-brand">${item.brand}${item.unitDesc ? '<span style="display:inline-block;margin-left:6px;padding:1px 7px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:99px;font-size:9px;font-weight:700;color:#64748b">'+item.unitDesc+'</span>' : ''}${(item.min && item.min > 1) ? '<span style="display:inline-block;margin-left:6px;padding:1px 7px;background:#fef3c7;border:1px solid #fde68a;border-radius:99px;font-size:9px;font-weight:800;color:#92400e">最小発注 '+item.min+(item.unit||'個')+'</span>' : ''}</div>
       ${hostToggle}
-      ${!isHost?`<div style="font-size:14px;font-weight:900;color:var(--brand);font-family:var(--mono);margin-top:4px"><span style="font-size:10px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(item.price*(qty>0?qty:item.min)).toLocaleString()}</div>`:''}
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0" onclick="event.stopPropagation()">
-      ${(()=>{
-        const minV = (item.min && item.min > 1) ? item.min : 1;
-        let opts='';
-        if(minV > 1){
-          for(let i=1;i<=20;i++) opts+='<option value="'+(i*minV)+'"'+(qty===i*minV?' selected':'')+'>'+(i*minV)+'</option>';
-        } else {
-          for(let i=1;i<=20;i++) opts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
-        }
-        const _ROOM_LINK_IDS = [
-          // STEP1-1
-          'S0031','S0092','S0179','S0183','B0140','B0212',
-          // STEP1-2 調理器具
-          'B0017','B0018','B0019','B0020','B0021','B0024','B0025','B0027','B0028',
-          // STEP1-2 カトラリーケース
-          'B0073',
-          // STEP1-2 トイレ掃除道具（ラバーカップ）
-          'B0100',
-        ];
-        const _numUnits = (state.property && state.property.units && state.property.units.length) || 1;
-        const _autoSub = ['B0079','B0081','B0082','B0083','B0074','B0084','B0196'].includes(id) ? '<span class="qty-row-label-sub">人数連動</span>'
-          : id==='B0101' ? '<span class="qty-row-label-sub">トイレ数連動</span>'
-          : (_ROOM_LINK_IDS.includes(id) && _numUnits > 1) ? '<span class="qty-row-label-sub">室数連動</span>' : '';
-        const _minLabel = (item.min && item.min > 1) ? '<div style="font-size:10px;font-weight:600;color:#94a3b8;margin-top:3px;text-align:right">最小発注 '+item.min+(item.unit||'個')+'</div>' : '';
-        return '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span>'+_autoSub+'</div><select class="qty-select" onchange="setQtyDirect(\'' + id + '\',this.value)">' + opts + '</select></div>'+_minLabel;
-      })()}
-      ${(()=>{
-        const hcVal = state.hostChoice[id];
-        const isHost = hcVal === 'host';
-        // ホスト様準備 → カート削除済み表示
-        if(isHost) return '<span style="font-size:11px;color:#94a3b8;font-weight:700;white-space:nowrap">✕ カート削除済み</span>';
-        const isReqItem = reqVal==='必須' || reqVal==='ファミリー必須';
-        if(isReqItem){
-          const hcVal2 = state.hostChoice[id];
-          if(hcVal2 === 'host') return '<span style="font-size:11px;color:#94a3b8;font-weight:700;white-space:nowrap">✕ カート削除済み</span>';
-          const _confirmedQtyI = (state.confirmedQty||{})[id];
-          if(_confirmedQtyI !== undefined && qty === _confirmedQtyI){
-            return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
-          } else if(_confirmedQtyI !== undefined) {
-            return '<button class="btn-add-cart" style="padding:6px 10px;font-size:12px;margin-top:0;width:auto" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">変更する</button>';
-          } else {
-            return '<button class="btn-add-cart" style="padding:6px 10px;font-size:12px;margin-top:0;width:auto" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">カートに入れる</button>';
-          }
-        } else {
-          // 任意品目（推奨・任意）も必須と同じ3状態（未追加・変更あり・投入済み）に統一
-          const _addedI2 = (state.cartAdded||{})[id];
-          const _confirmedQtyI2 = (state.confirmedQty||{})[id];
-          if (_addedI2 && _confirmedQtyI2 !== undefined && qty === _confirmedQtyI2) {
-            return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
-          } else if (_addedI2 && _confirmedQtyI2 !== undefined) {
-            return '<button class="btn-add-cart" style="padding:6px 10px;font-size:12px;margin-top:0;width:auto" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">変更する</button>';
-          } else {
-            return '<button class="btn-add-cart" style="padding:6px 10px;font-size:12px;margin-top:0;width:auto" onclick="event.stopPropagation();addToCart(\'item\',\''+id+'\','+qty+')">カートに入れる</button>';
-          }
-        }
-      })()}
+      ${isHost
+        ? '<span style="font-size:11px;color:#94a3b8;font-weight:700;white-space:nowrap">✕ 発注対象外</span>'
+        : '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ 発注対象</span>'}
     </div>
   </div>`;
+}
+
+// ─── 任意品目の選択トグル ───
+function toggleItemSelect(id) {
+  if (!state.cartAdded) state.cartAdded = {};
+  const wasSelected = !!state.cartAdded[id];
+  if (wasSelected) {
+    delete state.cartAdded[id];
+    state.quantities[id] = 0;
+    if (state.confirmedQty) delete state.confirmedQty[id];
+  } else {
+    state.cartAdded[id] = true;
+    const item = ITEMS[id];
+    state.quantities[id] = item && item.min ? item.min : 1;
+    if (!state.confirmedQty) state.confirmedQty = {};
+    state.confirmedQty[id] = state.quantities[id];
+  }
+  saveState();
+  render();
+}
+function badgeToggleItem(ev, id) {
+  ev.stopPropagation();
+  toggleItemSelect(id);
 }
 
 function setCardHTML(key) {
@@ -3452,57 +3752,44 @@ function setCardHTML(key) {
       + subItems.reduce((s,i)=>s+(state.hostChoice[i.id]==='host'?0:i.price),0) * sRQty
     : def.items.reduce((s,i)=>s+(state.hostChoice[i.id]==='host'?0:i.price),0) * qty;
 
-  // setCardHTML: 数量コントロールを右端縦配置、合計価格を枠内下部に表示
+  // setCardHTML: 数量UI廃止後の構成
+  const isReqSet = def.req==='必須'||def.req==='ファミリー必須';
+
+  // ─── 推奨・任意セット品目：新UI（カード全体タップでON/OFF） ───
+  if (!isReqSet) {
+    const isSelected = !!(state.cartAdded||{})['set_'+key];
+    const labelText = isSelected ? '選択中' : '選択する';
+    const setInnerHTML = `<div class="set-inner" style="display:flex;align-items:flex-start;gap:10px;padding:12px;background:#fff;border-radius:12px;margin-bottom:0">
+      <div class="set-inner-left" style="flex:1;min-width:0">
+        ${mainHTML}
+        ${subHTML}
+        ${def.hostNote?`<div class="host-note" style="margin-top:6px">${def.hostNote}</div>`:''}
+      </div>
+    </div>`;
+    return `<div class="set-card selectable${isSelected?' selected':''}" data-setkey="${key}" onclick="toggleSetSelect('${key}')">
+      <div class="select-mark" onclick="badgeToggleSet(event,'${key}')"><span class="select-mark-icon"></span><span class="select-mark-label">${labelText}</span></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-right:90px">
+        <div style="margin-bottom:6px">${reqBadge}</div><div class="set-title" style="margin:0">${def.title}</div>
+      </div>
+      ${setInnerHTML}
+    </div>`;
+  }
+
+  // ─── 必須・ファミリー必須セット品目：従来UI ───
   const setDetailHTML = `<div class="set-inner" style="display:flex;align-items:flex-start;gap:10px;padding:12px;background:#fff;border-radius:12px;margin-bottom:0">
     <div class="set-inner-left" style="flex:1;min-width:0">
       ${mainHTML}
       ${subHTML}
       ${def.hostNote?`<div class="host-note" style="margin-top:6px">${def.hostNote}</div>`:''}
-      <div style="border-top:1px solid #e8edf2;margin-top:8px;padding-top:8px">
-        <span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(calcSetTotal)}</span>
-      </div>
     </div>
     <div class="set-inner-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
-      ${isAutoSet && subItems.length > 0 ? `
-        <div class="qty-row">
-          <div class="qty-row-label">
-            <span class="qty-row-label-main">本体数量</span>
-            <span class="qty-row-label-sub">トイレ数連動</span>
-          </div>
-          ${(()=>{let o='';for(let i=1;i<=20;i++)o+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setSetQtyDirect(\''+key+'\',this.value)">'+o+'</select>';})()}</div>
-        <div class="qty-row">
-          <div class="qty-row-label"><span class="qty-row-label-main">詰替数量</span></div>
-          ${(()=>{let o='';for(let i=1;i<=20;i++)o+='<option value="'+i+'"'+(sRQty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setSetRefillQtyDirect(\''+key+'\',this.value)">'+o+'</select>';})()}</div>
-      ` : `
-        <div class="qty-row">
-          <div class="qty-row-label"><span class="qty-row-label-main">数量</span>${(['kitchen_bleach','corocoro','bath_magic'].includes(key) && ((state.property && state.property.units && state.property.units.length) || 1) > 1) ? '<span class="qty-row-label-sub">室数連動</span>' : ''}</div>
-          ${(()=>{let o='';for(let i=1;i<=20;i++)o+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';return '<select class="qty-select" onchange="setSetQtyDirect(\''+key+'\',this.value)">'+o+'</select>';})()}</div>
-      `}
       ${(()=>{
-        const isReqS = def.req==='必須'||def.req==='ファミリー必須';
         const _hostRemovedS = (state.hostRemoved||{})['set_'+key];
         if(_hostRemovedS){
-          return '<span style="font-size:11px;color:#94a3b8;font-weight:700;white-space:nowrap">✕ カート削除済み</span>';
+          return '<span style="font-size:11px;color:#94a3b8;font-weight:700;white-space:nowrap">✕ 発注対象外</span>';
         }
-        if(isReqS){
-          const _confirmedSetQtyS = (state.confirmedSetQty||{})[key];
-          if(_confirmedSetQtyS !== undefined && qty === _confirmedSetQtyS){
-            return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
-          } else {
-            return '<button class="btn-add-cart" onclick="addToCart(\'set\',\''+key+'\','+qty+')">変更する</button>';
-          }
-        } else {
-          // 任意セットも必須と同じ3状態に統一
-          const _addedS2 = (state.cartAdded||{})['set_'+key];
-          const _confirmedSetQtyS2 = (state.confirmedSetQty||{})[key];
-          if (_addedS2 && _confirmedSetQtyS2 !== undefined && qty === _confirmedSetQtyS2) {
-            return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
-          } else if (_addedS2 && _confirmedSetQtyS2 !== undefined) {
-            return '<button class="btn-add-cart" onclick="addToCart(\'set\',\''+key+'\','+qty+')">変更する</button>';
-          } else {
-            return '<button class="btn-add-cart" onclick="addToCart(\'set\',\''+key+'\','+qty+')">カートに入れる</button>';
-          }
-        }
+        // 必須セット：デフォルトで反映済み
+        return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ 発注対象</span>';
       })()}
     </div>
   </div>`;
@@ -3512,6 +3799,29 @@ function setCardHTML(key) {
     </div>
     ${setDetailHTML}
   </div>`;
+}
+
+// ─── 任意セット品目の選択トグル ───
+function toggleSetSelect(key) {
+  if (!state.cartAdded) state.cartAdded = {};
+  const cartKey = 'set_'+key;
+  const wasSelected = !!state.cartAdded[cartKey];
+  if (wasSelected) {
+    delete state.cartAdded[cartKey];
+    state.setQty[key] = 0;
+    if (state.confirmedSetQty) delete state.confirmedSetQty[key];
+  } else {
+    state.cartAdded[cartKey] = true;
+    state.setQty[key] = 1;
+    if (!state.confirmedSetQty) state.confirmedSetQty = {};
+    state.confirmedSetQty[key] = 1;
+  }
+  saveState();
+  render();
+}
+function badgeToggleSet(ev, key) {
+  ev.stopPropagation();
+  toggleSetSelect(key);
 }
 
 function choiceCardHTML(key) {
@@ -3610,61 +3920,63 @@ function choiceCardHTML(key) {
     const _confirmedQtyC = (state.confirmedChoiceQty||{})[key];
     const _selChangedC = _addedC && _confirmedSelC !== undefined && sel !== _confirmedSelC;
     const _qtyChangedC = _addedC && _confirmedQtyC !== undefined && qty !== _confirmedQtyC;
+    const _isChoiceReq = (def.req===true || def.req==='必須' || def.req==='ファミリー必須');
     let _cartBtn;
-    if (!_addedC) {
-      _cartBtn = `<button class="btn-add-cart" onclick="addToCart('choice','${key}',${qty})">カートに入れる</button>`;
-    } else if (_selChangedC) {
-      _cartBtn = `<button class="btn-add-cart" onclick="addToCart('choice','${key}',${qty})">変更する</button>`;
-    } else if (_qtyChangedC) {
-      _cartBtn = `<button class="btn-add-cart" onclick="addToCart('choice','${key}',${qty})">変更する</button>`;
-    } else {
-      _cartBtn = '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
-    }
-    let _qtyOpts='';
-    if (key === 'slipper' && sel === 'vinyl') {
-      const _maxG = parseInt(state.property && state.property.maxGuests) || 0;
-      const _max = _maxG > 0 ? _maxG : 20;
-      const _curQ = state.choiceQty['slipper'] || (_maxG > 0 ? _maxG : 1);
-      for (let i=1; i<=_max; i++) _qtyOpts += '<option value="'+i+'"'+(_curQ===i?' selected':'')+'>'+i+'</option>';
-    } else {
-      // 選択された単品の最小発注数を考慮
-      const _selIds = (selOpt && selOpt.ids) || [];
-      const _selSingleId = _selIds.length === 1 ? _selIds[0] : null;
-      const _selItem = _selSingleId ? ITEMS[_selSingleId] : null;
-      const _minV = (_selItem && _selItem.min && _selItem.min > 1) ? _selItem.min : 1;
-      if (_minV > 1) {
-        // 現在の qty を min の倍数に丸める
-        let _curQ = qty || _minV;
-        if (_curQ < _minV) _curQ = _minV;
-        for (let i=1; i<=20; i++) {
-          const v = i * _minV;
-          _qtyOpts += '<option value="'+v+'"'+(_curQ===v?' selected':'')+'>'+v+'</option>';
-        }
+    if (_isChoiceReq) {
+      // 必須選択肢付き：選択変更時のみ「変更する」、それ以外は反映済み
+      if (_selChangedC) {
+        _cartBtn = `<button class="btn-add-cart" onclick="addToCart('choice','${key}',${qty})">変更する</button>`;
       } else {
-        for(let i=1;i<=20;i++) _qtyOpts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
+        _cartBtn = '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ 反映済み</span>';
+      }
+    } else {
+      // 推奨/任意（Phase B で「いる／いらない」UIに置き換え予定）
+      if (!_addedC) {
+        _cartBtn = `<button class="btn-add-cart" onclick="addToCart('choice','${key}',${qty})">選択する</button>`;
+      } else if (_selChangedC) {
+        _cartBtn = `<button class="btn-add-cart" onclick="addToCart('choice','${key}',${qty})">変更する</button>`;
+      } else {
+        _cartBtn = '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ 選択中</span>';
       }
     }
-    const _CHOICE_ROOM_LINK = ['mizukiri','dishsoap','laundry','softener','tissue','room_deodor','gomibag45','sanitary_bag'];
-    const _choiceNumUnits = (state.property && state.property.units && state.property.units.length) || 1;
-    const _autoSub = (key==='slipper' && sel==='vinyl') ? '<span class="qty-row-label-sub">人数連動</span>'
-      : (key==='toilet_sheet' || key==='toilet_deodor') ? '<span class="qty-row-label-sub">トイレ数連動</span>'
-      : (_CHOICE_ROOM_LINK.includes(key) && _choiceNumUnits > 1) ? '<span class="qty-row-label-sub">室数連動</span>'
-      : '';
-    const _rightCol = `<div class="choice-inner-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()"><div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span>${_autoSub}</div><select class="qty-select" onchange="setChoiceQtyDirect('${key}',this.value)">${_qtyOpts}</select></div>${_cartBtn}</div>`;
+    const _rightCol = `<div class="choice-inner-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">${_cartBtn}</div>`;
 
     detailHTML = `<div class="choice-inner" style="display:flex;align-items:flex-start;gap:8px;padding:12px;background:#fff;border-radius:12px;margin-top:10px"><div class="choice-inner-left" style="flex:1;min-width:0">${innerHTML}</div>${_rightCol}</div>`;
   }
 
-  // 合計価格（枠内左下・単位なし）
-  const totalRow = selOpt
-    ? `<div style="font-size:16px;font-weight:900;color:var(--brand);font-family:var(--mono);padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span>¥${(selOpt.price * (qty > 0 ? qty : 1)).toLocaleString()}</div>`
-    : '';
+  // 合計価格表示は廃止
+  const totalRow = '';
 
   let warnRow = '';
   // 任意カードのみ「未選択」警告を表示（必須カードはデフォルト選択済みのため不要）
   if (!sel && def.req === false) {
     warnRow = `<div class="choice-warn" style="margin-top:10px">⚠️ 選択してください</div>`;
   }
+
+  const _isChoiceReqFinal = (def.req===true || def.req==='必須' || def.req==='ファミリー必須');
+
+  // ─── 推奨・任意の選択肢付きカード：新UI（選択肢タップでON、バッジで解除） ───
+  if (!_isChoiceReqFinal) {
+    const isSelected = !!sel;
+    const labelText = isSelected ? '選択中' : '選択する';
+    // 推奨/任意では選択肢のonclickをselectChoiceToggleに差し替え（同じ選択肢の再タップでOFF）
+    const tabsHTML2 = def.opts.map(opt=>{
+      const active = sel===opt.key;
+      return `<div class="choice-opt-btn${active?' active':''}" onclick="event.stopPropagation();selectChoiceToggle('${key}','${opt.key}')" style="${active?'border-color:var(--brand);background:var(--brand-base);color:var(--brand);':''}">${opt.label}</div>`;
+    }).join('');
+    return `<div class="choice-card-wrap selectable${isSelected?' selected':''}" data-choicekey="${key}">
+      <div class="select-mark" onclick="badgeToggleChoice(event,'${key}')"><span class="select-mark-icon"></span><span class="select-mark-label">${labelText}</span></div>
+      <div style="padding-right:90px">
+        ${reqBadge}
+        <div class="choice-title">${def.title}</div>
+      </div>
+      <div class="choice-opts" style="margin-bottom:0">${tabsHTML2}</div>
+      ${detailHTML}
+      ${warnRow}
+    </div>`;
+  }
+
+  // ─── 必須の選択肢付きカード：従来UI ───
   return `<div class="choice-card-wrap ${sel?'has-sel':''}">
     ${reqBadge}
     <div class="choice-title">${def.title}</div>
@@ -3673,6 +3985,50 @@ function choiceCardHTML(key) {
     ${totalRow}
     ${warnRow}
   </div>`;
+}
+
+// ─── 任意の選択肢付きカード：選択肢タップでトグル ───
+function selectChoiceToggle(key, optKey) {
+  const currentSel = state.choiceSelections[key];
+  if (currentSel === optKey) {
+    // 同じ選択肢の再タップ：解除
+    delete state.choiceSelections[key];
+    state.choiceQty[key] = 0;
+    if (state.cartAdded) delete state.cartAdded['choice_'+key];
+    if (state.confirmedSelections) delete state.confirmedSelections['choice_'+key];
+    if (state.confirmedChoiceQty) delete state.confirmedChoiceQty[key];
+  } else {
+    // 別の選択肢または初回選択：即反映
+    state.choiceSelections[key] = optKey;
+    state.choiceQty[key] = 1;
+    if (!state.cartAdded) state.cartAdded = {};
+    state.cartAdded['choice_'+key] = true;
+    if (!state.confirmedSelections) state.confirmedSelections = {};
+    state.confirmedSelections['choice_'+key] = optKey;
+    if (!state.confirmedChoiceQty) state.confirmedChoiceQty = {};
+    state.confirmedChoiceQty[key] = 1;
+    // 内部のquantitiesも更新（送信用）
+    const def = CHOICE_DEFS[key];
+    const opt = def && def.opts.find(o => o.key === optKey);
+    if (opt && opt.ids) opt.ids.forEach(id => { if (ITEMS[id]) state.quantities[id] = 1; });
+  }
+  saveState();
+  render();
+}
+function badgeToggleChoice(ev, key) {
+  ev.stopPropagation();
+  const currentSel = state.choiceSelections[key];
+  if (currentSel) {
+    // 選択中の場合：解除
+    delete state.choiceSelections[key];
+    state.choiceQty[key] = 0;
+    if (state.cartAdded) delete state.cartAdded['choice_'+key];
+    if (state.confirmedSelections) delete state.confirmedSelections['choice_'+key];
+    if (state.confirmedChoiceQty) delete state.confirmedChoiceQty[key];
+    saveState();
+    render();
+  }
+  // 未選択時にバッジをタップしても何もしない（選択肢タップが必要）
 }
 
 
@@ -3798,45 +4154,29 @@ function refillCardHTML(key) {
       if (selOpt.note) detailHTML += '<div style="font-size:10px;color:var(--amber);margin-top:2px">'+selOpt.note+'</div>';
       detailHTML += '</div></div>';
     }
-    // 合計
-    const _kidsRefQty2 = (key === 'kids_shampoo' && selOpt.extraId) ? ((state.setRefillQty||{})[key] ?? 1) : qty;
-    const _totalCalc = (key === 'kids_shampoo' && selOpt.extraId)
-      ? def.base.price * qty + selOpt.extraPrice * _kidsRefQty2
-      : optTotal * qty;
-    detailHTML += '<div style="padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">'+fmt(_totalCalc)+'</span></div>';
+    // 合計表示は廃止
     detailHTML += '</div>';
-    // 右：数量セレクト＋カートボタン
+    // 右：カートボタン（数量UIは廃止）
     detailHTML += '<div class="refill-inner-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">';
-    let qtyOpts2 = '';
-    for (let i = 1; i <= 20; i++) qtyOpts2 += '<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
-
-    if (key === 'kids_shampoo' && selOpt.extraId) {
-      // 本体・詰替を別セレクトで表示
-      const _kidsRefillQty = (state.setRefillQty||{})[key] ?? 1;
-      let refillOpts2 = '';
-      for (let i = 1; i <= 20; i++) refillOpts2 += '<option value="'+i+'"'+(_kidsRefillQty===i?' selected':'')+'>'+i+'</option>';
-      detailHTML += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">本体数量</span><span class="qty-row-label-sub">ファミリーバス数連動</span></div><select class="qty-select" onchange="changeRefillQtyDirect(\''+key+'\',this.value)">'+qtyOpts2+'</select></div>';
-      detailHTML += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">詰替数量</span></div><select class="qty-select" onchange="setSetRefillQtyDirect(\''+key+'\',this.value)">'+refillOpts2+'</select></div>';
-    } else {
-      const _REFILL_ROOM_LINK = ['quickle','kabikiller','toilet_magic'];
-      const _refillNumUnits = (state.property && state.property.units && state.property.units.length) || 1;
-      const _refillSub = (_REFILL_ROOM_LINK.includes(key) && _refillNumUnits > 1) ? '<span class="qty-row-label-sub">室数連動</span>' : '';
-      detailHTML += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span>'+_refillSub+'</div><select class="qty-select" onchange="changeRefillQtyDirect(\''+key+'\',this.value)">'+qtyOpts2+'</select></div>';
-    }
     const _confirmedSelR = (state.confirmedSelections||{})['refill_'+key];
-    const _confirmedQtyR = (state.confirmedRefillQty||{})[key];
-    const _confirmedSetRefillQtyR = (state.confirmedSetRefillQty||{})[key];
-    const _currentSetRefillQty = (state.setRefillQty||{})[key] ?? 1;
     const _selChangedR = isAdded2 && _confirmedSelR !== undefined && sel !== _confirmedSelR;
-    const _qtyChangedR = isAdded2 && _confirmedQtyR !== undefined && qty !== _confirmedQtyR;
-    // kids_shampooの詰替数量変化も検出
-    const _setRefillQtyChangedR = isAdded2 && key === 'kids_shampoo' && _confirmedSetRefillQtyR !== undefined && _currentSetRefillQty !== _confirmedSetRefillQtyR;
-    if (!isAdded2) {
-      detailHTML += '<button class="btn-add-cart" onclick="addToCart(\'refill\',\''+key+'\','+qty+')">カートに入れる</button>';
-    } else if (_selChangedR || _qtyChangedR || _setRefillQtyChangedR) {
-      detailHTML += '<button class="btn-add-cart" onclick="addToCart(\'refill\',\''+key+'\','+qty+')">変更する</button>';
+    const _isRefillReq = (def.req === '必須' || def.req === 'ファミリー必須');
+    if (_isRefillReq) {
+      // 必須・ファミリー必須：選択変更時のみ「変更する」、それ以外は反映済み
+      if (_selChangedR) {
+        detailHTML += '<button class="btn-add-cart" onclick="addToCart(\'refill\',\''+key+'\','+qty+')">変更する</button>';
+      } else {
+        detailHTML += '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ 反映済み</span>';
+      }
     } else {
-      detailHTML += '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
+      // 推奨/任意（Phase B で「いる／いらない」UIに置き換え予定）
+      if (!isAdded2) {
+        detailHTML += '<button class="btn-add-cart" onclick="addToCart(\'refill\',\''+key+'\','+qty+')">選択する</button>';
+      } else if (_selChangedR) {
+        detailHTML += '<button class="btn-add-cart" onclick="addToCart(\'refill\',\''+key+'\','+qty+')">変更する</button>';
+      } else {
+        detailHTML += '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ 選択中</span>';
+      }
     }
     detailHTML += '</div>';
     detailHTML += '</div>';
@@ -4000,55 +4340,19 @@ function gradeGroupHTML(g) {
         ${mainHTML}
         ${subHTML}
         ${opt.hostNote?`<div class="host-note" style="margin-top:6px">${opt.hostNote}</div>`:''}
-        <div style="padding-top:8px;border-top:1px solid #e8edf2;margin-top:8px"><span style="font-size:11px;font-weight:600;margin-right:4px;color:var(--brand)">合計</span><span style="font-size:16px;font-weight:900;font-family:var(--mono);color:var(--brand)">${fmt(totalP)}</span></div>
       </div>
       <div class="grade-inner-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0" onclick="event.stopPropagation()">
         ${(()=>{
-          // 本体セレクト（bodyItemsがある場合のみ）
-          const _rQty = (state.gradeRefillQty||{})[g.id] ?? 1;
-          const _confirmedRQty = (state.confirmedGradeQty||{})['refill_'+g.id] ?? 1;
           const _addedG = (state.cartAdded||{})['grade_'+g.id];
           const _confirmedSelG = (state.confirmedSelections||{})['grade_'+g.id];
-          const _confirmedQtyG = (state.confirmedGradeQty||{})[g.id];
           const _selChangedG = _addedG && _confirmedSelG !== undefined && sel !== _confirmedSelG;
-          const _qtyChangedG = _addedG && _confirmedQtyG !== undefined && (qty !== _confirmedQtyG || _rQty !== _confirmedRQty);
-          // ハンドソープは室数連動、shampoo/conditioner/bodysoapはバス数連動
-          const _gradeNumUnits = (state.property && state.property.units && state.property.units.length) || 1;
-          const _gradeIsHandsoap = g.id === 'handsoap';
-          // バス数連動バッジ
-          const _bodySubLabelBath = isAutoGrade ? '<span class="qty-row-label-sub">バス数連動</span>' : '';
-          // 室数連動バッジ（handsoapのみ、1室時は非表示）
-          const _bodySubLabelRoom = (_gradeIsHandsoap && _gradeNumUnits > 1) ? '<span class="qty-row-label-sub">室数連動</span>' : '';
-          let html2 = '';
-          if (bodyItems.length > 0 && subItems.length > 0) {
-            // 本体＋詰替 両方ある場合
-            let bodyOpts=''; for(let i=1;i<=20;i++) bodyOpts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
-            const bodySubLabel = _bodySubLabelBath || _bodySubLabelRoom;
-            html2 += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">本体数量</span>'+bodySubLabel+'</div><select class="qty-select" onchange="setGradeQtyDirect(\''+g.id+'\',this.value)">'+bodyOpts+'</select></div>';
-            let refillOpts=''; for(let i=1;i<=20;i++) refillOpts+='<option value="'+i+'"'+(_rQty===i?' selected':'')+'>'+i+'</option>';
-            html2 += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">詰替数量</span></div><select class="qty-select" onchange="setGradeRefillQtyDirect(\''+g.id+'\',this.value)">'+refillOpts+'</select></div>';
-          } else if (bodyItems.length > 0 && subItems.length === 0) {
-            // 本体のみ
-            let bodyOpts=''; for(let i=1;i<=20;i++) bodyOpts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
-            const bodySubLabel = _bodySubLabelBath || _bodySubLabelRoom;
-            html2 += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">本体数量</span>'+bodySubLabel+'</div><select class="qty-select" onchange="setGradeQtyDirect(\''+g.id+'\',this.value)">'+bodyOpts+'</select></div>';
-          } else if (!bodyItems.length && subItems.length > 0) {
-            // 詰替のみ（パンテーン等）
-            let soloOpts=''; for(let i=1;i<=20;i++) soloOpts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
-            html2 += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">詰替数量</span></div><select class="qty-select" onchange="setGradeQtyDirect(\''+g.id+'\',this.value)">'+soloOpts+'</select></div>';
+          // グレードグループは全て必須カテゴリ（シャンプー・コンディショナー・ボディソープ・ハンドソープ）
+          // 選択変更時のみ「変更する」、それ以外は反映済み
+          if (_selChangedG) {
+            return '<button class="btn-add-cart" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">変更する</button>';
           } else {
-            // 品目未分類（念のため）
-            let soloOpts=''; for(let i=1;i<=20;i++) soloOpts+='<option value="'+i+'"'+(qty===i?' selected':'')+'>'+i+'</option>';
-            html2 += '<div class="qty-row"><div class="qty-row-label"><span class="qty-row-label-main">数量</span></div><select class="qty-select" onchange="setGradeQtyDirect(\''+g.id+'\',this.value)">'+soloOpts+'</select></div>';
+            return '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ 反映済み</span>';
           }
-          if (!_addedG) {
-            html2 += '<button class="btn-add-cart" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">カートに入れる</button>';
-          } else if (_selChangedG || _qtyChangedG) {
-            html2 += '<button class="btn-add-cart" onclick="addToCart(\'grade\',\''+g.id+'\','+qty+')">変更する</button>';
-          } else {
-            html2 += '<span style="font-size:11px;color:#10b981;font-weight:700;white-space:nowrap">✓ カート投入済み</span>';
-          }
-          return html2;
         })()}
       </div>
     </div>
@@ -4066,7 +4370,7 @@ function renderDashboard() {
   const familyRequired = state.property.isFamily === true
     ? (state.completedSteps['family'] && state.completedSteps['family_opt'])
     : true;
-  const canSubmit = state.completedSteps['fixed'] && state.completedSteps['select1'] && state.completedSteps['select2'] && familyRequired;
+  const canSubmit = state.completedSteps['select1'] && state.completedSteps['select2'] && familyRequired;
 
   const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 
@@ -4110,9 +4414,12 @@ function renderDashboard() {
   }
 
   // STEP完了状態の判定
-  const familyDone = state.completedSteps['family'] && state.completedSteps['family_opt'];
-  const step1Done = state.completedSteps['fixed'] && state.completedSteps['select1'] && state.completedSteps['select2'] && familyDone;
-  const step1Partial = state.completedSteps['fixed'] || state.completedSteps['select1'] || state.completedSteps['select2'];
+  // ファミリー物件の場合のみ family/family_opt の完了を要件にする
+  const familyDone = state.property.isFamily === true
+    ? (state.completedSteps['family'] && state.completedSteps['family_opt'])
+    : true;
+  const step1Done = state.completedSteps['select1'] && state.completedSteps['select2'] && familyDone;
+  const step1Partial = state.completedSteps['select1'] || state.completedSteps['select2'];
   const step2Done = state.completedSteps['recommend'];
   const step3Done = OPT_CATS.some(s => state.completedSteps[s.key]);
   const step3Count = OPT_CATS.filter(s => state.completedSteps[s.key]).length;
@@ -4155,8 +4462,8 @@ function renderDashboard() {
   const step1Desc = step1Done
     ? '必須項目の入力が完了しました。'
     : state.property.isFamily === true
-      ? '数量確認 → 担当設定 → 品目選択 → ファミリー品目の順にお進みください。'
-      : '数量確認 → 担当設定 → 品目選択の順にお進みください。';
+      ? '担当設定 → 品目選択 → ファミリー品目の順にお進みください。'
+      : '担当設定 → 品目選択の順にお進みください。';
 
   let html = '<div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px"><button class="btn-reset" onclick="showResetDialog()">🗑️ すべてリセット</button></div>';
 
@@ -4200,7 +4507,7 @@ function renderDashboard() {
     </div>
   </div>`;
 
-  html += stepBlock(1, step1Done, step1Partial, '初回必須品目の選択・数量確認', step1Desc,
+  html += stepBlock(1, step1Done, step1Partial, '初回必須品目の選択', step1Desc,
     step1Cards + (step1Partial ? '<div style="margin-top:12px;text-align:right"><button class="btn-step-reset" onclick="showStepResetDialog(\'step1\',\'初回必須品目\')">↺ このSTEPをリセット</button></div>' : ''));
 
   const step2Desc = step2Done
@@ -4292,16 +4599,19 @@ function renderRecommend() {
 // ファミリー必須ページ
 // ══════════════════════════════════════════════
 function renderFamily() {
-  let html = pageHeader('step-family','STEP 1 — 4/5','ファミリー必須品目','ファミリー物件向けの必須品目です。最低発注数が初期値として入っています。数量を変更する場合のみ「変更する」ボタンで反映してください。');
-  html += `<div style="margin:0 0 8px;font-size:13px;font-weight:700;color:var(--text-sub)">ファミリー必須品目（自動追加）</div>`;
+  let html = pageHeader('step-family','STEP 1 — 3/4','ファミリー必須品目','ファミリー物件向けの必須品目です。各品目の補充担当を設定してください。ホスト様ご自身で準備・補充される場合は「ホスト様準備」へ切り替えてください。');
+  html += `<div class="subsection"><div class="subsection-title">子供用食器・カトラリー</div>`;
   const familyReqIds = ['B0085','B0086','B0087','B0088'];
   familyReqIds.forEach(id => { html += itemCardHTML(id, 'ファミリー必須'); });
+  html += `</div>`;
+  html += `<div class="subsection"><div class="subsection-title">子供用シャンプー</div>`;
   html += refillCardHTML('kids_shampoo');
+  html += `</div>`;
   return html;
 }
 
 function renderFamilyOpt() {
-  let html = pageHeader('step-family','STEP 1 — 5/5','ファミリー品目（任意追加）','ファミリー向けのオプション品目です。必要なものをカートに追加してください。不要な場合はそのまま「確定」をタップしてください。');
+  let html = pageHeader('step-family','STEP 1 — 4/4','ファミリー品目（任意追加）','ファミリー向けのオプション品目です。必要なものを選択してください。不要な場合はそのまま「確定」をタップしてください。');
   html += setCardHTML('baby_bottle_spray');
   const familyOptIds = ['S0004','S0005','S0041','S0130','S0132','S0133','S0134','S0223','S0224'];
   familyOptIds.forEach(id => { html += itemCardHTML(id); });
@@ -4813,48 +5123,14 @@ function getDuplicateNumberIndices() {
 }
 
 function renderStep1() {
-  return `${pageHeader('step1','STEP 1 — 1/4','初回必須品目 — 数量確認','物件情報をもとに数量を自動設定しました。内容を確認し、必要に応じて変更してから「次へ」をタップしてください。')}
-  <div class="subsection"><div class="subsection-title">キッチン消耗品</div>
-  ${['S0031'].map(id => itemCardHTML(id)).join('')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">キッチン洗浄・衛生</div>
-  ${setCardHTML('kitchen_bleach')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">ゴミ・ホコリ除去</div>
-  ${setCardHTML('corocoro')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">浴室洗剤</div>
-  ${setCardHTML('bath_magic')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">トイレ用消耗品</div>
-  ${['S0092'].map(id => itemCardHTML(id)).join('')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">害虫対策</div>
-  ${['S0179','S0183'].map(id => itemCardHTML(id)).join('')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">浴室清掃道具</div>
-  ${['B0140'].map(id => itemCardHTML(id)).join('')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">拭き掃除</div>
-  ${['B0212'].map(id => itemCardHTML(id)).join('')}
-  </div>
-
-  <div class="subsection"><div class="subsection-title">トイレ消臭（置き型）</div>
-  ${setCardHTML('toilet_fab')}
-  </div>
-  <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center">
-  </div>`;
+  // 旧: 必須固定品目（数量確認）ページ。廃止し、確認画面に「自動追加品目」として一覧表示するように変更。
+  // 後方互換のため空骸関数として残す。
+  console.warn('renderStep1 is deprecated and should not be called.');
+  return `${pageHeader('step1','STEP 1','このページは廃止されました','このページは現在使用されていません。ダッシュボードへお戻りください。')}`;
 }
 
 function renderStep2a() {
-  return `${pageHeader('step1','STEP 1 — 2/4','初回必須品目 — 担当設定','各品目の補充担当を設定してください。ホスト様ご自身で準備・補充される場合は「ホスト様準備」へ切り替えてください。')}
+  return `${pageHeader('step1','STEP 1 — 1/4','初回必須品目 — 担当設定','各品目の補充担当を設定してください。ホスト様ご自身で準備・補充される場合は「ホスト様準備」へ切り替えてください。')}
   <div class="subsection"><div class="subsection-title">調理器具</div>
   ${['B0017','B0018','B0019','B0020','B0021','B0024','B0025','B0027','B0028'].map(id => itemCardHTML(id)).join('')}
   </div>
@@ -4875,7 +5151,7 @@ function renderStep2a() {
 }
 
 function renderStep2b() {
-  return `${pageHeader('step1','STEP 1 — 3/4','初回必須品目 — 品目・メーカー選択','デフォルトの選択肢がカートに追加されています。変更する場合はタブを切り替え、「変更する」ボタンで反映してください。')}
+  return `${pageHeader('step1','STEP 1 — 2/4','初回必須品目 — 品目・メーカー選択','デフォルトの選択肢が選択されています。変更する場合はタブを切り替え、「変更する」ボタンで反映してください。')}
 
   <div class="subsection"><div class="subsection-title">スリッパ</div>${choiceCardHTML('slipper')}</div>
   <div class="subsection"><div class="subsection-title">床掃除</div>${refillCardHTML('quickle')}</div>
@@ -5308,7 +5584,6 @@ render();
 
 </script>
 <!-- ─── 発注者情報入力モーダルは廃止（物件情報画面に統合済み） ─── -->
-
-<div class="total-bar" id="total-bar"><div class="total-bar-inner"><span class="total-bar-label">現在の合計金額（目安）</span><span class="total-bar-amount" id="total-display">¥0</span></div></div>
+<!-- ─── 合計金額バー（total-bar）は廃止 ─── -->
 
 </body></html>
