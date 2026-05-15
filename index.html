@@ -43,7 +43,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .progress-pct{font-size:14px;font-weight:900;color:var(--brand);min-width:36px;text-align:right}
 
 /* ── メイン ── */
-.main{padding:24px 16px;max-width:896px;margin:0 auto}
+.main{padding:24px 16px 100px;max-width:896px;margin:0 auto}
 
 /* ── ページヘッダー（統一デザイン） ── */
 .page-header{background:var(--card);border:1px solid var(--border);border-radius:28px;padding:24px 28px;margin-bottom:24px;box-shadow:0 1px 6px rgba(0,0,0,.04)}
@@ -243,6 +243,23 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 /* ── フッター ── */
 .footer{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-top:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100}
 .footer-inner{max-width:640px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:flex-end;gap:12px}
+
+/* PC（672px以上）ではフッターを中央フローティングパネル風に */
+@media (min-width: 672px) {
+  .footer{
+    left:50%;
+    right:auto;
+    transform:translateX(-50%);
+    max-width:640px;
+    width:calc(100% - 32px);
+    bottom:16px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:rgba(255,255,255,0.97);
+    box-shadow:0 8px 28px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.04);
+    padding:10px 14px;
+  }
+}
 .total-wrap .total-label{font-size:10px;color:var(--text-sub);font-weight:700}
 .total-wrap .total-amount{font-size:18px;font-weight:900;font-family:var(--mono);color:var(--brand)}
 .nav-btns{display:flex;gap:8px}
@@ -2515,6 +2532,30 @@ function updatePropInfoBtn() {
       btn.style.cursor = valid ? 'pointer' : 'not-allowed';
     }
   });
+  // 警告メッセージのリアルタイム更新
+  const warnEl = document.getElementById('propinfo-warning');
+  if (warnEl) {
+    if (valid) {
+      // 全項目入力済み → 警告を消す
+      warnEl.style.display = 'none';
+      warnEl.className = '';
+      warnEl.innerHTML = '';
+    } else {
+      // 未入力 or 重複あり → 警告を表示
+      const dupIdx = getDuplicateNumberIndices();
+      const isDup = dupIdx && dupIdx.size > 0;
+      warnEl.style.display = 'flex';
+      if (isDup) {
+        warnEl.className = 'alert-box alert-danger';
+        warnEl.style.cssText = 'display:flex;align-items:center;margin-top:16px';
+        warnEl.innerHTML = '<div class="alert-icon">!</div><div style="flex:1"><div class="alert-title">物件番号が重複しています</div><div class="alert-text">同じ物件番号を複数の物件に設定することはできません。重複箇所を修正してください。</div></div>';
+      } else {
+        warnEl.className = 'alert-box alert-warn';
+        warnEl.style.cssText = 'display:flex;align-items:center;margin-top:16px';
+        warnEl.innerHTML = '<div class="alert-icon">!</div><div style="flex:1"><div class="alert-title">未入力の項目があります</div><div class="alert-text">全項目を入力・選択後に「次へ」が有効になります。</div></div>';
+      }
+    }
+  }
 }
 
 // 物件番号の重複警告をリアルタイムで更新（render不要）
@@ -4542,7 +4583,7 @@ function renderDashboard() {
 // 任意カテゴリ一覧
 // ══════════════════════════════════════════════
 function renderOptionalList() {
-  let html = `${pageHeader('step3','STEP 3','任意追加品目','カテゴリを選んで品目を追加してください。不要な場合はそのままスキップできます。')}` ;
+  let html = `${pageHeader('step3','STEP 3','任意追加品目','カテゴリを選んで、必要な品目をタップで選択してください。不要な場合はそのままスキップできます。')}` ;
   const OPT_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
   OPT_CATS.forEach(cat => {
     const done = state.completedSteps[cat.key];
@@ -4570,7 +4611,7 @@ function renderOptionalList() {
 // 推奨品目ページ
 // ══════════════════════════════════════════════
 function renderRecommend() {
-  return `${pageHeader('step2','STEP 2','推奨品目','弊社がおすすめする品目です。必要なものをカートに追加してください。不要な場合はそのまま「確定」でスキップできます。')}`
+  return `${pageHeader('step2','STEP 2','推奨品目','弊社がおすすめする品目です。追加したい品目をタップで選択してください。不要な場合はそのまま「確定」でスキップできます。')}`
     + '<div class="subsection"><div class="subsection-title">スキンケア</div>'
     + choiceCardHTML('skincare_lotion')
     + choiceCardHTML('skincare_milk')
@@ -5074,12 +5115,12 @@ function renderPropInfo() {
   ${propertyCard}
   ${contactCard}
   ${(()=>{
-    if (valid) return '';
+    if (valid) return '<div id="propinfo-warning" style="display:none"></div>';
     const dupCount = _dupIdx.size;
     if (dupCount > 0) {
-      return '<div class="alert-box alert-danger" style="display:flex;align-items:center;margin-top:16px"><div class="alert-icon">!</div><div style="flex:1"><div class="alert-title">物件番号が重複しています</div><div class="alert-text">同じ物件番号を複数の物件に設定することはできません。重複箇所を修正してください。</div></div></div>';
+      return '<div id="propinfo-warning" class="alert-box alert-danger" style="display:flex;align-items:center;margin-top:16px" data-type="dup"><div class="alert-icon">!</div><div style="flex:1"><div class="alert-title">物件番号が重複しています</div><div class="alert-text">同じ物件番号を複数の物件に設定することはできません。重複箇所を修正してください。</div></div></div>';
     }
-    return '<div class="alert-box alert-warn" style="display:flex;align-items:center;margin-top:16px"><div class="alert-icon">!</div><div style="flex:1"><div class="alert-title">未入力の項目があります</div><div class="alert-text">全項目を入力・選択後に「次へ」が有効になります。</div></div></div>';
+    return '<div id="propinfo-warning" class="alert-box alert-warn" style="display:flex;align-items:center;margin-top:16px" data-type="empty"><div class="alert-icon">!</div><div style="flex:1"><div class="alert-title">未入力の項目があります</div><div class="alert-text">全項目を入力・選択後に「次へ」が有効になります。</div></div></div>';
   })()}`;
 }
 
