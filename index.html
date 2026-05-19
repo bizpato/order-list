@@ -82,6 +82,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .step-desc{font-size:12px;font-weight:600;color:var(--text-sub);line-height:1.7;padding:8px 12px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--brand)}
 .subsection{margin-bottom:24px}
 .subsection-title{font-size:10px;font-weight:900;color:var(--text-sub);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding-left:2px}
+.subsection-note{font-size:11px;color:var(--text-sub);line-height:1.6;margin:-4px 2px 12px;padding:8px 12px;background:#f8fafc;border-radius:8px;border:1px solid #f1f5f9}
 
 /* ── アイテムカード ── */
 .item-card{background:var(--card);border:1px solid #e2e8f0;border-radius:28px;padding:18px 20px;margin-bottom:14px;display:flex;align-items:flex-start;gap:14px;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.03);position:relative}
@@ -636,10 +637,10 @@ const ITEMS = {
   'B0135':{id:'B0135',name:"バスブラシ",brand:"3M スコッチブライト",price:790,min:1,unit:"個",cat:"浴室清掃道具",req:"推奨",img:"https://m.media-amazon.com/images/I/61YeQkQPGZS._AC_SL1500_.jpg"},
   'B0141':{id:'B0141',name:"排水溝ブラシ",brand:"オーエ",price:380,min:1,unit:"個",cat:"浴室清掃道具",req:"推奨",img:"https://m.media-amazon.com/images/I/61nxH+7R4OL._AC_SL1000_.jpg"},
   'B0161':{id:'B0161',name:"屋外用スリッパ ブラック",brand:"TOKYO SLIPPER",price:600,min:1,unit:"足",cat:"履物",req:"推奨",img:""},
-  'B0263':{id:'B0263',name:"ベッドパッド 100×200（シングル）上位",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
-  'B0264':{id:'B0264',name:"ベッドパッド 120×200（セミダブル）上位",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
-  'B0265':{id:'B0265',name:"ベッドパッド 140×200（ダブル）上位",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
-  'B0266':{id:'B0266',name:"ベッドパッド 140×200（ダブル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
+  'B0263':{id:'B0263',name:"ベッドパッド 100×200（シングル）上位",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
+  'B0264':{id:'B0264',name:"ベッドパッド 120×200（セミダブル）上位",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
+  'B0265':{id:'B0265',name:"ベッドパッド 140×200（ダブル）上位",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
+  'B0266':{id:'B0266',name:"ベッドパッド 140×200（ダブル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
   'B0270':{id:'B0270',name:"ステンレスピンチハンガー 32ピンチ",brand:"アイリスオーヤマ",price:1600,min:1,unit:"個",cat:"その他",req:"推奨",img:"https://m.media-amazon.com/images/I/51Jk8HKdUDL._AC_SY300_SX300_QL70_ML2_.jpg"},
   'B0271':{id:'B0271',name:"ステンレスピンチハンガー 42ピンチ",brand:"アイリスオーヤマ",price:2200,min:1,unit:"個",cat:"その他",req:"推奨",img:"https://m.media-amazon.com/images/I/51wW6ZSmoVL._AC_SY300_SX300_QL70_ML2_.jpg"},
   'B0272':{id:'B0272',name:"タオルハンガー付きコンパクト洗濯物干し",brand:"アイリスオーヤマ",price:6300,min:1,unit:"個",cat:"その他",req:"推奨",img:"https://m.media-amazon.com/images/I/51Mduq26hrL._AC_SY300_SX300_QL70_ML2_.jpg"},
@@ -710,14 +711,14 @@ const ITEMS = {
   'E0193':{id:'E0193',name:"山善サイクロンスティッククリーナー 2WAY ZSC-C1000",brand:"山善",price:8780,min:1,unit:"個",cat:"その他",img:"https://yamazenbizcom.jp/client_info/YAMAZEN/itemimage/cabinet/main-img/018/main-r7r75.jpg"},
   'E0204':{id:'E0204',name:"三菱紙パック掃除機コード式",brand:"Leacco",price:4780,min:1,unit:"個",cat:"その他",img:"https://m.media-amazon.com/images/I/61KIBkUxGvL._AC_SL1500_.jpg"},
   'E0209':{id:'E0209',name:"紙パック",brand:"-",price:410,min:1,unit:"個",cat:"その他",img:"https://m.media-amazon.com/images/I/7141adAbwmL._AC_SL1500_.jpg"},
-  'B0255':{id:'B0255',name:"枕 柔らかめ",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
-  'B0256':{id:'B0256',name:"枕 パイプ入り",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
-  'B0257':{id:'B0257',name:"掛け布団 450g/㎡ 150×210（シングル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
-  'B0258':{id:'B0258',name:"掛け布団 450g/㎡ 170×211（セミダブル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
-  'B0259':{id:'B0259',name:"掛け布団 450g/㎡ 190×210（ダブル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
-  'B0260':{id:'B0260',name:"掛け布団 400g/㎡ 150×210（シングル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
-  'B0261':{id:'B0261',name:"掛け布団 400g/㎡ 180×210（セミダブル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
-  'B0262':{id:'B0262',name:"掛け布団 400g/㎡ 200×210（クイーン）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",img:""},
+  'B0255':{id:'B0255',name:"枕 柔らかめ",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
+  'B0256':{id:'B0256',name:"枕 パイプ入り",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
+  'B0257':{id:'B0257',name:"掛け布団 450g/㎡ 150×210（シングル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
+  'B0258':{id:'B0258',name:"掛け布団 450g/㎡ 170×211（セミダブル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
+  'B0259':{id:'B0259',name:"掛け布団 450g/㎡ 190×210（ダブル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
+  'B0260':{id:'B0260',name:"掛け布団 400g/㎡ 150×210（シングル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
+  'B0261':{id:'B0261',name:"掛け布団 400g/㎡ 180×210（セミダブル）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
+  'B0262':{id:'B0262',name:"掛け布団 400g/㎡ 200×210（クイーン）",brand:"大野株式会社",price:0,min:1,unit:"個",cat:"その他",req:"推奨",img:""},
   'E0275':{id:'E0275',name:"汎用マルチリモコン",brand:"E0275",price:2400,min:1,unit:"個",cat:"その他",img:""},
   'B0075':{id:'B0075',name:"カトラリー フォーク 4本",brand:"IKEA",price:90,min:1,unit:"個",cat:"カトラリー",img:"https://www.ikea.com/jp/ja/images/products/foernuft-fork-stainless-steel__0714592_pe730133_s5.jpg?f=xl"},
   'B0076':{id:'B0076',name:"カトラリー ナイフ 4本",brand:"IKEA",price:90,min:1,unit:"個",cat:"カトラリー",img:"https://www.ikea.com/jp/ja/images/products/foernuft-knife-stainless-steel__0714605_pe730140_s5.jpg?f=xl"},
@@ -1021,15 +1022,6 @@ const CHOICE_DEFS = {
         price: 1500, desc: 'フジスーパー カウンタークロス薄手 100枚（S0035）' },
     ]
   },
-  bed_pad: {
-    title: 'ベッドパッド', req: '推奨',
-    opts: [
-      { key: 'p100_upper', label: '100×200 上位', ids: ['B0263'], img: '', price: 0 },
-      { key: 'p120_upper', label: '120×200 上位', ids: ['B0264'], img: '', price: 0 },
-      { key: 'p140_upper', label: '140×200 上位', ids: ['B0265'], img: '', price: 0 },
-      { key: 'p140',       label: '140×200',      ids: ['B0266'], img: '', price: 0 },
-    ]
-  },
   vacuum: {
     title: '掃除機', req: false, reqLabel: '任意 — どちらか選択',
     opts: [
@@ -1041,13 +1033,6 @@ const CHOICE_DEFS = {
         ids: ['E0204','E0209'],
         img: 'https://m.media-amazon.com/images/I/61KIBkUxGvL._AC_SL1500_.jpg',
         price: 5190, desc: '三菱紙パック掃除機コード式（E0204）＋ 紙パック（E0209）' },
-    ]
-  },
-  pillow: {
-    title: '枕', req: false, reqLabel: '任意 — どちらか選択',
-    opts: [
-      { key: 'soft',  label: '柔らかめ',  ids: ['B0255'], img: '', price: 0 },
-      { key: 'pipe',  label: 'パイプ入り', ids: ['B0256'], img: '', price: 0 },
     ]
   },
 };
@@ -1499,8 +1484,8 @@ function doStepReset(stepKey) {
   } else if (stepKey === 'opt_equipment') {
     ['S0185','S0186','S0189','B0195','S0198','B0169','B0172','S0178','B0163','E0275'].forEach(function(id){ state.quantities[id] = 0; if(state.cartAdded)delete state.cartAdded[id]; });
   } else if (stepKey === 'opt_bedding') {
-    ['B0257','B0258','B0259','B0260','B0261','B0262'].forEach(function(id){ state.quantities[id] = 0; if(state.cartAdded)delete state.cartAdded[id]; });
-    ['vacuum','pillow'].forEach(function(k){ delete state.choiceSelections[k]; state.choiceQty[k] = 0; if(state.cartAdded)delete state.cartAdded['choice_'+k]; });
+    // 家電カテゴリ（掃除機のみ）。掛け布団・枕は推奨品目へ移動済み。
+    ['vacuum'].forEach(function(k){ delete state.choiceSelections[k]; state.choiceQty[k] = 0; if(state.cartAdded)delete state.cartAdded['choice_'+k]; });
   } else if (stepKey === 'opt_bbq') {
     ['S0012','S0013','B0014','B0015','S0016','B0018','S0047','B0090','B0091','B0092','S0228','S0229','S0235','B0242'].forEach(function(id){ state.quantities[id] = 0; });
   } else if (stepKey === 'recommend') {
@@ -1675,9 +1660,9 @@ const OPT_CATS = [
   },
   {
     key: 'bedding',
-    label: '寝具・家電',
+    label: '家電',
     pages: [
-      { title: '寝具・家電', fn: function(){ return renderOptBedding(); } },
+      { title: '家電', fn: function(){ return renderOptBedding(); } },
     ]
   },
   {
@@ -4616,7 +4601,12 @@ function renderRecommend() {
     + '</div>'
     + '<div class="subsection"><div class="subsection-title">その他設備</div>'
     + ['B0161','B0270','B0271','B0272','B0274'].map(id => itemCardHTML(id)).join('')
-    + choiceCardHTML('bed_pad')
+    + '</div>'
+    + '<div class="subsection"><div class="subsection-title">寝具</div>'
+    + '<div class="subsection-note">ベッドパッド・掛け布団・枕です。必要なサイズ・種類をタップで選択してください。</div>'
+    + ['B0263','B0264','B0265','B0266'].map(id => itemCardHTML(id, '推奨')).join('')
+    + ['B0257','B0258','B0259','B0260','B0261','B0262'].map(id => itemCardHTML(id, '推奨')).join('')
+    + ['B0255','B0256'].map(id => itemCardHTML(id, '推奨')).join('')
     + '</div>';
 }
 
@@ -5322,9 +5312,7 @@ function renderOptEquipment() {
 
 // 寝具・家電（カテゴリ）
 function renderOptBedding() {
-  return `${pageHeader('step3','STEP 3 — 寝具・家電','寝具・家電','掛け布団・枕・掃除機などを選択してください。不要な場合はそのままスキップできます。')}
-  <div class="subsection"><div class="subsection-title">掛け布団</div>${['B0257','B0258','B0259','B0260','B0261','B0262'].map(id => itemCardHTML(id)).join('')}</div>
-  <div class="subsection"><div class="subsection-title">枕</div>${choiceCardHTML('pillow')}</div>
+  return `${pageHeader('step3','STEP 3 — 家電','家電','掃除機などの家電を選択してください。不要な場合はそのままスキップできます。')}
   <div class="subsection"><div class="subsection-title">掃除機</div>${choiceCardHTML('vacuum')}</div>
   `;
 }
